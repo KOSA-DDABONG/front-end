@@ -159,17 +159,23 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           color: Colors.transparent,
         ),
         child: ListTile(
-          title: Text('다가오는 일정'),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('다가오는 일정'),
+              SizedBox(height: 20), // 다가오는 일정 텍스트 아래 여백 추가
+            ],
+          ),
           subtitle: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(width: 10),
               Container(
-                width: 50,
-                height: 50,
+                width: 80,
+                height: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: AssetImage('../assets/images/noImg.jpg'),
                     fit: BoxFit.cover,
                   ),
@@ -187,6 +193,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                       Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
                     ],
                   ),
+                  SizedBox(height: 50),
                 ],
               ),
             ],
@@ -201,8 +208,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 child: Text(
                   '3건',
                   style: TextStyle(
+                    fontSize: 15,
                     decoration: TextDecoration.underline,
-                    color: Colors.blue, // 링크 스타일로 보이게 하기 위해서 색상 추가
+                    color: Colors.black, // 링크 스타일로 보이게 하기 위해서 색상 추가
                   ),
                 ),
               ),

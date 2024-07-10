@@ -12,24 +12,47 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget _submitButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      },
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width / 3,
-          padding: EdgeInsets.symmetric(vertical: 13),
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: secondaryColor),
-          child: const Text(
-            '로그인 하기',
-            style: TextStyle(fontSize: 20, color: Colors.white),
+    return FadeTransition(
+      opacity: _animation,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        },
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width / 3,
+            padding: EdgeInsets.symmetric(vertical: 13),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                color: secondaryColor),
+            child: const Text(
+              '로그인 하기',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
           ),
         ),
       ),
@@ -40,19 +63,19 @@ class _SplashScreenState extends State<SplashScreen> {
     return RichText(
       textAlign: TextAlign.center,
       text: const TextSpan(
-          text: 'Trip',
-          style: TextStyle(
-            fontFamily: 'Oswald',
-            fontSize: 40,
-            fontWeight: FontWeight.w700,
-            color: secondaryColor,
+        text: 'Trip',
+        style: TextStyle(
+          fontFamily: 'Oswald',
+          fontSize: 40,
+          fontWeight: FontWeight.w700,
+          color: secondaryColor,
+        ),
+        children: [
+          TextSpan(
+            text: ' Flow',
+            style: TextStyle(color: secondaryColor, fontSize: 30),
           ),
-          children: [
-            TextSpan(
-              text: ' Flow',
-              style: TextStyle(color: secondaryColor, fontSize: 30),
-            ),
-          ]),
+        ]),
     );
   }
 
@@ -64,11 +87,10 @@ class _SplashScreenState extends State<SplashScreen> {
           padding: EdgeInsets.symmetric(horizontal: 20),
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [bgColor, bgColor])),
+              image: DecorationImage(
+                image: AssetImage('../assets/images/splash_background.jpg'),
+                fit: BoxFit.cover,
+              )),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
