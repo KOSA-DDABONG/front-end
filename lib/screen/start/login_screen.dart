@@ -323,10 +323,10 @@ class _LoginScreenState extends State<LoginScreen> {
           });
           try {
             // 로그인 API 호출
-            final model = LoginRequestModel(userId: userId, password: password);
+            final model = LoginRequestModel(userid: userId, password: password);
             final result = await SessionService.login(model);
 
-            if (result.value == true) {
+            if (result.value != null) {
               savePreferences();
               final userProfileResult = await UserService.getUserProfile();
               print("Here is LoginPage : ${userProfileResult.value}");

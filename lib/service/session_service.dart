@@ -14,18 +14,24 @@ class SessionService {
   //안전한 저장소 설정
   static const storage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock));
+      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock)
+  );
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
+
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
 
+    print("@@@@@ 1 : ${url}");
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-
+      print("@@@@@ 2 : ${response}");
+      print("@@@@@ 3 : ${response.data}");
+      print("@@@@@ 4 : ${response.data['data']}");
       return Result.success(
-          loginResponseJson(response.data as Map<String, dynamic>));
+          loginResponseJson(response.data['data'] as Map<String, dynamic>));
     } catch (e) {
+      print("@@@@@ 5 : ${e}");
       return Result.failure("[Login] An Error Occurred: $e");
     }
   }
@@ -51,7 +57,7 @@ class SessionService {
     );
 
     await storage.write(key: 'accessToken', value: loginResponse.accessToken);
-    await storage.write(key: 'refreshToken', value: loginResponse.refreshToken);
+    // await storage.write(key: 'refreshToken', value: loginResponse.refreshToken);
   }
 
   // // 로그아웃
@@ -89,7 +95,7 @@ class SessionService {
   // refreshToken 가져오기. 값이 없을 경우 null 반환
   static Future<String?> getRefreshToken() async {
     final details = await loginDetails();
-    return details?.refreshToken;
+    // return details?.refreshToken;
   }
 
   // refreshToken 설정하기

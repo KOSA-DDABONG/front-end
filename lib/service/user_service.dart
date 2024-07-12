@@ -20,7 +20,7 @@ class UserService {
           signupResponseJson(response.data['data'] as Map<String, dynamic>)
       );
     } catch (e) {
-      return Result.failure("[Signup] Failed with status code : ${e}");
+      return Result.failure("[Signup] An Error Occurred: ${e}");
     }
   }
 
