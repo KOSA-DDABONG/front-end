@@ -30,7 +30,9 @@ class _SignupScreenState extends State<SignupScreen> {
   int verifyEmailSuccess = 0;
   StreamController<int> verifyEmailStreamController = StreamController<int>();
 
+  String? username;
   String? email;
+  String? userId;
   String? password;
   String? checkpassword;
   String? nickname;
@@ -174,7 +176,7 @@ class _SignupScreenState extends State<SignupScreen> {
               }
               return null;
             },
-            onChanged: (val) => nickname = val,
+            onChanged: (val) => username = val,
             obscureText: false,
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
@@ -234,37 +236,37 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () async {
-                    try {
-                      final response =
-                      await UserService.emailVerifyRequest(email!);
-                      if (response.statusCode == 200) {
-                        expectedToken = response.data['token'];
-                        showVerificationDialog();
-                        print("TokenToken : $response");
-                      } else {
-                        print("TokenToken : $response");
-                        FormHelper.showSimpleAlertDialog(
-                          context,
-                          Config.appName,
-                          "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
-                          "확인",
-                              () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                        );
-                      }
-                    } catch (e) {
-                      print("Error: $e");
-                      FormHelper.showSimpleAlertDialog(
-                        context,
-                        Config.appName,
-                        "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
-                        "확인",
-                            () {
-                          Navigator.of(context, rootNavigator: true).pop();
-                        },
-                      );
-                    }
+                  //   try {
+                  //     final response =
+                  //     await UserService.emailVerifyRequest(email!);
+                  //     if (response.statusCode == 200) {
+                  //       expectedToken = response.data['token'];
+                  //       showVerificationDialog();
+                  //       print("TokenToken : $response");
+                  //     } else {
+                  //       print("TokenToken : $response");
+                  //       FormHelper.showSimpleAlertDialog(
+                  //         context,
+                  //         Config.appName,
+                  //         "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
+                  //         "확인",
+                  //             () {
+                  //           Navigator.of(context, rootNavigator: true).pop();
+                  //         },
+                  //       );
+                  //     }
+                  //   } catch (e) {
+                  //     print("Error: $e");
+                  //     FormHelper.showSimpleAlertDialog(
+                  //       context,
+                  //       Config.appName,
+                  //       "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
+                  //       "확인",
+                  //           () {
+                  //         Navigator.of(context, rootNavigator: true).pop();
+                  //       },
+                  //     );
+                  //   }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -286,146 +288,146 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ],
           ),
-          if (verifyEmailSuccess == 1)
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: Text(
-                '이메일 인증이 완료되었습니다.',
-                style: TextStyle(color: Colors.green),
-              ),
-            )
-          else if (verifyEmailSuccess == 2)
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: Text(
-                '이메일 인증에 실패했습니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-            )
+          // if (verifyEmailSuccess == 1)
+          //   const Padding(
+          //     padding: EdgeInsets.only(top: 8.0),
+          //     child: Text(
+          //       '이메일 인증이 완료되었습니다.',
+          //       style: TextStyle(color: Colors.green),
+          //     ),
+          //   )
+          // else if (verifyEmailSuccess == 2)
+          //   const Padding(
+          //     padding: EdgeInsets.only(top: 8.0),
+          //     child: Text(
+          //       '이메일 인증에 실패했습니다.',
+          //       style: TextStyle(color: Colors.red),
+          //     ),
+          //   )
         ],
       ),
     );
   }
 
-  //인증코드 입력 다이어로그
-  void showVerificationDialog() {
-    TextEditingController verificationCodeController = TextEditingController();
-    int timerDuration = 5 * 60;
-    int currentTimerValue = timerDuration;
-
-    StreamController<int> timerStreamController = StreamController<int>();
-
-    void resetTimer() {
-      currentTimerValue = timerDuration;
-      timerStreamController.add(currentTimerValue);
-    }
-
-    // Start the countdown
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (currentTimerValue == 0) {
-        timer.cancel();
-        timerStreamController.close();
-      } else {
-        timerStreamController.add(currentTimerValue);
-        currentTimerValue--;
-      }
-    });
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Container(
-            width: 300, // Set the width as per your requirement
-            padding: const EdgeInsets.all(16),
-            child: StreamBuilder<int>(
-              initialData: currentTimerValue, // Start from the full duration
-              stream: timerStreamController.stream,
-              builder: (context, snapshot) {
-                bool isCodeMatched =
-                (verificationCodeController.text == expectedToken);
-
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "인증코드를 입력하세요",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: verificationCodeController,
-                      decoration: const InputDecoration(labelText: '인증코드'),
-                    ),
-                    if (!isCodeMatched &&
-                        verificationCodeController.text.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          "인증 코드가 일치하지 않습니다",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "남은 시간: ${(snapshot.data ?? 0) ~/ 60}:${(snapshot.data ?? 0) % 60}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            resetTimer();
-                          },
-                          child: const Text("재전송"),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            if (isCodeMatched) {
-                              timerStreamController.close();
-                              Navigator.of(context).pop();
-                              try {
-                                final tokenResponse = await UserService
-                                    .emailVerifyTokenRequest(
-                                    verificationCodeController.text);
-                                if (tokenResponse.statusCode == 200) {
-                                  setState(() {
-                                    verifyEmailSuccess = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    verifyEmailSuccess = 2;
-                                  });
-                                }
-                              } catch (e) {
-                                // 에러가 발생한 경우
-                                print("Error: $e");
-                                setState(() {
-                                  verifyEmailSuccess = 2;
-                                });
-                              }
-                            }
-                          },
-                          child: const Text("확인"),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // //인증코드 입력 다이어로그
+  // void showVerificationDialog() {
+  //   TextEditingController verificationCodeController = TextEditingController();
+  //   int timerDuration = 5 * 60;
+  //   int currentTimerValue = timerDuration;
+  //
+  //   StreamController<int> timerStreamController = StreamController<int>();
+  //
+  //   void resetTimer() {
+  //     currentTimerValue = timerDuration;
+  //     timerStreamController.add(currentTimerValue);
+  //   }
+  //
+  //   // Start the countdown
+  //   Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     if (currentTimerValue == 0) {
+  //       timer.cancel();
+  //       timerStreamController.close();
+  //     } else {
+  //       timerStreamController.add(currentTimerValue);
+  //       currentTimerValue--;
+  //     }
+  //   });
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: Container(
+  //           width: 300, // Set the width as per your requirement
+  //           padding: const EdgeInsets.all(16),
+  //           child: StreamBuilder<int>(
+  //             initialData: currentTimerValue, // Start from the full duration
+  //             stream: timerStreamController.stream,
+  //             builder: (context, snapshot) {
+  //               bool isCodeMatched =
+  //               (verificationCodeController.text == expectedToken);
+  //
+  //               return Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   const Text(
+  //                     "인증코드를 입력하세요",
+  //                     style: TextStyle(
+  //                       fontSize: 20,
+  //                     ),
+  //                   ),
+  //                   const SizedBox(height: 10),
+  //                   TextField(
+  //                     controller: verificationCodeController,
+  //                     decoration: const InputDecoration(labelText: '인증코드'),
+  //                   ),
+  //                   if (!isCodeMatched &&
+  //                       verificationCodeController.text.isNotEmpty)
+  //                     const Padding(
+  //                       padding: EdgeInsets.only(top: 8.0),
+  //                       child: Text(
+  //                         "인증 코드가 일치하지 않습니다",
+  //                         style: TextStyle(color: Colors.red),
+  //                       ),
+  //                     ),
+  //                   const SizedBox(height: 10),
+  //                   Text(
+  //                     "남은 시간: ${(snapshot.data ?? 0) ~/ 60}:${(snapshot.data ?? 0) % 60}",
+  //                     style: const TextStyle(fontSize: 16),
+  //                   ),
+  //                   const SizedBox(height: 16),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                     children: [
+  //                       TextButton(
+  //                         onPressed: () {
+  //                           resetTimer();
+  //                         },
+  //                         child: const Text("재전송"),
+  //                       ),
+  //                       TextButton(
+  //                         onPressed: () async {
+  //                           if (isCodeMatched) {
+  //                             timerStreamController.close();
+  //                             Navigator.of(context).pop();
+  //                             try {
+  //                               final tokenResponse = await UserService
+  //                                   .emailVerifyTokenRequest(
+  //                                   verificationCodeController.text);
+  //                               if (tokenResponse.statusCode == 200) {
+  //                                 setState(() {
+  //                                   verifyEmailSuccess = 1;
+  //                                 });
+  //                               } else {
+  //                                 setState(() {
+  //                                   verifyEmailSuccess = 2;
+  //                                 });
+  //                               }
+  //                             } catch (e) {
+  //                               // 에러가 발생한 경우
+  //                               print("Error: $e");
+  //                               setState(() {
+  //                                 verifyEmailSuccess = 2;
+  //                               });
+  //                             }
+  //                           }
+  //                         },
+  //                         child: const Text("확인"),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   //전화번호 필드
   Widget _buildNumberField() {
@@ -592,7 +594,7 @@ class _SignupScreenState extends State<SignupScreen> {
               }
               return null;
             },
-            onChanged: (val) => nickname = val,
+            onChanged: (val) => userId = val,
             obscureText: false,
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
@@ -729,10 +731,13 @@ class _SignupScreenState extends State<SignupScreen> {
           });
 
           SignupRequestModel model = SignupRequestModel(
+            username: username,
+            nickname: nickname,
+            userId: userId,
+            password: password,
             email: email,
             phoneNumber: phoneNumber,
-            nickname: nickname,
-            password: password,
+            birth: birthDate
           );
 
           UserService.register(model).then(
@@ -749,12 +754,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   "확인",
                       () {
                     Future.delayed(const Duration(seconds: 1), () {
-                      Navigator.of(context)
-                          .pop(); // Dismiss the dialog after a delay
-                      Navigator.pushNamedAndRemoveUntil(
+                      Navigator.of(context).pop(); // Dismiss the dialog after a delay
+                      // Navigator.pushNamedAndRemoveUntil(
+                      //   context,
+                      //   '/login',
+                      //       (route) => false,
+                      // );
+                      Navigator.push(
                         context,
-                        '/login',
-                            (route) => false,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     });
                   },

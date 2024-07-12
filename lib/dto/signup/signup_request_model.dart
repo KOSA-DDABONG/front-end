@@ -20,10 +20,10 @@ class SignupRequestModel {
   SignupRequestModel.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     nickname = json['nickname'];
-    userId = json['userId'];
+    userId = json['userid'];
     password = json['password'];
     email = json['email'];
-    phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phonenumber'];
     birth = json['birth'];
   }
 
@@ -31,10 +31,10 @@ class SignupRequestModel {
     final _data = <String, dynamic>{};
     _data['username'] = username;
     _data['nickname'] = nickname;
-    _data['userId'] = userId;
+    _data['userid'] = userId;
     _data['password'] = password;
     _data['email'] = email;
-    _data['phoneNumber'] = phoneNumber;
+    _data['phonenumber'] = phoneNumber;
     _data['birth'] = birth;
     return _data;
   }

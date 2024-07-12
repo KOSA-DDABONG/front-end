@@ -11,6 +11,7 @@ class DioClient {
   // JSON 헤더 설정
   static const Map<String, String> jsonHeaders = {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
   };
 
   // 모든 http 요청
