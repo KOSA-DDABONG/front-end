@@ -11,17 +11,16 @@ import 'session_service.dart';
 class UserService {
 
   //회원가입
-  static Future<Result<SignupResponseModel>> register(
-      SignupRequestModel model) async {
+  static Future<Result<SignupResponseModel>> register(SignupRequestModel model) async {
     final url = Uri.http(Config.apiURL, Config.signupAPI).toString();
-
     try {
-      final response =
-      await DioClient.sendRequest('POST', url, body: model.toJson());
+      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
+
       return Result.success(
-          signupResponseJson(response.data as Map<String, dynamic>));
+          signupResponseJson(response.data['data'] as Map<String, dynamic>)
+      );
     } catch (e) {
-      return Result.failure("[Signup] An Error Occurred: $e");
+      return Result.failure("[Signup] Failed with status code : ${e}");
     }
   }
 

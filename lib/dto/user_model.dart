@@ -2,24 +2,26 @@ class User {
   User({
     required this.username,
     required this.nickname,
-    required this.userId,
-    required this.password,
+    required this.userid,
+    this.password,
     required this.email,
-    required this.phoneNumber,
+    required this.phonenumber,
     required this.birth,
-    this.profileImage,
-    required this.createdAt,
+    this.profileimage,
+    // this.createdtime,
+    // this.recentaccess,
   });
 
   late final String username;
   late final String nickname;
-  late final String userId;
-  late final String password;
+  late final String userid;
+  late final String? password;
   late final String email;
-  late final String phoneNumber;
+  late final String phonenumber;
   late final String birth;
-  late final String? profileImage;
-  late final DateTime createdAt;
+  late final String? profileimage;
+  // late final DateTime? createdtime;
+  // late final DateTime? recentaccess;
 
   @override
   String toString() {
@@ -27,27 +29,27 @@ class User {
       User {
         username: $username,
         nickname: $nickname,
-        id: $userId,
+        userid: $userid,
         password: $password,
         email: $email,
-        phoneNumber: $phoneNumber,
+        phonenumber: $phonenumber,
         birth: $birth,
-        profileImage: $profileImage,
-        createdAt: $createdAt,
+        profileimage: $profileimage,
       }''';
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      username: json['username'],
-      nickname: json['nickname'],
-      userId: json['userId'],
-      password: json['password'],
-      email: json['email'],
-      phoneNumber: json['phoneNumber'],
-      birth: json['birth'],
-      profileImage: json['profileImage'],
-      createdAt: DateTime.parse(json['createdAt']),
+      username: json['username'] ?? '',
+      nickname: json['nickname'] ?? '',
+      userid: json['userid'] ?? '',
+      password: json['password'] ?? '',
+      email: json['email'] ?? '',
+      phonenumber: json['phonenumber'] ?? '',
+      birth: json['birth'] ?? '',
+      profileimage: json['profileimage'] ?? '',
+      // createdtime: DateTime.parse(json['createdtime'] ?? ''),
+      // recentaccess: DateTime.parse(json['recentaccess'] ?? ''),
     );
   }
 
@@ -55,13 +57,14 @@ class User {
     return {
       'username': username,
       'nickname': nickname,
-      'userId': userId,
+      'userid': userid,
       'password': password,
       'email': email,
-      'phoneNumber': phoneNumber,
+      'phonenumber': phonenumber,
       'birth': birth,
-      'profileImage': profileImage,
-      'createdAt': createdAt.toIso8601String(),
+      'profileimage': profileimage,
+      // 'createdtime': createdtime?.toIso8601String(),
+      // 'recentaccess': recentaccess?.toIso8601String(),
     };
   }
 
@@ -75,10 +78,7 @@ class User {
       createdAtArray[4],
       createdAtArray[5],
       createdAtArray[6] ~/ 1000000,
-      // Nanoseconds to milliseconds
-      createdAtArray[6] %
-          1000000 ~/
-          1000, // Remaining nanoseconds to microseconds
+      createdAtArray[6] % 1000000 ~/ 1000, // Remaining nanoseconds to microseconds
     );
   }
 
