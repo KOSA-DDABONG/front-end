@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/widget/appBar.dart';
 
 import 'login_screen.dart';
 
@@ -6,40 +7,12 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: notLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
+      ),
       body: Column(
         children: [
-          // Header
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Image.asset(
-                      '../assets/images/noImg.jpg', // 로고 이미지 경로
-                      height: 40,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'TripFlow',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _headerItem('HOME'),
-                    _headerItem('OUR TEAM'),
-                    _headerItem('SERVICES'),
-                    _headerItem('CONTACT'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Body
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),

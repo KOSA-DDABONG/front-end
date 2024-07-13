@@ -1,6 +1,166 @@
 import 'package:flutter/material.dart';
 import 'package:front/screen/start/splash_screen.dart';
 
+class notLoginHeader extends AppBar {
+  notLoginHeader({Key? key, required bool automaticallyImplyLeading, BuildContext? context})
+      : super(
+    key: key,
+    backgroundColor: Colors.white,
+    automaticallyImplyLeading: automaticallyImplyLeading,
+    elevation: 0,
+    centerTitle: true, // This centers the title, but we'll adjust the layout further
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Image.asset(
+              '../assets/images/noImg.jpg', // Update the path to your logo image
+              height: 40,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              child: Text(
+                'HOME',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              child: Text(
+                'MY TRIP',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              child: Text(
+                'REVIEW',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              child: Text(
+                'MY PAGE',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              child: Text(
+                'CONTACT',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            OutlinedButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.blue),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+              child: Text(
+                'Sign up',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () {
+                // Add navigation logic here
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+              child: Text(
+                'Login',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            SizedBox(width: 20),
+          ],
+        ),
+        // Row(
+        //   children: [
+        //     TextButton(
+        //       onPressed: () {
+        //         // Add navigation logic here
+        //       },
+        //       child: Text(
+        //         'Sign up',
+        //         style: TextStyle(color: Color(0xffd86a04)),
+        //       ),
+        //     ),
+        //     SizedBox(width: 8),
+        //     TextButton(
+        //       onPressed: () {
+        //         // Add navigation logic here
+        //       },
+        //       child: Text(
+        //         'Login',
+        //         style: TextStyle(color: Color(0xffd86a04)),
+        //       ),
+        //     ),
+        //     SizedBox(width: 20),
+        //   ],
+        // ),
+      ],
+    ),
+    iconTheme: IconThemeData(
+      color: Color(0xffd86a04),
+    ),
+    leading: automaticallyImplyLeading == true
+        ? IconButton(
+      onPressed: () => Navigator.of(context!).pop(true),
+      icon: Icon(Icons.arrow_back_ios),
+    )
+        : null,
+  );
+}
+
+
+
 class CommonAppBar extends AppBar {
   CommonAppBar({Key? key, required bool automaticallyImplyLeading, BuildContext? context})
       : super(
