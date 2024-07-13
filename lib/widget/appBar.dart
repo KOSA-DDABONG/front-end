@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:front/screen/start/splash_screen.dart';
+import 'package:front/screen/start/signup_screen.dart';
+import 'package:front/screen/start/landing_screen.dart';
+
+import '../screen/start/login_screen.dart';
 
 class notLoginHeader extends AppBar {
   notLoginHeader({Key? key, required bool automaticallyImplyLeading, BuildContext? context})
       : super(
     key: key,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.transparent,
     automaticallyImplyLeading: automaticallyImplyLeading,
     elevation: 0,
     centerTitle: true, // This centers the title, but we'll adjust the layout further
@@ -89,7 +92,10 @@ class notLoginHeader extends AppBar {
           children: [
             OutlinedButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.blue),
@@ -105,7 +111,10 @@ class notLoginHeader extends AppBar {
             SizedBox(width: 8),
             ElevatedButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue, // Background color
@@ -121,30 +130,6 @@ class notLoginHeader extends AppBar {
             SizedBox(width: 20),
           ],
         ),
-        // Row(
-        //   children: [
-        //     TextButton(
-        //       onPressed: () {
-        //         // Add navigation logic here
-        //       },
-        //       child: Text(
-        //         'Sign up',
-        //         style: TextStyle(color: Color(0xffd86a04)),
-        //       ),
-        //     ),
-        //     SizedBox(width: 8),
-        //     TextButton(
-        //       onPressed: () {
-        //         // Add navigation logic here
-        //       },
-        //       child: Text(
-        //         'Login',
-        //         style: TextStyle(color: Color(0xffd86a04)),
-        //       ),
-        //     ),
-        //     SizedBox(width: 20),
-        //   ],
-        // ),
       ],
     ),
     iconTheme: IconThemeData(
