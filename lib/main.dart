@@ -3,7 +3,7 @@ import 'package:front/screen/menu/my_menu_screen.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
-import 'package:front/screen/start/splash_screen.dart';
+import 'package:front/screen/start/landing_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

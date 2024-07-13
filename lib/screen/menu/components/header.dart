@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../controller/menu_app_controller.dart';
 import '../../../responsive.dart';
-import '../../start/splash_screen.dart';
+import '../../start/landing_screen.dart';
 
 class Header extends StatelessWidget {
   const Header({
