@@ -90,7 +90,7 @@ class ProfileCard extends StatelessWidget {
                 );
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => SplashScreen()),
+                  MaterialPageRoute(builder: (context) => LandingScreen()),
                 );
               } else {
                 Navigator.pop(context);

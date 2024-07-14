@@ -4,12 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../widget/appBar.dart';
 
-class SplashScreen extends StatefulWidget {
+class LandingScreen extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _LandingScreenState createState() => _LandingScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _LandingScreenState extends State<LandingScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   double opacityLevel = 0.0;
 
