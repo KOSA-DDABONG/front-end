@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/menu/my_menu_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/service/session_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
@@ -10,6 +11,7 @@ import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
 import '../../responsive.dart';
 import '../../service/user_service.dart';
+import '../../widget/appBar.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -73,48 +75,53 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
-          title: const Text(
-            '로그인',
-            style: TextStyle(color: secondaryColor),
-          ),
-          backgroundColor: Colors.white,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(4.0),
-            child: Container(
-              color: Colors.black,
-              height: 1.0,
+      appBar: notLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
+      ),
+      backgroundColor: Color(0xffe4f4ff),
+      body: Stack(
+        children: [
+          Positioned(
+            // right: 0,
+            bottom: 0,
+            top: 0,
+            // left: 0,
+            child: Opacity(
+              opacity: 0.15, // 이미지를 연하게 설정
+              child: Image.asset(
+                '../assets/images/login_background.png',
+                width: screenWidth/2,
+                height: screenHeight * 2/3,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
-        ),
-      ),
-      // appBar: AppBar(
-      //   title: const Text('로그인', style: TextStyle(color: Colors.white),),
-      //   backgroundColor: secondaryColor,
-      // ),
-      backgroundColor: bgColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProgressHUD(
-              inAsyncCall: isApiCallProcess,
-              opacity: 0.3,
-              key: UniqueKey(),
-              child: Form(
-                key: globalFormKey,
-                // child: _loginUI(context),
-                child: Responsive(
-                  mobile: _loginUIMobile(context),
-                  tablet: _loginUITablet(context),
-                  desktop: _loginUIDesktop(context),
-                ),
-              )
-            )
-          ],
-        ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ProgressHUD(
+                    inAsyncCall: isApiCallProcess,
+                    opacity: 0.3,
+                    key: UniqueKey(),
+                    child: Form(
+                      key: globalFormKey,
+                      // child: _loginUI(context),
+                      child: Responsive(
+                        mobile: _loginUIMobile(context),
+                        tablet: _loginUITablet(context),
+                        desktop: _loginUIDesktop(context),
+                      ),
+                    )
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -148,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _loginUI(BuildContext context) {
     return Column(
       children: <Widget>[
-        const SizedBox(height: 100),
+        const SizedBox(height: 60),
         _buildIdField(),
         const SizedBox(height: 30),
         _buildPasswordField(),
@@ -169,6 +176,17 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Center(
+          child: Text(
+            'TripFlow',
+            style: GoogleFonts.indieFlower(
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF003680),
+            ),
+          ),
+        ),
+        const SizedBox(height: 50),
         const Text(
           "아이디",
           style: TextStyle(
@@ -182,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
             onFocusChange: (hasFocus) {
               setState(() {
                 idIconColor =
-                hasFocus ? Colors.black : Colors.grey.withOpacity(0.7);
+                hasFocus ? Color(0xFF003680) : Colors.grey.withOpacity(0.7);
               });
             },
             child: Container(
@@ -204,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.black, // Change the color as needed
+                      color: Color(0xFF003680), // Change the color as needed
                     ),
                   ),
                 ),
@@ -232,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onFocusChange: (hasFocus) {
             setState(() {
               passwordIconColor =
-              hasFocus ? Colors.black : Colors.grey.withOpacity(0.7);
+              hasFocus ? Color(0xFF003680) : Colors.grey.withOpacity(0.7);
             });
           },
           child: Container(
@@ -261,12 +279,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     hidePassword ? Icons.visibility_off : Icons.visibility,
                     color: hidePassword
                         ? Colors.grey.withOpacity(0.7)
-                        : Colors.black,
+                        : Color(0xFF003680),
                   ),
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.black, // Change the color as needed
+                    color: Color(0xFF003680), // Change the color as needed
                   ),
                 ),
               ),
@@ -287,7 +305,7 @@ class _LoginScreenState extends State<LoginScreen> {
               rememberId = value!;
             });
           },
-          activeColor: Colors.black,
+          activeColor: Color(0xFF003680),
         ),
         const Text("아이디 기억하기"),
       ],
@@ -298,62 +316,48 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLoginButton(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return InkWell(
-      child: Container(
-        width: screenWidth, // 원하는 너비 설정
-        height: 50, // 원하는 높이 설정
-        decoration: BoxDecoration(
-          color: secondaryColor, // 버튼 배경색 설정
-          borderRadius: BorderRadius.circular(5.0), // 원하는 모양 설정
-        ),
-        child: const Center(
-          child: Text(
-            "로그인",
-            style: TextStyle(
-              color: Colors.white, // 텍스트 색상 설정
-              fontSize: 18, // 텍스트 크기 설정
-            ),
-          ),
-        ),
-      ),
-      onTap: () async {
-        if (validateAndSave()) {
-          setState(() {
-            isApiCallProcess = true;
-          });
-          try {
-            // 로그인 API 호출
-            final model = LoginRequestModel(userid: userId, password: password);
-            final result = await SessionService.login(model);
 
-            if (result.value != null) {
-              savePreferences();
-              final userProfileResult = await UserService.getUserProfile();
-              print("Here is LoginPage : ${userProfileResult.value}");
+    return Container(
+      width: screenWidth,
+      child: ElevatedButton(
+        onPressed: () async {
+          if (validateAndSave()) {
+            setState(() {
+              isApiCallProcess = true;
+            });
+            try {
+              // 로그인 API 호출
+              final model = LoginRequestModel(userid: userId, password: password);
+              final result = await SessionService.login(model);
 
-              setState(() {
-                isApiCallProcess = false;
-              });
+              if (result.value != null) {
+                savePreferences();
+                final userProfileResult = await UserService.getUserProfile();
+                print("Here is LoginPage : ${userProfileResult.value}");
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyMenuScreen(),
-                ),
-              );
+                setState(() {
+                  isApiCallProcess = false;
+                });
 
-            } else {
-              setState(() {
-                isApiCallProcess = false;
-              });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyMenuScreen(),
+                  ),
+                );
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.'),
-                ),
-              );
-            }
-          } catch (e) {
+              } else {
+                setState(() {
+                  isApiCallProcess = false;
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.'),
+                  ),
+                );
+              }
+            } catch (e) {
               setState(() {
                 isApiCallProcess = false;
               });
@@ -362,15 +366,101 @@ class _LoginScreenState extends State<LoginScreen> {
                   content: Text('에러가 발생했습니다: $e'),
                 ),
               );
+            }
+            //   finally {
+            //   setState(() {
+            //     isApiCallProcess = false;
+            //   });
+            // }
           }
-          //   finally {
-          //   setState(() {
-          //     isApiCallProcess = false;
-          //   });
-          // }
-        }
-      },
+        },
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          backgroundColor: Colors.blue,
+        ),
+        child: Text(
+          '로그인하기',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
+
+    // return InkWell(
+    //   child: Container(
+    //     width: screenWidth, // 원하는 너비 설정
+    //     height: 50, // 원하는 높이 설정
+    //     decoration: BoxDecoration(
+    //       color: secondaryColor, // 버튼 배경색 설정
+    //       borderRadius: BorderRadius.circular(5.0), // 원하는 모양 설정
+    //     ),
+    //     child: const Center(
+    //       child: Text(
+    //         "로그인",
+    //         style: TextStyle(
+    //           color: Colors.white, // 텍스트 색상 설정
+    //           fontSize: 18, // 텍스트 크기 설정
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    //   onTap: () async {
+    //     if (validateAndSave()) {
+    //       setState(() {
+    //         isApiCallProcess = true;
+    //       });
+    //       try {
+    //         // 로그인 API 호출
+    //         final model = LoginRequestModel(userid: userId, password: password);
+    //         final result = await SessionService.login(model);
+    //
+    //         if (result.value != null) {
+    //           savePreferences();
+    //           final userProfileResult = await UserService.getUserProfile();
+    //           print("Here is LoginPage : ${userProfileResult.value}");
+    //
+    //           setState(() {
+    //             isApiCallProcess = false;
+    //           });
+    //
+    //           Navigator.push(
+    //             context,
+    //             MaterialPageRoute(
+    //               builder: (context) => MyMenuScreen(),
+    //             ),
+    //           );
+    //
+    //         } else {
+    //           setState(() {
+    //             isApiCallProcess = false;
+    //           });
+    //
+    //           ScaffoldMessenger.of(context).showSnackBar(
+    //             const SnackBar(
+    //               content: Text('로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.'),
+    //             ),
+    //           );
+    //         }
+    //       } catch (e) {
+    //           setState(() {
+    //             isApiCallProcess = false;
+    //           });
+    //           ScaffoldMessenger.of(context).showSnackBar(
+    //             SnackBar(
+    //               content: Text('에러가 발생했습니다: $e'),
+    //             ),
+    //           );
+    //       }
+    //       //   finally {
+    //       //   setState(() {
+    //       //     isApiCallProcess = false;
+    //       //   });
+    //       // }
+    //     }
+    //   },
+    // );
   }
 
   // OR 텍스트
@@ -400,7 +490,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextSpan(
                 text: '회원가입 하기',
                 style: const TextStyle(
-                  color: secondaryColor,
+                  color: Color(0xFF003680),
                   fontWeight: FontWeight.bold,
                 ),
                 recognizer: TapGestureRecognizer()

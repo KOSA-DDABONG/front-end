@@ -10,6 +10,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../config.dart';
 import '../../constants.dart';
+import '../../widget/appBar.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -47,28 +48,11 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: AppBar(
-            title: const Text(
-              '회원가입',
-              style: TextStyle(color: secondaryColor),
-            ),
-            backgroundColor: Colors.white,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(4.0),
-              child: Container(
-                color: Colors.black,
-                height: 1.0,
-              ),
-            ),
-          ),
-        ),
-      // appBar: AppBar(
-      //   title: const Text('Signup', style: TextStyle(color: Colors.white),),
-      //   backgroundColor: secondaryColor,
-      // ),
-      backgroundColor: bgColor,
+      appBar: notLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
+      ),
+        backgroundColor: Color(0xffe4f4ff),
       body: SingleChildScrollView(
         child: Column(
           children: [
