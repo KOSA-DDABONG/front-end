@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../screen/start/login_screen.dart';
 
@@ -18,8 +19,18 @@ class notLoginHeader extends AppBar {
         Row(
           children: [
             Image.asset(
-              '../assets/images/noImg.jpg', // Update the path to your logo image
-              height: 40,
+              '../assets/images/tripflow_logo.png', // Update the path to your logo image
+              height: 30,
+              color: Color(0xFF003680),
+            ),
+            SizedBox(width: 5,),
+            Text(
+              'TripFlow',
+              style: GoogleFonts.indieFlower(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF003680),
+              ),
             ),
           ],
         ),
@@ -133,7 +144,7 @@ class notLoginHeader extends AppBar {
       ],
     ),
     iconTheme: IconThemeData(
-      color: Color(0xffd86a04),
+      color: Color(0xFF003680),
     ),
     leading: automaticallyImplyLeading == true
         ? IconButton(

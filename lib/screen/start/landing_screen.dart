@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('../assets/images/splash_background.jpg'),
+                          image: AssetImage('../assets/images/landing_background.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -154,7 +154,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                                     backgroundColor: Colors.blue,
                                   ),
                                   child: Text(
-                                    'Learn More',
+                                    '여행 일정 생성하기',
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
