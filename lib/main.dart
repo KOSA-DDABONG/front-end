@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: secondaryColor,
       ),
-      home: SplashScreen(),
+      home: LandingScreen(),
       // home: MyMenuScreen(),
     );
   }
