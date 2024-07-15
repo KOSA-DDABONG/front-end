@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: secondaryColor,
       ),
-      home: LandingScreen(),
-      // home: MyMenuScreen(),
+      // home: SignupScreen(),
+      home: MyMenuScreen(),
     );
   }
 }

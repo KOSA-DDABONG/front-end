@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
-import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
 import '../../responsive.dart';
 import '../../service/user_service.dart';
@@ -86,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
             bottom: 0,
             top: 0,
             child: Opacity(
-              opacity: 0.15, // 이미지를 연하게 설정
+              opacity: 0.15,
               child: Image.asset(
                 '../assets/images/login_background.png',
                 width: screenWidth/2,
@@ -308,7 +307,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLoginButton(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-
     return Container(
       width: screenWidth,
       child: ElevatedButton(
@@ -425,7 +423,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // 입력 유효성 검사
+  //입력 유효성 검사
   bool validateAndSave() {
     final form = globalFormKey.currentState;
     if (form!.validate()) {

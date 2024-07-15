@@ -85,7 +85,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     color: Colors.transparent,
                   ),
                   child: ListTile(
-                    title: Text('작성한 후기'),
+                    title: Text('최근 작성한 후기'),
                     trailing: GestureDetector(
                       onTap: () {
                         context.read<MenuAppController>().setSelectedScreen('myReview');
@@ -105,7 +105,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     color: Colors.transparent,
                   ),
                   child: ListTile(
-                    title: Text('좋아하는 후기'),
+                    title: Text('최근 좋아요 누른 후기'),
                     trailing: GestureDetector(
                       onTap: () {
                         context.read<MenuAppController>().setSelectedScreen('myLikes');

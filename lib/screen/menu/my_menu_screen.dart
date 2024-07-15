@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../controller/menu_app_controller.dart';
 import '../../responsive.dart';
+import '../../widget/header.dart';
 import 'components/side_menu.dart';
 
 
@@ -26,19 +27,9 @@ class MyMenuScreen extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
-          title: const Text(
-            '마이페이지',
-            style: TextStyle(color: secondaryColor),
-          ),
-          backgroundColor: Colors.white,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(4.0),
-            child: Container(
-              color: Colors.black,
-              height: 1.0,
-            ),
-          ),
+        child: afterLoginHeader(
+          automaticallyImplyLeading: false,
+          context: context,
         ),
       ),
       // key: context.read<MenuAppController>().scaffoldKey,
