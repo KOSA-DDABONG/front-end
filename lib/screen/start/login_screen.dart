@@ -8,9 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../dto/login/login_request_model.dart';
-import '../../responsive.dart';
 import '../../service/user_service.dart';
-import '../../widget/header.dart';
+import '../../component/header.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -103,11 +102,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: UniqueKey(),
                   child: Form(
                     key: globalFormKey,
-                    child: Responsive(
-                      mobile: _loginUIMobile(context),
-                      tablet: _loginUITablet(context),
-                      desktop: _loginUIDesktop(context),
-                    ),
+                    child: _loginUIDesktop(context),
+                    // Responsive(
+                    //   mobile: _loginUIMobile(context),
+                    //   tablet: _loginUITablet(context),
+                    //   desktop: _loginUIDesktop(context),
+                    // ),
                   )
                 )
               ],
@@ -219,7 +219,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-            )),
+            )
+        ),
       ],
     );
   }

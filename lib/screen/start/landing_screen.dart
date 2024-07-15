@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../widget/header.dart';
+import '../../component/header.dart';
+
 
 class LandingScreen extends StatefulWidget {
   @override

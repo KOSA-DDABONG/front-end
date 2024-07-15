@@ -189,7 +189,7 @@ class afterLoginHeader extends AppBar {
             children: [
               Image.asset(
                 '../assets/images/tripflow_logo.png',
-                height: 30,
+                height: 20,
                 color: Color(0xFF003680),
               ),
               SizedBox(width: 5,),

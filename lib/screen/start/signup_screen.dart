@@ -3,15 +3,12 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dto/signup/signup_request_model.dart';
-import 'package:front/responsive.dart';
 import 'package:front/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
-import '../../config.dart';
-import '../../widget/header.dart';
-import '../../widget/snackBar.dart';
+import '../../component/header.dart';
+import '../../component/snackBar.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -81,11 +78,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     key: UniqueKey(),
                     child: Form(
                       key: globalFormKey,
-                      child: Responsive(
-                        mobile: _registerUIMobile(context),
-                        tablet: _registerUITablet(context),
-                        desktop: _registerUIDesktop(context),
-                      ),
+                      child: _registerUIDesktop(context),
+                      // Responsive(
+                      //   mobile: _registerUIMobile(context),
+                      //   tablet: _registerUITablet(context),
+                      //   desktop: _registerUIDesktop(context),
+                      // ),
                     )
                 )
               ],

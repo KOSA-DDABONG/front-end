@@ -22,16 +22,11 @@ class SessionService {
 
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
 
-    print("@@@@@ 1 : ${url}");
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-      print("@@@@@ 2 : ${response}");
-      print("@@@@@ 3 : ${response.data}");
-      print("@@@@@ 4 : ${response.data['data']}");
       return Result.success(
           loginResponseJson(response.data['data'] as Map<String, dynamic>));
     } catch (e) {
-      print("@@@@@ 5 : ${e}");
       return Result.failure("[Login] An Error Occurred: $e");
     }
   }

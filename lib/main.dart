@@ -28,12 +28,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TripFlow',
       theme: ThemeData(
-        scaffoldBackgroundColor: bgColor,
+        scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: Colors.black),
-        canvasColor: secondaryColor,
+        canvasColor: Colors.blue,
       ),
-      // home: SignupScreen(),
+      // home: LandingScreen(),
       home: MyMenuScreen(),
     );
   }
