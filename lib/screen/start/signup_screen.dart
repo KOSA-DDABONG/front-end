@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:front/dto/signup/signup_request_model.dart';
 import 'package:front/responsive.dart';
 import 'package:front/service/user_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../config.dart';
-import '../../constants.dart';
-import '../../widget/appBar.dart';
+import '../../widget/header.dart';
+import '../../widget/snackBar.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -47,31 +48,51 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: notLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
-        backgroundColor: Color(0xffe4f4ff),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProgressHUD(
-              inAsyncCall: isApiCallProcess,
-              opacity: 0.3,
-              key: UniqueKey(),
-              child: Form(
-                key: globalFormKey,
-                child: Responsive(
-                  mobile: _registerUIMobile(context),
-                  tablet: _registerUITablet(context),
-                  desktop: _registerUIDesktop(context),
-                ),
+      backgroundColor: Color(0xffe4f4ff),
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            top: 0,
+            child: Opacity(
+              opacity: 0.15,
+              child: Image.asset(
+                '../assets/images/login_background.png',
+                width: screenWidth/2,
+                height: screenHeight * 2/3,
+                fit: BoxFit.fill,
               ),
             ),
-          ],
-        ),
-      )
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ProgressHUD(
+                    inAsyncCall: isApiCallProcess,
+                    opacity: 0.3,
+                    key: UniqueKey(),
+                    child: Form(
+                      key: globalFormKey,
+                      child: Responsive(
+                        mobile: _registerUIMobile(context),
+                        tablet: _registerUITablet(context),
+                        desktop: _registerUIDesktop(context),
+                      ),
+                    )
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -80,7 +101,7 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height * 1.5,
+          height: MediaQuery.of(context).size.height * 2,
           child: _registerUI(context),
         ),
       ),
@@ -92,7 +113,7 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.symmetric(horizontal: 60),
       child: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height * 1.6,
+          height: MediaQuery.of(context).size.height * 2,
           child: _registerUI(context),
         ),
       ),
@@ -104,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 80),
-          height: MediaQuery.of(context).size.height * 1.8,
+          height: MediaQuery.of(context).size.height * 2,
           width: MediaQuery.of(context).size.width / 2,
           child: _registerUI(context),
         ),
@@ -116,16 +137,22 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget _registerUI(BuildContext context) {
     return Column(
       children: <Widget>[
-        const SizedBox(height: 50),
+        const SizedBox(height: 60),
         _buildUsernameField(),
+        const SizedBox(height: 30),
         _buildEmailField(),
+        const SizedBox(height: 30),
         _buildNumberField(),
+        const SizedBox(height: 30),
         _buildBirthField(),
+        const SizedBox(height: 30),
         _buildNicknameField(),
+        const SizedBox(height: 30),
         _buildUserIdField(),
+        const SizedBox(height: 30),
         _buildPasswordField(),
         _buildPasswordCheckField(),
-        const SizedBox(height: 50),
+        const SizedBox(height: 80),
         _buildRegisterButton(),
         const SizedBox(height: 50),
         _buildOrText(),
@@ -138,10 +165,20 @@ class _SignupScreenState extends State<SignupScreen> {
 
   //이름 필드
   Widget _buildUsernameField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Text(
+              'TripFlow',
+              style: GoogleFonts.indieFlower(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF003680),
+              ),
+            ),
+          ),
+          const SizedBox(height: 50),
           const Text(
             "이름",
             style: TextStyle(
@@ -168,20 +205,18 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor, // Change the color as needed
+                  color: Color(0xFF003680), // Change the color as needed
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   // 이메일 필드
   Widget _buildEmailField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -208,7 +243,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: secondaryColor, // Change the color as needed
+                        color: Color(0xFF003680), // Change the color as needed
                       ),
                     ),
                   ),
@@ -253,20 +288,20 @@ class _SignupScreenState extends State<SignupScreen> {
                   //   }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.transparent,
                     // Set button background color to orange
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                       // Set button border radius
                       side: const BorderSide(
-                          color: secondaryColor// Set button border color to orange
+                          color: Color(0xFF003680)// Set button border color to orange
                       ),
                     ),
                   ),
                   child: const Text(
                     '인증',
-                    style: TextStyle(fontSize: 18, color: secondaryColor),
+                    style: TextStyle(fontSize: 15, color: Color(0xFF003680)),
                   ),
                 ),
               ),
@@ -289,8 +324,7 @@ class _SignupScreenState extends State<SignupScreen> {
           //     ),
           //   )
         ],
-      ),
-    );
+      );
   }
 
   // //인증코드 입력 다이어로그
@@ -415,8 +449,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   //전화번호 필드
   Widget _buildNumberField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -445,20 +478,18 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor,// Change the color as needed
+                  color: Color(0xFF003680),// Change the color as needed
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   //생년월일 필드
   Widget _buildBirthField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -500,7 +531,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: secondaryColor,
+                      color: Color(0xFF003680),
                     ),
                   ),
                 ),
@@ -508,14 +539,12 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   //닉네임 필드
   Widget _buildNicknameField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -544,20 +573,18 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor, // Change the color as needed
+                  color: Color(0xFF003680), // Change the color as needed
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   //아이디 필드
   Widget _buildUserIdField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -586,20 +613,18 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor, // Change the color as needed
+                  color: Color(0xFF003680), // Change the color as needed
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   // 비밀번호 필드
   Widget _buildPasswordField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -627,30 +652,28 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
                 color: hidePassword
                     ? Colors.grey.withOpacity(0.7)
-                    : secondaryColor,
+                    : Color(0xFF003680),
                 icon: Icon(
                   hidePassword ? Icons.visibility_off : Icons.visibility,
                   color: hidePassword
                       ? Colors.grey.withOpacity(0.7)
-                      : secondaryColor,
+                      : Color(0xFF003680),
                 ),
               ),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor, // Change the color as needed
+                  color: Color(0xFF003680), // Change the color as needed
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   // 비밀번호 확인 필드
   Widget _buildPasswordCheckField() {
-    return Flexible(
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
@@ -670,7 +693,7 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor, // Change the color as needed
+                  color: Color(0xFF003680), // Change the color as needed
                 ),
               ),
               // focusedBorder: OutlineInputBorder(
@@ -682,91 +705,107 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   // 회원가입 버튼
   Widget _buildRegisterButton() {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return InkWell(
-      child: Container(
-        width: screenWidth, // 원하는 너비 설정
-        height: 50, // 원하는 높이 설정
-        decoration: BoxDecoration(
-          color: secondaryColor, // 버튼 배경색 설정
-          borderRadius: BorderRadius.circular(10.0), // 원하는 모양 설정
+    return Container(
+      width: screenWidth,
+      child: ElevatedButton(
+        onPressed: () async {
+          if (validateAndSave()) {
+            setState(() {
+              isApiCallProcess = true;
+            });
+
+            SignupRequestModel model = SignupRequestModel(
+              username: username,
+              nickname: nickname,
+              userId: userId,
+              password: password,
+              email: email,
+              phoneNumber: phoneNumber,
+              birth: birthDate
+            );
+
+            UserService.register(model).then(
+                  (result) {
+                setState(() {
+                  isApiCallProcess = false;
+                });
+
+                if (result.value != null) {
+                  showCustomSnackBar(context, '가입이 완료되었습니다.');
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                } else {
+                  showCustomSnackBar(context, '회원가입에 실패하였습니다. 다시 시도해주세요.');
+                }
+              },
+            );
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          backgroundColor: Colors.blue,
         ),
-        child: const Center(
-          child: Text(
-            "등록하기",
-            style: TextStyle(
-              color: Colors.white, // 텍스트 색상 설정
-              fontSize: 18, // 텍스트 크기 설정
-            ),
+        child: Text(
+          '등록하기',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.white,
           ),
         ),
       ),
-      onTap: () async {
-        if (validateAndSave()) {
-          setState(() {
-            isApiCallProcess = true;
-          });
-
-          SignupRequestModel model = SignupRequestModel(
-            username: username,
-            nickname: nickname,
-            userId: userId,
-            password: password,
-            email: email,
-            phoneNumber: phoneNumber,
-            birth: birthDate
-          );
-
-          UserService.register(model).then(
-                (result) {
-              setState(() {
-                isApiCallProcess = false;
-              });
-
-              if (result.value != null) {
-                FormHelper.showSimpleAlertDialog(
-                  context,
-                  Config.appName,
-                  "가입이 완료되었습니다.",
-                  "확인",
-                      () {
-                    Future.delayed(const Duration(seconds: 1), () {
-                      Navigator.of(context).pop(); // Dismiss the dialog after a delay
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //   context,
-                      //   '/login',
-                      //       (route) => false,
-                      // );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
-                    });
-                  },
-                );
-              } else {
-                FormHelper.showSimpleAlertDialog(
-                  context,
-                  Config.appName,
-                  "회원가입에 실패하였습니다. 입력하신 정보를 다시 확인해주세요.",
-                  "확인",
-                      () {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  },
-                );
-              }
-            },
-          );
-        }
-      },
     );
+      // onTap: () async {
+      //   if (validateAndSave()) {
+      //     setState(() {
+      //       isApiCallProcess = true;
+      //     });
+      //
+      //     SignupRequestModel model = SignupRequestModel(
+      //       username: username,
+      //       nickname: nickname,
+      //       userId: userId,
+      //       password: password,
+      //       email: email,
+      //       phoneNumber: phoneNumber,
+      //       birth: birthDate
+      //     );
+      //
+      //     UserService.register(model).then(
+      //           (result) {
+      //         setState(() {
+      //           isApiCallProcess = false;
+      //         });
+      //
+      //         if (result.value != null) {
+      //           showCustomSnackBar(context, '가입이 완료되었습니다.');
+      //           Navigator.pushReplacement(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => LoginScreen()),
+      //           );
+      //         } else {
+      //           FormHelper.showSimpleAlertDialog(
+      //             context,
+      //             Config.appName,
+      //             "회원가입에 실패하였습니다. 입력하신 정보를 다시 확인해주세요.",
+      //             "확인",
+      //                 () {
+      //               Navigator.of(context, rootNavigator: true).pop();
+      //             },
+      //           );
+      //         }
+      //       },
+      //     );
+      //   }
+      // },
   }
 
   // OR 텍스트
@@ -796,7 +835,7 @@ class _SignupScreenState extends State<SignupScreen> {
               TextSpan(
                 text: '로그인 하기',
                 style: const TextStyle(
-                  color: secondaryColor,
+                  color: Color(0xFF003680),
                   fontWeight: FontWeight.bold,
                 ),
                 recognizer: TapGestureRecognizer()
