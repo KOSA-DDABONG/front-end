@@ -10,7 +10,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../config.dart';
 import '../../constants.dart';
-import '../../widget/appBar.dart';
+import '../../widget/header.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -731,25 +731,25 @@ class _SignupScreenState extends State<SignupScreen> {
               });
 
               if (result.value != null) {
-                FormHelper.showSimpleAlertDialog(
-                  context,
-                  Config.appName,
-                  "가입이 완료되었습니다.",
-                  "확인",
-                      () {
-                    Future.delayed(const Duration(seconds: 1), () {
-                      Navigator.of(context).pop(); // Dismiss the dialog after a delay
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //   context,
-                      //   '/login',
-                      //       (route) => false,
-                      // );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
-                    });
-                  },
+                // FormHelper.showSimpleAlertDialog(
+                //   context,
+                //   Config.appName,
+                //   "가입이 완료되었습니다.",
+                //   "확인",
+                //       () {
+                //     Future.delayed(const Duration(seconds: 1), () {
+                //       Navigator.of(context).pop(); // Dismiss the dialog after a delay
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(builder: (context) => LoginScreen()),
+                //       );
+                //     });
+                //   },
+                // );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('가입이 완료되었습니다.'),
+                  ),
                 );
               } else {
                 FormHelper.showSimpleAlertDialog(

@@ -11,7 +11,7 @@ import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
 import '../../responsive.dart';
 import '../../service/user_service.dart';
-import '../../widget/appBar.dart';
+import '../../widget/header.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -47,12 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void loadPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Load the checkbox state
     setState(() {
       rememberId = prefs.getBool('rememberId') ?? false;
     });
 
-    // Load the email field text if the checkbox is checked
     if (rememberId) {
       setState(() {
         userId = prefs.getString('userId') ?? '';
@@ -64,10 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void savePreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Save the checkbox state
     prefs.setBool('rememberId', rememberId);
 
-    // Save the email field text if the checkbox is checked
     if (rememberId) {
       prefs.setString('userId', userId ?? '');
     }
@@ -87,10 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Positioned(
-            // right: 0,
             bottom: 0,
             top: 0,
-            // left: 0,
             child: Opacity(
               opacity: 0.15, // 이미지를 연하게 설정
               child: Image.asset(
@@ -105,18 +99,17 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 ProgressHUD(
-                    inAsyncCall: isApiCallProcess,
-                    opacity: 0.3,
-                    key: UniqueKey(),
-                    child: Form(
-                      key: globalFormKey,
-                      // child: _loginUI(context),
-                      child: Responsive(
-                        mobile: _loginUIMobile(context),
-                        tablet: _loginUITablet(context),
-                        desktop: _loginUIDesktop(context),
-                      ),
-                    )
+                  inAsyncCall: isApiCallProcess,
+                  opacity: 0.3,
+                  key: UniqueKey(),
+                  child: Form(
+                    key: globalFormKey,
+                    child: Responsive(
+                      mobile: _loginUIMobile(context),
+                      tablet: _loginUITablet(context),
+                      desktop: _loginUIDesktop(context),
+                    ),
+                  )
                 )
               ],
             ),
@@ -232,7 +225,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-// Update _buildPasswordField method
   Widget _buildPasswordField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-//  로그인 버튼
+  // 로그인 버튼
   Widget _buildLoginButton(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -326,7 +318,6 @@ class _LoginScreenState extends State<LoginScreen> {
               isApiCallProcess = true;
             });
             try {
-              // 로그인 API 호출
               final model = LoginRequestModel(userid: userId, password: password);
               final result = await SessionService.login(model);
 
@@ -387,80 +378,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-
-    // return InkWell(
-    //   child: Container(
-    //     width: screenWidth, // 원하는 너비 설정
-    //     height: 50, // 원하는 높이 설정
-    //     decoration: BoxDecoration(
-    //       color: secondaryColor, // 버튼 배경색 설정
-    //       borderRadius: BorderRadius.circular(5.0), // 원하는 모양 설정
-    //     ),
-    //     child: const Center(
-    //       child: Text(
-    //         "로그인",
-    //         style: TextStyle(
-    //           color: Colors.white, // 텍스트 색상 설정
-    //           fontSize: 18, // 텍스트 크기 설정
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    //   onTap: () async {
-    //     if (validateAndSave()) {
-    //       setState(() {
-    //         isApiCallProcess = true;
-    //       });
-    //       try {
-    //         // 로그인 API 호출
-    //         final model = LoginRequestModel(userid: userId, password: password);
-    //         final result = await SessionService.login(model);
-    //
-    //         if (result.value != null) {
-    //           savePreferences();
-    //           final userProfileResult = await UserService.getUserProfile();
-    //           print("Here is LoginPage : ${userProfileResult.value}");
-    //
-    //           setState(() {
-    //             isApiCallProcess = false;
-    //           });
-    //
-    //           Navigator.push(
-    //             context,
-    //             MaterialPageRoute(
-    //               builder: (context) => MyMenuScreen(),
-    //             ),
-    //           );
-    //
-    //         } else {
-    //           setState(() {
-    //             isApiCallProcess = false;
-    //           });
-    //
-    //           ScaffoldMessenger.of(context).showSnackBar(
-    //             const SnackBar(
-    //               content: Text('로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.'),
-    //             ),
-    //           );
-    //         }
-    //       } catch (e) {
-    //           setState(() {
-    //             isApiCallProcess = false;
-    //           });
-    //           ScaffoldMessenger.of(context).showSnackBar(
-    //             SnackBar(
-    //               content: Text('에러가 발생했습니다: $e'),
-    //             ),
-    //           );
-    //       }
-    //       //   finally {
-    //       //   setState(() {
-    //       //     isApiCallProcess = false;
-    //       //   });
-    //       // }
-    //     }
-    //   },
-    // );
   }
 
   // OR 텍스트
@@ -495,7 +412,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    // Navigator.pushNamed(context, '/user/login');
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignupScreen()),
