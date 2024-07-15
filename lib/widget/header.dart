@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/menu/my_menu_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -83,7 +84,10 @@ class notLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                //
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => MyMenuScreen()),
+                );
               },
               child: Text(
                 'MY PAGE',
@@ -174,23 +178,31 @@ class afterLoginHeader extends AppBar {
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Image.asset(
-              '../assets/images/tripflow_logo.png', // Update the path to your logo image
-              height: 30,
-              color: Color(0xFF003680),
-            ),
-            SizedBox(width: 5,),
-            Text(
-              'TripFlow',
-              style: GoogleFonts.indieFlower(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context!,
+              MaterialPageRoute(builder: (context) => LandingScreen()),
+            );
+          },
+          child: Row(
+            children: [
+              Image.asset(
+                '../assets/images/tripflow_logo.png',
+                height: 30,
                 color: Color(0xFF003680),
               ),
-            ),
-          ],
+              SizedBox(width: 5,),
+              Text(
+                'TripFlow',
+                style: GoogleFonts.indieFlower(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF003680),
+                ),
+              ),
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -233,7 +245,10 @@ class afterLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => MyMenuScreen()),
+                );
               },
               child: Text(
                 'MY PAGE',
