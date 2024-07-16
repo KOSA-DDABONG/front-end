@@ -694,12 +694,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   color: Color(0xFF003680), // Change the color as needed
                 ),
               ),
-              // focusedBorder: OutlineInputBorder(
-              //   borderRadius: BorderRadius.circular(10),
-              //   borderSide: BorderSide(
-              //     color: Color(0xffd86a04), // 클릭 시 테두리 색상 변경
-              //   ),
-              // ),
             ),
           ),
         ],
