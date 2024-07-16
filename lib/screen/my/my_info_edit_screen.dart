@@ -15,10 +15,13 @@ class MyInfoEditScreen extends StatefulWidget {
 
 class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   bool isApiCallProcess = false;
+  bool hidePrevPassword = true;
   bool hidePassword = true;
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   String? _imageUrl;  // 웹 플랫폼용 이미지 URL
   File? _image;      // 모바일/데스크톱 플랫폼용 이미지 파일
+  String? password;
+  String? checkpassword;
 
   @override
   void initState() {
@@ -93,14 +96,25 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
                     ),
                     const SizedBox(width: 20),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ElevatedButton(
                           onPressed: _getImage,
-                          child: Text('이미지 변경'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, // Background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                          child: Text(
+                            '이미지 변경',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
+                        SizedBox(height: 10,),
                         Text(
-                          '프로필 이미지 참고사항\n최소한 400 x 400px 이상 / 파일 크기 2MB 미만',
-                          textAlign: TextAlign.center,
+                          '* 프로필 이미지 참고사항\n최소한 400 x 400px 이상 / 파일 크기 2MB 미만',
+                          textAlign: TextAlign.left,
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -141,33 +155,188 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
-          ProfileEditFormField(
-            label: '현재 비밀번호',
-            hint: '현재 비밀번호',
-          ),
-          ProfileEditFormField(
-            label: '변경 비밀번호',
-            hint: '변경 비밀번호',
-            validationMessage: '대소문자, 숫자, 특수문자, 9자 이상',
-            validationColor: Colors.green,
-          ),
-          ProfileEditFormField(
-            label: '변경 비밀번호 확인',
-            hint: '변경 비밀번호 확인',
-          ),
+          _buildPrevPasswordField(),
           SizedBox(height: 20),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('수정 완료'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                textStyle: TextStyle(fontSize: 18),
+          _buildPasswordField(),
+          _buildPasswordCheckField(),
+          SizedBox(height: 50),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white, // Background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                  ),
+                  child: Text(
+                    '취소',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, // Background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                  ),
+                  child: Text(
+                    '수정 완료',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: () {},
+          //     child: Text('수정 완료'),
+          //     style: ElevatedButton.styleFrom(
+          //       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+          //       textStyle: TextStyle(fontSize: 18),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrevPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "현재 비밀번호",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          onChanged: (val) => password = val,
+          validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
+          obscureText: hidePrevPassword,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "비밀번호를 입력하세요.",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  hidePrevPassword = !hidePrevPassword;
+                });
+              },
+              color: hidePrevPassword
+                  ? Colors.grey.withOpacity(0.7)
+                  : Color(0xFF003680),
+              icon: Icon(
+                hidePrevPassword ? Icons.visibility_off : Icons.visibility,
+                color: hidePrevPassword
+                    ? Colors.grey.withOpacity(0.7)
+                    : Color(0xFF003680),
+              ),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFF003680), // Change the color as needed
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  // 비밀번호 필드
+  Widget _buildPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "변경 비밀번호",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          onChanged: (val) => password = val,
+          validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
+          obscureText: hidePassword,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "비밀번호를 입력하세요.",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  hidePassword = !hidePassword;
+                });
+              },
+              color: hidePassword
+                  ? Colors.grey.withOpacity(0.7)
+                  : Color(0xFF003680),
+              icon: Icon(
+                hidePassword ? Icons.visibility_off : Icons.visibility,
+                color: hidePassword
+                    ? Colors.grey.withOpacity(0.7)
+                    : Color(0xFF003680),
+              ),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFF003680), // Change the color as needed
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 비밀번호 확인 필드
+  Widget _buildPasswordCheckField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          onChanged: (val) => checkpassword = val,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '비밀번호가 입력되지 않았습니다.';
+            } else if (val != password) {
+              return '비밀번호가 일치하지 않습니다.';
+            }
+            return null;
+          },
+          obscureText: hidePassword,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "비밀번호를 한번 더 입력하세요.",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFF003680), // Change the color as needed
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

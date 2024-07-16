@@ -52,7 +52,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     // 기본 이미지
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('../assets/images/noImg.jpg'), // 기본 이미지 경로
+                      backgroundColor: Colors.grey[200],
+                      child: Icon(Icons.person, size: 50)
+                      // backgroundImage: AssetImage('../assets/images/noImg.jpg'), // 기본 이미지 경로
                     ),
                     const SizedBox(width: 20),
 
