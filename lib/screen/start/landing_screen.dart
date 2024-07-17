@@ -44,7 +44,8 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
         context: context,
       ),
       extendBodyBehindAppBar: true,
-      backgroundColor: Color(0xffe4f4ff),
+      // backgroundColor: Color(0xffe4f4ff),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Background image with custom shape and blur effect
