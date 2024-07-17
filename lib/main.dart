@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/screen/menu/my_menu_screen.dart';
 import 'package:front/screen/my/my_info_screen.dart';
+import 'package:front/screen/review/add_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.blue,
       ),
       // home: LandingScreen(),
-      home: MyMenuScreen(),
+      home: AddReviewScreen(),
     );
   }
 }
