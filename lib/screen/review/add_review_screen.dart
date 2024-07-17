@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../component/header.dart';
 
@@ -17,11 +17,54 @@ class AddReviewScreen extends StatefulWidget {
 
 class _AddReviewScreenState extends State<AddReviewScreen> {
   final TextEditingController _textController = TextEditingController();
+  final TextEditingController _hashtagController = TextEditingController();
   final List<XFile?> _images = List<XFile?>.filled(5, null, growable: false);
   final ImagePicker _picker = ImagePicker();
-  final List<String> _hashtags = ['부산', '해변', '해운대', '도심 속 바다', '휴양', '뜨거움'];
+  final List<String> _hashtags = [];
   List<String?> _imageUrls = List<String?>.filled(5, null, growable: false);  // 웹 플랫폼용 이미지 URL
   List<File?> _imageFiles = List<File?>.filled(5, null, growable: false);    // 모바일/데스크톱 플랫폼용 이미지 파일
+  Position? _currentPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  void _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // 위치 서비스가 활성화되어 있는지 확인합니다.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // 위치 서비스를 활성화하도록 요청합니다.
+      await Geolocator.openLocationSettings();
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // 권한이 거부된 경우 처리합니다.
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // 권한이 영구적으로 거부된 경우 처리합니다.
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    setState(() {
+      _currentPosition = position;
+    });
+  }
 
   void _pickImage(int index) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -38,6 +81,22 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     } else {
       print('이미지 선택이 취소되었습니다.');
     }
+  }
+
+  void _addHashtag() {
+    final String tag = _hashtagController.text.trim();
+    if (tag.isNotEmpty && !_hashtags.contains(tag)) {
+      setState(() {
+        _hashtags.add(tag);
+      });
+      _hashtagController.clear();
+    }
+  }
+
+  void _removeHashtag(String tag) {
+    setState(() {
+      _hashtags.remove(tag);
+    });
   }
 
   void _submit() {
@@ -65,20 +124,24 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
               Container(
                 height: 300,
                 width: 300,
-                child: GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(37.5665, 126.9780), // 서울의 위도와 경도
-                    zoom: 14.0,
+                child: _currentPosition == null
+                    ? Center(child: CircularProgressIndicator())
+                    : NaverMap(
+                  options: NaverMapViewOptions(
+                    initialCameraPosition: NCameraPosition(
+                      target: NLatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+                      zoom: 14,
+                    ),
+                    mapType: NMapType.basic,
+                    activeLayerGroups: [NLayerGroup.building, NLayerGroup.transit],
                   ),
-                  markers: {
-                    Marker(markerId: MarkerId('spot1'), position: LatLng(37.5665, 126.9780)),
-                    // Add more markers here
+                  onMapReady: (myMapController) {
+                    debugPrint("네이버 맵 로딩됨!");
+                  },
+                  onMapTapped: (point, latLng) {
+                    debugPrint("${latLng.latitude}, ${latLng.longitude}");
                   },
                 ),
-                // child: KakaoMap(
-                //   onMapCreated: onMapCreated,
-                //   initialCameraPosition: _kInitialPosition
-                // ),
               ),
               SizedBox(height: 20),
               Row(
@@ -107,11 +170,29 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 ),
               ),
               SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _hashtagController,
+                      decoration: InputDecoration(
+                        hintText: '해시태그를 입력하세요',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: _addHashtag,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
               Wrap(
                 spacing: 10,
                 children: _hashtags.map((tag) {
                   return Chip(
-                    label: Text(tag),
+                    label: Text('#$tag'),
+                    onDeleted: () => _removeHashtag(tag),
                   );
                 }).toList(),
               ),

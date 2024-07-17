@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:front/screen/menu/my_menu_screen.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
@@ -11,7 +12,15 @@ import 'package:provider/provider.dart';
 import 'constants.dart';
 import 'controller/menu_app_controller.dart';
 
-void main() {
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // var naverMapApiKey = 'Wqc2BU96WJi2KiRvnF0DgmOqlo7HUA2QuiYuQOmf';
+  // await NaverMapSdk.instance.initialize(
+  //   clientId: naverMapApiKey,
+  //   onAuthFailed: (ex) {
+  //     debugPrint("********* 네이버맵 인증오류 : $ex *********");
+  //   },
+  // );
   runApp(
     ChangeNotifierProvider(
       create: (context) => MenuAppController(),
@@ -19,6 +28,7 @@ void main() {
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   // const MyApp({super.key});
