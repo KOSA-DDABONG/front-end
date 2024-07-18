@@ -48,7 +48,10 @@ class notLoginHeader extends AppBar {
           children: [
             TextButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => LandingScreen()),
+                );
               },
               child: Text(
                 'HOME',
@@ -63,7 +66,7 @@ class notLoginHeader extends AppBar {
                 //
               },
               child: Text(
-                'MY TRIP',
+                'TRIP',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,
@@ -209,7 +212,10 @@ class afterLoginHeader extends AppBar {
           children: [
             TextButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => LandingScreen()),
+                );
               },
               child: Text(
                 'HOME',
@@ -224,7 +230,7 @@ class afterLoginHeader extends AppBar {
                 // Add navigation logic here
               },
               child: Text(
-                'MY TRIP',
+                'TRIP',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,
