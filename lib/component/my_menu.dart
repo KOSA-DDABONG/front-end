@@ -6,10 +6,10 @@ import 'package:front/screen/my/my_review_list_screen.dart';
 import 'package:front/screen/my/my_trip_schedule_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../component/header.dart';
-import '../../controller/menu_app_controller.dart';
-import '../../responsive.dart';
-import '../../component/side_menu.dart';
+import 'header.dart';
+import '../controller/my_menu_controller.dart';
+import '../responsive.dart';
+import 'side_menu.dart';
 
 class MyMenuScreen extends StatelessWidget {
   final Map<String, Widget> _screens = {
@@ -57,7 +57,7 @@ class MyMenuScreen extends StatelessWidget {
                     flex: 5,
                     //MenuAppController에서 시작페이지 변경 가능
                     child: _screens[
-                    context.watch<MenuAppController>().selectedScreen] ??
+                    context.watch<MyMenuController>().selectedScreen] ??
                         Container(),
                   ),
                 ],

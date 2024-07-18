@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:front/screen/menu/my_menu_screen.dart';
+import 'package:front/component/my_menu.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
-import 'controller/menu_app_controller.dart';
+import 'controller/my_menu_controller.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ void main() async {
   // );
   runApp(
     ChangeNotifierProvider(
-      create: (context) => MenuAppController(),
+      create: (context) => MyMenuController(),
       child: MyApp(),
     ),
   );

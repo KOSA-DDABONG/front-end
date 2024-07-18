@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/menu_app_controller.dart';
+import '../../controller/my_menu_controller.dart';
 
 
 class MyReviewListScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuAppController>().setSelectedScreen('myReview');
+      context.read<MyMenuController>().setSelectedScreen('myReview');
     });
   }
 

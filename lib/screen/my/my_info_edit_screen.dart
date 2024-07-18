@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
-import '../../controller/menu_app_controller.dart';
+import '../../controller/my_menu_controller.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
   const MyInfoEditScreen({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuAppController>().setSelectedScreen('myEdit');
+      context.read<MyMenuController>().setSelectedScreen('myEdit');
     });
   }
 
