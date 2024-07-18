@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/menu_app_controller.dart';
+import '../../controller/my_menu_controller.dart';
 
 
 class MyTripScheduleScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuAppController>().setSelectedScreen('mySchedule');
+      context.read<MyMenuController>().setSelectedScreen('mySchedule');
     });
   }
 

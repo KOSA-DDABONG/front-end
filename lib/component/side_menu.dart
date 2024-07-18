@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/component/sub_list_tile.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/menu_app_controller.dart';
+import '../controller/my_menu_controller.dart';
 import 'list_tile.dart';
 
 class SideMenu extends StatelessWidget {
@@ -12,8 +12,8 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedScreen = context.watch<MenuAppController>().selectedScreen;
-    final showSubMenu = context.watch<MenuAppController>().showSubMenu;
+    final selectedScreen = context.watch<MyMenuController>().selectedScreen;
+    final showSubMenu = context.watch<MyMenuController>().showSubMenu;
 
     return Drawer(
       backgroundColor: Colors.transparent,
@@ -33,8 +33,8 @@ class SideMenu extends StatelessWidget {
             title: "개인 정보",
             svgSrc: "../assets/icons/menu_dashboard.svg",
             press: () {
-              context.read<MenuAppController>().toggleSubMenu();
-              context.read<MenuAppController>().setSelectedScreen('myInfo');
+              context.read<MyMenuController>().toggleSubMenu();
+              context.read<MyMenuController>().setSelectedScreen('myInfo');
             },
             selected: showSubMenu,
             children: showSubMenu
@@ -43,14 +43,14 @@ class SideMenu extends StatelessWidget {
                       title: "내 프로필",
                       selected: selectedScreen == 'myInfo',
                       press: () {
-                        context.read<MenuAppController>().setSelectedScreen('myInfo');
+                        context.read<MyMenuController>().setSelectedScreen('myInfo');
                       },
                     ),
                     DrawerSubListTile(
                       title: "내 정보 수정",
                       selected: selectedScreen == 'myEdit',
                       press: () {
-                        context.read<MenuAppController>().setSelectedScreen('myEdit');
+                        context.read<MyMenuController>().setSelectedScreen('myEdit');
                       },
                     ),
                   ]
@@ -60,7 +60,7 @@ class SideMenu extends StatelessWidget {
             title: "나의 일정",
             svgSrc: "../assets/icons/menu_tran.svg",
             press: () {
-              context.read<MenuAppController>().setSelectedScreen('mySchedule');
+              context.read<MyMenuController>().setSelectedScreen('mySchedule');
             },
             selected: selectedScreen == 'mySchedule',
           ),
@@ -68,7 +68,7 @@ class SideMenu extends StatelessWidget {
             title: "나의 후기",
             svgSrc: "../assets/icons/menu_doc.svg",
             press: () {
-              context.read<MenuAppController>().setSelectedScreen('myReview');
+              context.read<MyMenuController>().setSelectedScreen('myReview');
             },
             selected: selectedScreen == 'myReview',
           ),
@@ -76,7 +76,7 @@ class SideMenu extends StatelessWidget {
             title: "나의 좋아요",
             svgSrc: "../assets/icons/menu_task.svg",
             press: () {
-              context.read<MenuAppController>().setSelectedScreen('myLikes');
+              context.read<MyMenuController>().setSelectedScreen('myLikes');
             },
             selected: selectedScreen == 'myLikes',
           ),

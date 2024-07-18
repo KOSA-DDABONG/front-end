@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../constants.dart';
-import '../../controller/menu_app_controller.dart';
+import '../../controller/my_menu_controller.dart';
 
 
 class MyInfoScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuAppController>().setSelectedScreen('myInfo');
+      context.read<MyMenuController>().setSelectedScreen('myInfo');
     });
   }
 
@@ -65,7 +65,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     // 회원정보 수정 버튼
                     IconButton(
                       onPressed: () {
-                        context.read<MenuAppController>().setSelectedScreen('myEdit');
+                        context.read<MyMenuController>().setSelectedScreen('myEdit');
                       },
                       icon: Icon(Icons.edit),
                       color: Color(0xFF003680),
@@ -178,7 +178,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  context.read<MenuAppController>().setSelectedScreen('mySchedule');
+                  context.read<MyMenuController>().setSelectedScreen('mySchedule');
                 },
                 child: Text(
                   '3건',
@@ -192,7 +192,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               const SizedBox(width: 10),  // 텍스트와 아이콘 사이 간격
               GestureDetector(
                 onTap: () {
-                  context.read<MenuAppController>().setSelectedScreen('mySchedule');
+                  context.read<MyMenuController>().setSelectedScreen('mySchedule');
                 },
                 child: Icon(Icons.arrow_forward),
               ),
@@ -255,7 +255,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                context.read<MenuAppController>().setSelectedScreen('myReview');
+                context.read<MyMenuController>().setSelectedScreen('myReview');
               },
               child: Text(
                 '3건',
@@ -269,7 +269,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             const SizedBox(width: 10),  // 텍스트와 아이콘 사이 간격
             GestureDetector(
               onTap: () {
-                context.read<MenuAppController>().setSelectedScreen('myReview');
+                context.read<MyMenuController>().setSelectedScreen('myReview');
               },
               child: Icon(Icons.arrow_forward),
             ),
@@ -353,7 +353,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                context.read<MenuAppController>().setSelectedScreen('myLikes');
+                context.read<MyMenuController>().setSelectedScreen('myLikes');
               },
               child: Text(
                 '3건',
@@ -367,7 +367,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             const SizedBox(width: 10),  // 텍스트와 아이콘 사이 간격
             GestureDetector(
               onTap: () {
-                context.read<MenuAppController>().setSelectedScreen('myLikes');
+                context.read<MyMenuController>().setSelectedScreen('myLikes');
               },
               child: Icon(Icons.arrow_forward),
             ),

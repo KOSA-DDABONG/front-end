@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
-import 'controller/menu_app_controller.dart';
+import 'controller/my_menu_controller.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ void main() async {
   // );
   runApp(
     ChangeNotifierProvider(
-      create: (context) => MenuAppController(),
+      create: (context) => MyMenuController(),
       child: MyApp(),
     ),
   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/menu_app_controller.dart';
+import '../../controller/my_menu_controller.dart';
 
 
 class MyLikesListScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuAppController>().setSelectedScreen('myLikes');
+      context.read<MyMenuController>().setSelectedScreen('myLikes');
     });
   }
 
