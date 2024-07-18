@@ -27,6 +27,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   final int _maxHashtags = 5;
   bool _showHashtagLimitError = false;
   bool _showDuplicateHashtagError = false;
+  bool _showNoHashtagError = false;
 
   @override
   void initState() {
@@ -104,25 +105,37 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   void _addHashtag() {
     final String tag = _hashtagController.text.trim();
-    if (tag.isNotEmpty && !_hashtags.contains(tag)) {
-      if (_hashtags.length < _maxHashtags) {
-        setState(() {
-          _hashtags.add(tag);
-          _showHashtagLimitError = false;
-          _showDuplicateHashtagError = false;
-        });
-        _hashtagController.clear();
+    if(tag.isEmpty) {
+      setState(() {
+        _showNoHashtagError = true;
+        _showHashtagLimitError = false;
+        _showDuplicateHashtagError = false;
+      });
+    }
+    else {
+      if (tag.isNotEmpty && !_hashtags.contains(tag)) {
+        if (_hashtags.length < _maxHashtags) {
+          setState(() {
+            _hashtags.add(tag);
+            _showHashtagLimitError = false;
+            _showDuplicateHashtagError = false;
+            _showNoHashtagError = false;
+          });
+          _hashtagController.clear();
+        } else {
+          setState(() {
+            _showHashtagLimitError = true;
+            _showDuplicateHashtagError = false;
+            _showNoHashtagError = false;
+          });
+        }
       } else {
         setState(() {
-          _showHashtagLimitError = true;
-          _showDuplicateHashtagError = false;
+          _showHashtagLimitError = false;
+          _showDuplicateHashtagError = true;
+          _showNoHashtagError = false;
         });
       }
-    } else {
-      setState(() {
-        _showHashtagLimitError = false;
-        _showDuplicateHashtagError = true;
-      });
     }
   }
 
@@ -155,6 +168,16 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                '여행 후기 작성',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20,),
+              Text(
+                '일정 지도',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10,),
               Container(
                 height: 300,
                 width: double.infinity,
@@ -164,6 +187,11 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 ),
               ),
               SizedBox(height: 20),
+              Text(
+                '사진 업로드',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(5, (index) {
@@ -190,10 +218,15 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 }),
               ),
               SizedBox(height: 20),
+              Text(
+                '후기 작성',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10,),
               TextField(
                 controller: _textController,
                 decoration: InputDecoration(
-                  hintText: '여름 휴가로 부산에 놀러 왔습니다. ~~',
+                  hintText: 'ex) 여름 휴가를 목적으로 부산에 놀러 왔습니다.',
                   counterText: '',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
@@ -213,13 +246,18 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 ),
               ),
               SizedBox(height: 20),
+              Text(
+                '해시태그 입력',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10,),
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _hashtagController,
                       decoration: InputDecoration(
-                        hintText: '해시태그를 입력하세요',
+                        hintText: '해시태그를 입력하세요. ex) 힐링',
                       ),
                     ),
                   ),
@@ -230,6 +268,14 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 ],
               ),
               SizedBox(height: 10),
+              if (_showNoHashtagError)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    '입력된 해시태그가 없습니다.',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
               if (_showHashtagLimitError)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -251,12 +297,22 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 spacing: 10,
                 children: _hashtags.map((tag) {
                   return Chip(
-                    label: Text('#$tag'),
+                    label: Text(
+                      '#$tag',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
                     onDeleted: () => _removeHashtag(tag),
+                    backgroundColor: Colors.grey[200],
+                    deleteIconColor: Colors.grey[600],
+                    // shape: RoundedRectangleBorder(
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+                    shape: StadiumBorder(),
+                    elevation: 4, // 그림자 설정
                   );
                 }).toList(),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -295,6 +351,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 50),
             ],
           ),
         ),
