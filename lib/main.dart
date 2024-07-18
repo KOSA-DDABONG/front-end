@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:front/screen/menu/my_menu_screen.dart';
+import 'package:front/component/my_menu.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';

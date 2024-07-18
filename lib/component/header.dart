@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/screen/menu/my_menu_screen.dart';
+import 'package:front/component/my_menu.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
