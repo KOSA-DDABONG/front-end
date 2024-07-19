@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:front/component/my_menu.dart';
@@ -7,6 +8,7 @@ import 'package:front/screen/start/login_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
@@ -21,6 +23,10 @@ void main() async {
   //     debugPrint("********* 네이버맵 인증오류 : $ex *********");
   //   },
   // );
+
+  // if (kIsWeb) {
+  //   GoogleMapsFlutterPlatform.instance = GoogleMapsFlutterWeb();
+  // }
   runApp(
     ChangeNotifierProvider(
       create: (context) => MyMenuController(),
@@ -45,7 +51,8 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.blue,
       ),
       // home: LandingScreen(),
-      home: AddReviewScreen(),
+      // home: AddReviewScreen(),
+      home: MyMenuScreen(),
     );
   }
 }

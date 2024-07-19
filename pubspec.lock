@@ -369,7 +369,7 @@ packages:
     source: hosted
     version: "2.10.0"
   google_maps_flutter_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: google_maps_flutter_platform_interface
       sha256: bd60ca330e3c7763b95b477054adec338a522d982af73ecc520b232474063ac5
