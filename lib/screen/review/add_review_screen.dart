@@ -10,6 +10,9 @@ import 'package:geolocator/geolocator.dart';
 import '../../component/get_map.dart';
 import '../../component/header.dart';
 
+//해결해야할 일
+//지도 api 불러와서 띄우기(웹)
+
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({Key? key}) : super(key: key);
 
