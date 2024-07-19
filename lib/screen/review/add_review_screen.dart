@@ -1,10 +1,17 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../component/get_map.dart';
 import '../../component/header.dart';
+
+//해결해야할 일
+//지도 api 불러와서 띄우기(웹)
 
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({Key? key}) : super(key: key);
@@ -155,6 +162,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // GoogleMapController? _controller;
     return Scaffold(
       appBar: afterLoginHeader(
         automaticallyImplyLeading: false,
@@ -181,10 +189,28 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
               Container(
                 height: 300,
                 width: double.infinity,
-                color: Colors.grey[300],
-                child: Center(
-                  child: Text('지도 이미지'),
-                ),
+                // child: GoogleMap(
+                //   onMapCreated: (controller) {
+                //     _controller = controller;
+                //   },
+                //   initialCameraPosition: CameraPosition(
+                //       target: LatLng(31.5555, 111.3333),
+                //       zoom: 15.0
+                //   ),
+                //   myLocationEnabled: true,
+                //   markers: _buildMarkers(),
+                // ),
+                // child: GoogleMap(
+                //   initialCameraPosition: CameraPosition(
+                //       target: LatLng(31.5555, 111.3333),
+                //       zoom: 16
+                //   ),
+                //   onMapCreated: (controller) {},
+                //   zoomControlsEnabled: false,
+                //   markers: _buildMarkers(),
+                //   mapType: MapType.normal,
+                // ),
+                child: getMap(),
               ),
               SizedBox(height: 20),
               Text(
@@ -250,14 +276,14 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 '해시태그 입력',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _hashtagController,
                       decoration: InputDecoration(
-                        hintText: '해시태그를 입력하세요. ex) 힐링',
+                        hintText: '띄어쓰기 없이 입력하세요. ex) 힐링',
                       ),
                     ),
                   ),
@@ -357,5 +383,14 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         ),
       ),
     );
+  }
+  Set<Marker> _buildMarkers() {
+    return {
+      Marker(
+        markerId: MarkerId('current location'),
+        position: LatLng(31.5555, 111.3333),
+        infoWindow: InfoWindow(title: '현재 위치'),
+      )
+    };
   }
 }
