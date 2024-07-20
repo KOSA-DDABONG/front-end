@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:front/component/my_menu.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
+import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
@@ -54,7 +55,8 @@ class MyApp extends StatelessWidget {
       // home: LandingScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
-      home: ChatbotScreen(),
+      // home: ChatbotScreen(),
+      home: ContactScreen(),
     );
   }
 }
