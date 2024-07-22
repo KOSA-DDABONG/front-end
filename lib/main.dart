@@ -10,6 +10,7 @@ import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
+import 'package:front/screen/trip/result_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,8 @@ class MyApp extends StatelessWidget {
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
       // home: ContactScreen(),
-      home: AllReviewScreen(),
+      // home: AllReviewScreen(),
+      home: ResultScreen()
     );
   }
 }
