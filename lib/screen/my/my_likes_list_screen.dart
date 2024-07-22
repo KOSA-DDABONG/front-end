@@ -115,14 +115,14 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
             '나의 좋아요',
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 50),
           GridView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 30.0,
+              mainAxisSpacing: 30.0,
             ),
             itemCount: 6, // 여기에 실제 데이터의 길이를 넣어야 합니다.
             itemBuilder: (context, index) {

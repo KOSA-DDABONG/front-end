@@ -85,7 +85,7 @@ class _ContactScreenState extends State<ContactScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Image.asset(
-                '/mnt/data/스크린샷 2024-07-20 오후 11.33.50.png', // Update with your map image path
+                '../assets/images/banner.png', // Update with your map image path
                 fit: BoxFit.cover,
               ),
             ),
