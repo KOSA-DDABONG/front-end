@@ -6,6 +6,7 @@ import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
+import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
@@ -54,9 +55,10 @@ class MyApp extends StatelessWidget {
       ),
       // home: LandingScreen(),
       // home: AddReviewScreen(),
-      home: MyMenuScreen(),
+      // home: MyMenuScreen(),
       // home: ChatbotScreen(),
       // home: ContactScreen(),
+      home: AllReviewScreen(),
     );
   }
 }
