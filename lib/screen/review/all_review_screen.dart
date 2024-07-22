@@ -11,14 +11,15 @@ class AllReviewScreen extends StatefulWidget {
 
 class _AllReviewScreenState extends State<AllReviewScreen> {
   List<String> rankingReviews = [
-    'https://via.placeholder.com/150', // Replace with your image URLs or asset paths
-    'https://via.placeholder.com/150',
+    '../assets/images/noImg.jpg', // Replace with your image URLs or asset paths
+    '../assets/images/noImg.jpg',
   ];
 
   List<String> allReviews = [
-    'https://via.placeholder.com/150', // Replace with your image URLs or asset paths
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
+    '../assets/images/noImg.jpg', // Replace with your image URLs or asset paths
+    '../assets/images/noImg.jpg',
+    '../assets/images/noImg.jpg', // Replace with your image URLs or asset paths
+    '../assets/images/noImg.jpg',
     // Add more image URLs or asset paths
   ];
 
@@ -134,7 +135,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> {
                 Expanded(
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                      crossAxisCount: 4,
                       childAspectRatio: 1,
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
