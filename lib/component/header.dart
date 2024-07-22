@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front/component/my_menu.dart';
+import 'package:front/screen/contact/contact_screen.dart';
+import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
+import 'package:front/screen/trip/select_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../screen/start/login_screen.dart';
@@ -63,7 +66,10 @@ class notLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                //
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => SelectScreen()),
+                );
               },
               child: Text(
                 'TRIP',
@@ -75,7 +81,10 @@ class notLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                //
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => AllReviewScreen()),
+                );
               },
               child: Text(
                 'REVIEW',
@@ -102,7 +111,10 @@ class notLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                //
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => ContactScreen()),
+                );
               },
               child: Text(
                 'CONTACT',
@@ -227,7 +239,10 @@ class afterLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => SelectScreen()),
+                );
               },
               child: Text(
                 'TRIP',
@@ -239,7 +254,10 @@ class afterLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => AllReviewScreen()),
+                );
               },
               child: Text(
                 'REVIEW',
@@ -266,7 +284,10 @@ class afterLoginHeader extends AppBar {
             ),
             TextButton(
               onPressed: () {
-                // Add navigation logic here
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => ContactScreen()),
+                );
               },
               child: Text(
                 'CONTACT',
