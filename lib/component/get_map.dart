@@ -7,7 +7,7 @@
 // import 'package:web/src/dom/html.dart';
 //
 // Widget getMap() {
-//   String htmlId = "7";
+//   String htmlId = "map_container";
 //
 //   // ignore: undefined_prefixed_name
 //   ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
@@ -209,7 +209,7 @@ class _GetMapState extends State<getMap> {
   }
 
   Widget _getMap() {
-    String htmlId = "map-container";
+    String htmlId = "map_container";
 
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {

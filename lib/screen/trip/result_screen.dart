@@ -17,6 +17,12 @@ class _ResultScreenState extends State<ResultScreen> {
       {'title': '부산역', 'time': '오전 07:48 - 오전 10:03', 'image': '../assets/images/noImg.jpg'},
       {'title': '부산 돼지 국밥', 'time': '오전 10:10 - 오전 10:45', 'image': '../assets/images/noImg.jpg'},
       {'title': '감천 문화 마을', 'time': '오전 10:45 - 오전 12:00', 'image': '../assets/images/noImg.jpg'},
+      {'title': '부산역', 'time': '오전 07:48 - 오전 10:03', 'image': '../assets/images/noImg.jpg'},
+      {'title': '부산 돼지 국밥', 'time': '오전 10:10 - 오전 10:45', 'image': '../assets/images/noImg.jpg'},
+      {'title': '감천 문화 마을', 'time': '오전 10:45 - 오전 12:00', 'image': '../assets/images/noImg.jpg'},
+      {'title': '부산역', 'time': '오전 07:48 - 오전 10:03', 'image': '../assets/images/noImg.jpg'},
+      {'title': '부산 돼지 국밥', 'time': '오전 10:10 - 오전 10:45', 'image': '../assets/images/noImg.jpg'},
+      {'title': '감천 문화 마을', 'time': '오전 10:45 - 오전 12:00', 'image': '../assets/images/noImg.jpg'},
     ],
     [
       {'title': '해운대 해수욕장', 'time': '오전 09:00 - 오후 12:00', 'image': '../assets/images/noImg.jpg'},
@@ -41,20 +47,23 @@ class _ResultScreenState extends State<ResultScreen> {
             flex: 3,
             child: Column(
               children: [
+                Text(
+                  '생성된 여행 일정',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blueAccent),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Stack(
                       children: [
-                        // Replace with a real map widget if available
-                        Center(child: Image.asset('../assets/images/noImg.jpg')),
                         ...itinerary[selectedDay - 1].asMap().entries.map((entry) {
                           int idx = entry.key;
                           var place = entry.value;
-                          // Dummy positions for the markers
                           return Positioned(
                             top: 50.0 + (idx * 30),
                             left: 50.0 + (idx * 30),
@@ -65,74 +74,190 @@ class _ResultScreenState extends State<ResultScreen> {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('저장'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF58C8E1), // Custom color
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            '저장',
+                            style: TextStyle(color: Color(0xFF005AA7)),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Color(0xFF005AA7), width: 1),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('재생성'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF005AA7), // Custom color
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            '재생성',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF005AA7),
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Color(0xFF005AA7), width: 1),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
           Expanded(
             flex: 2,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(3, (index) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedDay = index + 1;
-                        });
-                      },
-                      child: Text('${index + 1}일차'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDay == index + 1 ? Colors.blue : Colors.grey,
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  }),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: itinerary[selectedDay - 1].length,
-                    itemBuilder: (context, index) {
-                      var place = itinerary[selectedDay - 1][index];
-                      return Card(
-                        child: ListTile(
-                          leading: Image.asset(place['image']!, width: 60, height: 60, fit: BoxFit.cover),
-                          title: Text(place['title']!,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          subtitle: Text(place['time']!, style: TextStyle(fontSize: 14)),
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(3, (index) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedDay = index + 1;
+                          });
+                        },
+                        child: Text('${index + 1}일차'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: selectedDay == index + 1 ? Colors.blue : Colors.grey,
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       );
-                    },
+                    }),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: itinerary[selectedDay - 1].length,
+                      itemBuilder: (context, index) {
+                        var place = itinerary[selectedDay - 1][index];
+                        return Stack(
+                          children: [
+                            if (index < itinerary[selectedDay - 1].length - 1)
+                              Positioned.fill(
+                                left: 12,
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: DashedLine(
+                                    height: double.infinity,
+                                    color: Colors.grey, // Adjusting the height based on ListTile height
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Row(
+                                children: [
+                                  // Display the number outside the tile
+                                  CircleAvatar(
+                                    backgroundColor: Colors.blue,
+                                    radius: 12,
+                                    child: Text(
+                                      '${index + 1}',
+                                      style: TextStyle(color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  // Wrap the ListTile with a Card
+                                  Expanded(
+                                    child: Card(
+                                      child: ListTile(
+                                        leading: Image.asset(place['image']!,
+                                            width: 60, height: 60, fit: BoxFit.cover),
+                                        title: Text(
+                                          place['title']!,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 16),
+                                        ),
+                                        subtitle: Text(place['time']!,
+                                            style: TextStyle(fontSize: 14)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class DashedLine extends StatelessWidget {
+  final double height;
+  final Color color;
+  final double strokeWidth;
+
+  DashedLine({
+    required this.height,
+    required this.color,
+    this.strokeWidth = 1.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      width: 2,
+      child: CustomPaint(
+        painter: DashedLinePainter(color: color, strokeWidth: strokeWidth),
+      ),
+    );
+  }
+}
+
+class DashedLinePainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+
+  DashedLinePainter({required this.color, this.strokeWidth = 2.0});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    double dashWidth = 8,
+        dashSpace = 3,
+        startY = 0;
+    while (startY < size.height) {
+      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashWidth), paint);
+      startY += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
