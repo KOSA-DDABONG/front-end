@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../component/header.dart';
+
 class SelectScreen extends StatefulWidget {
   const SelectScreen({Key? key}) : super(key: key);
 
@@ -16,6 +18,12 @@ class _SelectScreenState extends State<SelectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Text('여행 선택지 페이지');
+    return Scaffold(
+      appBar: afterLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
+      ),
+      body: Text('여행 선택지 페이지')
+    );
   }
 }
