@@ -9,21 +9,25 @@ class AllReviewScreen extends StatefulWidget {
   _AllReviewScreenState createState() => _AllReviewScreenState();
 }
 
-class _AllReviewScreenState extends State<AllReviewScreen> {
+class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
   List<String> rankingReviews = [
-    '../assets/images/noImg.jpg', // Replace with your image URLs or asset paths
-    '../assets/images/noImg.jpg',
+    '../assets/images/noImg.jpg', // Placeholder for 1st place
+    '../assets/images/noImg.jpg', // Placeholder for 2nd place
+    '../assets/images/noImg.jpg', // Placeholder for 3rd place
   ];
 
-  List<String> allReviews = [
-    '../assets/images/noImg.jpg', // Replace with your image URLs or asset paths
-    '../assets/images/noImg.jpg',
-    '../assets/images/noImg.jpg', // Replace with your image URLs or asset paths
-    '../assets/images/noImg.jpg',
-    // Add more image URLs or asset paths
-  ];
+  List<String> allReviews = List.generate(20, (index) => '../assets/images/noImg.jpg');
 
   final TextEditingController _searchController = TextEditingController();
+
+  late TabController _tabController;
+  bool _isContestExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
 
   void _showImageModal(BuildContext context, String imageUrl) {
     showDialog(
@@ -35,9 +39,10 @@ class _AllReviewScreenState extends State<AllReviewScreen> {
             height: MediaQuery.of(context).size.height * 0.8,
             child: Column(
               children: [
-                Image.network(imageUrl), // Replace with Image.asset if using local assets
-                SizedBox(height: 10),
-                Text("Frame 79413"),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(imageUrl),
+                ),
                 SizedBox(height: 10),
                 Text("여름 휴가로 부산에 놀러 왔습니다. 재미지네요."),
                 SizedBox(height: 10),
@@ -59,9 +64,13 @@ class _AllReviewScreenState extends State<AllReviewScreen> {
   }
 
   void _onSearch() {
-    // Implement your search functionality here
     print("Searching for: ${_searchController.text}");
-    // For now, just print the search value. Replace this with your actual search logic.
+  }
+
+  void _toggleContestSection() {
+    setState(() {
+      _isContestExpanded = !_isContestExpanded;
+    });
   }
 
   @override
@@ -71,90 +80,218 @@ class _AllReviewScreenState extends State<AllReviewScreen> {
         automaticallyImplyLeading: false,
         context: context,
       ),
-      body: Row(
-        children: [
-          // Left Column
-          Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 120),
+        child: Column(
+          children: [
+            // Search Bar
+            Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('후기 작성하기'),
+                  Spacer(),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: '검색 키워드를 입력하세요.',
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: _onSearch,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 20),
-                  Text('후기 콘테스트'),
-                  SizedBox(height: 10),
-                  Column(
-                    children: rankingReviews.map((imageUrl) {
-                      return GestureDetector(
-                        onTap: () {
-                          _showImageModal(context, imageUrl);
-                        },
-                        child: Image.network(imageUrl, fit: BoxFit.cover),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 20),
-                  Text('주간 콘테스트'),
-                  // Add more ranking reviews for weekly contest
-                  SizedBox(height: 20),
-                  Text('월간 콘테스트'),
-                  // Add more ranking reviews for monthly contest
-                  SizedBox(height: 20),
-                  Text('시즌 콘테스트'),
-                  // Add more ranking reviews for seasonal contest
                 ],
               ),
             ),
-          ),
-          // Right Column
-          Expanded(
-            flex: 2,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Value',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: _onSearch,
+            // Contest Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('콘테스트', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      TextButton(
+                        onPressed: _toggleContestSection,
+                        child: Text(
+                          _isContestExpanded ? '접기' : '펼치기',
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      childAspectRatio: 1,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
+                  SizedBox(height: 10),
+                  _isContestExpanded
+                      ? Container(
+                    decoration: BoxDecoration(
+                      // border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-                    itemCount: allReviews.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          _showImageModal(context, allReviews[index]);
+                    child: Column(
+                      children: [
+                        TabBar(
+                          controller: _tabController,
+                          labelColor: Colors.black,
+                          tabs: [
+                            Tab(text: '후기 콘테스트'),
+                            Tab(text: '주간 콘테스트'),
+                            Tab(text: '월간 콘테스트'),
+                            Tab(text: '시즌 콘테스트'),
+                          ],
+                        ),
+                        Container(
+                          height: 200, // Adjust height as needed
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _buildContestTab(),
+                              _buildContestTab(),
+                              _buildContestTab(),
+                              _buildContestTab(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                      : SizedBox.shrink(),
+                  SizedBox(height: 20),
+                  // 전체 후기 Section with 나의 후기 작성하기 Button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('전체 후기', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Add your action here
                         },
-                        child: Image.network(allReviews[index], fit: BoxFit.cover),
-                      );
-                    },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Color(0xFF005AA7), // Text color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // Button corner radius
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text('나의 후기 작성하기'),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                  ),
+                  itemCount: allReviews.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        _showImageModal(context, allReviews[index]);
+                      },
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    allReviews[index],
+                                    fit: BoxFit.cover,
+                                    width: constraints.maxWidth,
+                                    height: constraints.maxWidth * 3 / 4,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.favorite, color: Colors.grey),
+                                    SizedBox(width: 4),
+                                    Text('45'),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.comment, color: Colors.grey),
+                                    SizedBox(width: 4),
+                                    Text('13'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContestTab() {
+    List<Map<String, dynamic>> rankings = [
+      {'icon': Icons.looks_one, 'image': '../assets/images/noImg.jpg'}, // 1st place
+      {'icon': Icons.looks_two, 'image': '../assets/images/noImg.jpg'}, // 2nd place
+      {'icon': Icons.looks_3, 'image': '../assets/images/noImg.jpg'}, // 3rd place
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: rankings.map((ranking) {
+          return Expanded(
+            child: GestureDetector(
+              onTap: () {
+                _showImageModal(context, ranking['image']);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(ranking['icon'], size: 40),
+                  SizedBox(height: 5),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      ranking['image'],
+                      fit: BoxFit.cover,
+                      width: 150, //MediaQuery.of(context).size.width
+                      height: 100
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
