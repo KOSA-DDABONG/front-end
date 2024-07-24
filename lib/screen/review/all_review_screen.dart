@@ -11,9 +11,9 @@ class AllReviewScreen extends StatefulWidget {
 
 class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
   List<String> rankingReviews = [
-    '../assets/images/noImg.jpg', // Placeholder for 1st place
-    '../assets/images/noImg.jpg', // Placeholder for 2nd place
-    '../assets/images/noImg.jpg', // Placeholder for 3rd place
+    '../assets/images/noImg.jpg',
+    '../assets/images/noImg.jpg',
+    '../assets/images/noImg.jpg',
   ];
 
   List<String> allReviews = List.generate(20, (index) => '../assets/images/noImg.jpg');
