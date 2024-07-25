@@ -63,7 +63,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: afterLoginHeader(
+      appBar: AfterLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),

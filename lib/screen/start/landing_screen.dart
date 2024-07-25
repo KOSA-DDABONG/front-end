@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/component/header_drawer.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
 
@@ -39,10 +40,14 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: notLoginHeader(
+      appBar: NotLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
+      // appBar: NotLoginShortHeader(
+      //   automaticallyImplyLeading: false,
+      // ),
+      // drawer: HeaderDrawer(),
       extendBodyBehindAppBar: true,
       // backgroundColor: Color(0xffe4f4ff),
       backgroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:front/component/header_drawer.dart';
 
 import '../../component/header.dart';
 
@@ -19,10 +20,14 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: afterLoginHeader(
+      appBar: AfterLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
+      // appBar: AfterLoginShortHeader(
+      //   automaticallyImplyLeading: false,
+      // ),
+      // drawer: HeaderDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,36 +93,41 @@ class _ContactScreenState extends State<ContactScreen> {
                   ),
                   SizedBox(height: 10),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.camera_alt),
-                        onPressed: () {
-                          // 인스타그램 URL 열기
-                        },
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.camera_alt),
+                            onPressed: () {
+                              // 인스타그램 URL 열기
+                            },
+                          ),
+                          Text('instagram'),
+                        ],
                       ),
-                      Text('https://instagram.com/yourprofile'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.facebook),
-                        onPressed: () {
-                          // 페이스북 URL 열기
-                        },
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.facebook),
+                            onPressed: () {
+                              // 인스타그램 URL 열기
+                            },
+                          ),
+                          Text('facebook'),
+                        ],
                       ),
-                      Text('https://facebook.com/yourprofile'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.alternate_email),
-                        onPressed: () {
-                          // 트위터 URL 열기
-                        },
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.alternate_email),
+                            onPressed: () {
+                              // 인스타그램 URL 열기
+                            },
+                          ),
+                          Text('twitter'),
+                        ],
                       ),
-                      Text('https://twitter.com/yourprofile'),
                     ],
                   ),
                 ],

@@ -76,7 +76,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: afterLoginHeader(
+      appBar: AfterLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),

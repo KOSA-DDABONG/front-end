@@ -161,7 +161,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   Widget build(BuildContext context) {
     // GoogleMapController? _controller;
     return Scaffold(
-      appBar: afterLoginHeader(
+      appBar: AfterLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
