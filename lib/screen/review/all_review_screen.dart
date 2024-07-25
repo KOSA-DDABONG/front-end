@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/review/add_review_screen.dart';
 
 import '../../component/header.dart';
 
@@ -171,7 +172,10 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       Text('전체 후기', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       ElevatedButton(
                         onPressed: () {
-                          // Add your action here
+                          Navigator.push(
+                            context!,
+                            MaterialPageRoute(builder: (context) => AddReviewScreen()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
