@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: notLoginHeader(
+      appBar: NotLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),

@@ -1,0 +1,202 @@
+import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+void showReviewDetailDialog(BuildContext context, String imageUrl) {
+  final PageController pageController = PageController();
+
+  List<String> images = [
+    imageUrl,
+    '../assets/images/noImg.jpg',
+    '../assets/images/login_background.png',
+    '../assets/images/noImg.jpg',
+  ];
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      bool isLiked = false;
+
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.9,
+                child: Row(
+                  children: [
+                    // 좌측
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  PageView(
+                                    controller: pageController,
+                                    children: images.map((image) {
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        child: Image.asset(
+                                          image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  Positioned(
+                                    bottom: 8.0,
+                                    child: SmoothPageIndicator(
+                                      controller: pageController,
+                                      count: images.length,
+                                      effect: WormEffect(
+                                        dotHeight: 8.0,
+                                        dotWidth: 8.0,
+                                        spacing: 16.0,
+                                        activeDotColor: Colors.black,
+                                        dotColor: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
+                              child: PageView(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      '../assets/images/noImg.jpg',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // 우측
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                            child: Text(
+                              "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.",
+                              style: TextStyle(fontSize: 18),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    isLiked ? Icons.favorite : Icons.favorite_border,
+                                    color: isLiked ? Colors.red : Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isLiked = !isLiked;
+                                    });
+                                  },
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                  child: Text('116'),
+                                ),
+                                Icon(Icons.comment),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: Text('99'),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: 100,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage: AssetImage('../assets/images/profile_pic.png'), // Placeholder image
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Nickname $index',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text('Comment $index'),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(color: Colors.grey[200]), // Add this line
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: '댓글을 입력하세요...',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.send),
+                                    onPressed: () {
+                                      // Handle send action
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
