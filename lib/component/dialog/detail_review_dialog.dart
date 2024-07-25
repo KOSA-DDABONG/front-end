@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-void showReviewDetailDialog(BuildContext context, String imageUrl) {
+void showDetailReviewDialog(BuildContext context, String imageUrl) {
   final PageController pageController = PageController();
 
   List<String> images = [

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/chat/chatbot_screen.dart';
+import 'package:front/screen/review/add_review_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../component/dialog/trip_detail_dialog.dart';
+import '../../component/dialog/detail_trip_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
 // 마무리 할일
@@ -161,7 +163,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showTripDetailDialog(context);
+              showDetailTripDialog(context);
             },
           ),
           Positioned(
@@ -172,7 +174,12 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 IconButton(
                   icon: Icon(Icons.chat_bubble_outline),
                   onPressed: () {
-                    // 채팅 아이콘 클릭 시 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatbotScreen()
+                      ),
+                    );
                   },
                 ),
                 IconButton(
@@ -240,7 +247,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showTripDetailDialog(context);
+              showDetailTripDialog(context);
             },
           ),
           Positioned(
@@ -251,7 +258,12 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 IconButton(
                   icon: Icon(Icons.chat_bubble_outline),
                   onPressed: () {
-                    // 채팅 아이콘 클릭 시 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatbotScreen()
+                      ),
+                    );
                   },
                 ),
                 IconButton(
@@ -319,7 +331,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showTripDetailDialog(context);
+              showDetailTripDialog(context);
             },
           ),
           Positioned(
@@ -328,9 +340,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.note_add_outlined),
                   onPressed: () {
-                    // 연필 아이콘 클릭 시 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddReviewScreen()
+                      ),
+                    );
                   },
                 ),
                 IconButton(

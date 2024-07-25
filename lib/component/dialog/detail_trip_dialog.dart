@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showTripDetailDialog(BuildContext context) {
+void showDetailTripDialog(BuildContext context) {
   int selectedDay = 1;
   int? selectedIndex;
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../snack_bar.dart';
 
-void showNumberEditDialog(BuildContext context) {
+void showEditNumberDialog(BuildContext context) {
   final TextEditingController phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/edit_review_dialog.dart';
-import '../../component/dialog/review_detail_dialog.dart';
+import '../../component/dialog/detail_review_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyReviewListScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showReviewDetailDialog(context, '../assets/images/landing_background.jpg');
+        showDetailReviewDialog(context, '../assets/images/landing_background.jpg');
       },
       child: Container(
         decoration: BoxDecoration(
@@ -138,13 +138,13 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.edit),
+                    icon: Icon(Icons.edit_outlined),
                     onPressed: () {
                       showEditReviewDialog(context);
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete_outline),
                     onPressed: () {
                       // Delete action here
                     },
