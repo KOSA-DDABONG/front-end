@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/component/dialog/review_detail_dialog.dart';
+import 'package:front/component/dialog/detail_review_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/my_menu_controller.dart';
@@ -46,11 +46,11 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+              crossAxisCount: 5,
               crossAxisSpacing: 30.0,
               mainAxisSpacing: 30.0,
             ),
-            itemCount: 6, // 여기에 실제 데이터의 길이를 넣어야 합니다.
+            itemCount: 15,
             itemBuilder: (context, index) {
               return _buildImageCard(context);
             },
@@ -63,7 +63,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   Widget _buildImageCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showReviewDetailDialog(context, '../assets/images/landing_background.jpg');
+        showDetailReviewDialog(context, '../assets/images/landing_background.jpg');
       },
       child: Stack(
         children: [
@@ -73,11 +73,14 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.transparent,
             ),
-            child: Image.asset(
-              '../assets/images/noImg.jpg',
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                '../assets/images/noImg.jpg',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
           ),
           Positioned(

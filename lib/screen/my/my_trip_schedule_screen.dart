@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/chat/chatbot_screen.dart';
+import 'package:front/screen/review/add_review_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/dialog/detail_trip_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
 // 마무리 할일
@@ -75,8 +78,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 각 일정 카드들을 리스트로 반복하여 보여줍니다.
-          _upcomingScheduleCard(context),
+          _presentScheduleCard(context),
           SizedBox(height: 20), // 카드 간격
         ],
       ),
@@ -103,9 +105,8 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 각 일정 카드들을 리스트로 반복하여 보여줍니다.
           _pastScheduleCard(context),
-          SizedBox(height: 20), // 카드 간격
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -126,7 +127,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('다가오는 일정'),
-                SizedBox(height: 20), // 다가오는 일정 텍스트 아래 여백 추가
+                SizedBox(height: 20),
               ],
             ),
             subtitle: Row(
@@ -162,7 +163,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              _showImageDialog(context);
+              showDetailTripDialog(context);
             },
           ),
           Positioned(
@@ -173,7 +174,12 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 IconButton(
                   icon: Icon(Icons.chat_bubble_outline),
                   onPressed: () {
-                    // 채팅 아이콘 클릭 시 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatbotScreen()
+                      ),
+                    );
                   },
                 ),
                 IconButton(
@@ -241,7 +247,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              _showImageDialog(context);
+              showDetailTripDialog(context);
             },
           ),
           Positioned(
@@ -252,7 +258,12 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 IconButton(
                   icon: Icon(Icons.chat_bubble_outline),
                   onPressed: () {
-                    // 채팅 아이콘 클릭 시 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatbotScreen()
+                      ),
+                    );
                   },
                 ),
                 IconButton(
@@ -320,7 +331,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              _showImageDialog(context);
+              showDetailTripDialog(context);
             },
           ),
           Positioned(
@@ -329,9 +340,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.note_add_outlined),
                   onPressed: () {
-                    // 연필 아이콘 클릭 시 동작
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddReviewScreen()
+                      ),
+                    );
                   },
                 ),
                 IconButton(
@@ -345,55 +361,6 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showImageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          '../assets/images/noImg.jpg',
-                          width: 300,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          '이미지가 없습니다',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
-import '../../component/dialog/number_edit_dialog.dart';
+import '../../component/dialog/edit_number_dialog.dart';
+import '../../component/dialog/edit_pwd_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
@@ -141,7 +142,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  showNumberEditDialog(context);
+                  showEditNumberDialog(context);
                 },
                 icon: Icon(
                   Icons.edit,         // 연필 모양 아이콘
@@ -162,16 +163,28 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           ProfileFormField(
             label: '아이디',
           ),
-          SizedBox(height: 40),
-          Text(
-            '비밀번호 변경',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          _buildPrevPasswordField(),
           SizedBox(height: 20),
-          _buildPasswordField(),
-          _buildPasswordCheckField(),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Text(
+                '비밀번호 변경',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                onPressed: () {
+                  showEditPasswordDialog(context);
+                },
+                icon: Icon(
+                  Icons.edit,         // 연필 모양 아이콘
+                  color: Colors.grey, // 회색으로 설정
+                ),
+              )
+            ],
+          ),
           SizedBox(height: 50),
         ],
       ),
