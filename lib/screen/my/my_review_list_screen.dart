@@ -155,6 +155,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/dialog/review_detail_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyReviewListScreen extends StatefulWidget {
@@ -229,7 +230,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _showImageModal(context);
+        showReviewDetailDialog(context, '../assets/images/landing_background.jpg');
       },
       child: Container(
         decoration: BoxDecoration(
@@ -259,7 +260,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         image: const DecorationImage(
-                          image: AssetImage('../assets/images/noImg.jpg'),
+                          image: AssetImage('../assets/images/landing_background.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -307,55 +308,6 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showImageModal(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          '../assets/images/noImg.jpg',
-                          width: 300,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          '이미지가 없습니다',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

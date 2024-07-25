@@ -74,6 +74,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:front/component/dialog/review_detail_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/my_menu_controller.dart';
@@ -137,7 +138,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   Widget _buildImageCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _showImageDialog(context);
+        showReviewDetailDialog(context, '../assets/images/landing_background.jpg');
       },
       child: Stack(
         children: [
@@ -166,55 +167,6 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showImageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          '../assets/images/noImg.jpg',
-                          width: 300,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          '이미지가 없습니다',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 

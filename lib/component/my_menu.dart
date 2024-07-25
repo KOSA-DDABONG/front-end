@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'header.dart';
 import '../controller/my_menu_controller.dart';
 import '../responsive.dart';
-import 'side_menu.dart';
+import 'my_side_menu.dart';
 
 class MyMenuScreen extends StatelessWidget {
   final Map<String, Widget> _screens = {
@@ -27,7 +27,7 @@ class MyMenuScreen extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: afterLoginHeader(
+        child: AfterLoginHeader(
           automaticallyImplyLeading: false,
           context: context,
         ),

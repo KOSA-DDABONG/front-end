@@ -35,7 +35,7 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: afterLoginHeader(
+      appBar: AfterLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
