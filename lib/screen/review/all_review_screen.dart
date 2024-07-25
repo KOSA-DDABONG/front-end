@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 
+import '../../component/dialog/review_detail_dialog.dart';
 import '../../component/header.dart';
 
 class AllReviewScreen extends StatefulWidget {
@@ -30,39 +31,39 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
     _tabController = TabController(length: 4, vsync: this);
   }
 
-  void _showImageModal(BuildContext context, String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(imageUrl),
-                ),
-                SizedBox(height: 10),
-                Text("여름 휴가로 부산에 놀러 왔습니다. 재미지네요."),
-                SizedBox(height: 10),
-                Expanded(
-                  child: ListView(
-                    children: List.generate(100, (index) {
-                      return ListTile(
-                        title: Text('Comment $index'),
-                      );
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void _showImageModal(BuildContext context, String imageUrl) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         child: Container(
+  //           width: MediaQuery.of(context).size.width * 0.8,
+  //           height: MediaQuery.of(context).size.height * 0.8,
+  //           child: Column(
+  //             children: [
+  //               ClipRRect(
+  //                 borderRadius: BorderRadius.circular(10),
+  //                 child: Image.network(imageUrl),
+  //               ),
+  //               SizedBox(height: 10),
+  //               Text("여름 휴가로 부산에 놀러 왔습니다. 재미지네요."),
+  //               SizedBox(height: 10),
+  //               Expanded(
+  //                 child: ListView(
+  //                   children: List.generate(100, (index) {
+  //                     return ListTile(
+  //                       title: Text('Comment $index'),
+  //                     );
+  //                   }),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void _onSearch() {
     print("Searching for: ${_searchController.text}");
@@ -91,22 +92,24 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               child: Row(
                 children: [
                   Spacer(),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: '검색 키워드를 입력하세요.',
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: _onSearch,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                  Expanded(
+                    child: Container(
+                      // width: MediaQuery.of(context).size.width * 0.2,
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: '검색 키워드를 입력하세요.',
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: _onSearch,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -206,7 +209,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        _showImageModal(context, allReviews[index]);
+                        showReviewDetailDialog(context, allReviews[index]);
                       },
                       child: Column(
                         children: [
@@ -275,7 +278,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                _showImageModal(context, ranking['image']);
+                showReviewDetailDialog(context, ranking['image']);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

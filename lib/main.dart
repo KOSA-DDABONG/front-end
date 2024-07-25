@@ -58,8 +58,8 @@ class MyApp extends StatelessWidget {
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
-      home: ContactScreen(),
-      // home: AllReviewScreen(),
+      // home: ContactScreen(),
+      home: AllReviewScreen(),
       // home: ResultScreen()
     );
   }
