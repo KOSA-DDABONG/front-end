@@ -7,7 +7,7 @@ import 'package:front/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 import '../../component/snack_bar.dart';
 import 'login_screen.dart';
 

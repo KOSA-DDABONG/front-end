@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 
 import '../../component/dialog/review_detail_dialog.dart';
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 class AllReviewScreen extends StatefulWidget {
   const AllReviewScreen({Key? key}) : super(key: key);
