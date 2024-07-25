@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 class SelectScreen extends StatefulWidget {
   const SelectScreen({Key? key}) : super(key: key);

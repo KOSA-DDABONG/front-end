@@ -8,8 +8,8 @@ import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../component/get_map.dart';
-import '../../component/header.dart';
+import '../../component/map/get_map.dart';
+import '../../component/header/header.dart';
 
 //해결해야할 일
 //지도 api 불러와서 띄우기(웹)

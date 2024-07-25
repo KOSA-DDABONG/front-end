@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:front/component/header_drawer.dart';
+import 'package:front/component/header/header_drawer.dart';
 
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({Key? key}) : super(key: key);

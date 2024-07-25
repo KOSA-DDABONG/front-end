@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:front/component/sub_list_tile.dart';
+import 'package:front/component/mypage/sub_list_tile.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/my_menu_controller.dart';
+import '../../controller/my_menu_controller.dart';
 import 'my_list_tile.dart';
+
+
 
 class SideMenu extends StatelessWidget {
   const SideMenu({

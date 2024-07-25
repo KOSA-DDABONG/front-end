@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({Key? key}) : super(key: key);
