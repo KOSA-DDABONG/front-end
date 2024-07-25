@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/dialog/review_detail_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
@@ -139,7 +140,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      // Edit action here
+                      showEditReviewDialog(context);
                     },
                   ),
                   IconButton(
