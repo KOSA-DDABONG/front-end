@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
+import '../../component/dialog/number_edit_dialog.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
@@ -133,9 +134,21 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
             label: '이메일',
           ),
           SizedBox(height: 20),
-          ProfileEditFormField(
-            label: '전화번호',
-            hint: '{010-0000-0000} 전화번호만 변경가능',
+          Row(
+            children: [
+              ProfileFormField(
+                label: '전화번호',
+              ),
+              IconButton(
+                onPressed: () {
+                  showNumberEditDialog(context);
+                },
+                icon: Icon(
+                  Icons.edit,         // 연필 모양 아이콘
+                  color: Colors.grey, // 회색으로 설정
+                ),
+              )
+            ],
           ),
           SizedBox(height: 20),
           ProfileFormField(
@@ -160,53 +173,6 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           _buildPasswordField(),
           _buildPasswordCheckField(),
           SizedBox(height: 50),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // Background color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                  ),
-                  child: Text(
-                    '취소',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Background color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                  ),
-                  child: Text(
-                    '수정 완료',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: () {},
-          //     child: Text('수정 완료'),
-          //     style: ElevatedButton.styleFrom(
-          //       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-          //       textStyle: TextStyle(fontSize: 18),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

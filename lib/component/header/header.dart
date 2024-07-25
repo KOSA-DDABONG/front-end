@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/component/my_menu.dart';
+import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
@@ -7,7 +7,7 @@ import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/trip/select_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../screen/start/login_screen.dart';
+import '../../screen/start/login_screen.dart';
 
 class NotLoginHeader extends AppBar {
   NotLoginHeader({Key? key, required bool automaticallyImplyLeading, BuildContext? context})

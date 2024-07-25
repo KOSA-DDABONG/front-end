@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:front/component/header_drawer.dart';
+import 'package:front/component/header/header_drawer.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 
 class LandingScreen extends StatefulWidget {

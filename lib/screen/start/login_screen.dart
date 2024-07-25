@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:front/component/my_menu.dart';
+import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/service/session_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +9,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../dto/login/login_request_model.dart';
 import '../../service/user_service.dart';
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 
 class LoginScreen extends StatefulWidget {

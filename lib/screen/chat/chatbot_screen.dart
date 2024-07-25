@@ -22,7 +22,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../component/header.dart';
+import '../../component/header/header.dart';
 
 class ChatbotScreen extends StatefulWidget {
   const ChatbotScreen({Key? key}) : super(key: key);
