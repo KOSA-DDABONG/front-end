@@ -3,25 +3,26 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
-import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../component/map/get_map.dart';
-import '../../component/header/header.dart';
 
-//해결해야할 일
-//지도 api 불러와서 띄우기(웹)
-
-class AddReviewScreen extends StatefulWidget {
-  const AddReviewScreen({Key? key}) : super(key: key);
-
-  @override
-  _AddReviewScreenState createState() => _AddReviewScreenState();
+void showEditReviewDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AddReviewDialog();
+    },
+  );
 }
 
-class _AddReviewScreenState extends State<AddReviewScreen> {
+class AddReviewDialog extends StatefulWidget {
+  @override
+  _AddReviewDialogState createState() => _AddReviewDialogState();
+}
+
+class _AddReviewDialogState extends State<AddReviewDialog> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _hashtagController = TextEditingController();
   final List<XFile?> _images = List<XFile?>.filled(5, null, growable: false);
@@ -113,14 +114,13 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   void _addHashtag() {
     final String tag = _hashtagController.text.trim();
-    if(tag.isEmpty) {
+    if (tag.isEmpty) {
       setState(() {
         _showNoHashtagError = true;
         _showHashtagLimitError = false;
         _showDuplicateHashtagError = false;
       });
-    }
-    else {
+    } else {
       if (tag.isNotEmpty && !_hashtags.contains(tag)) {
         if (_hashtags.length < _maxHashtags) {
           setState(() {
@@ -159,17 +159,14 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // GoogleMapController? _controller;
-    return Scaffold(
-      appBar: AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+    return Dialog(
+      backgroundColor: Colors.white, // 배경색 흰색으로 설정
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
       ),
-      extendBodyBehindAppBar: false,
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 200.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -177,12 +174,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 '여행 후기 작성',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               Text(
                 '일정 지도',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
               Container(
                 height: 300,
                 width: double.infinity,
@@ -192,27 +189,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
-                // child: GoogleMap(
-                //   onMapCreated: (controller) {
-                //     _controller = controller;
-                //   },
-                //   initialCameraPosition: CameraPosition(
-                //       target: LatLng(31.5555, 111.3333),
-                //       zoom: 15.0
-                //   ),
-                //   myLocationEnabled: true,
-                //   markers: _buildMarkers(),
-                // ),
-                // child: GoogleMap(
-                //   initialCameraPosition: CameraPosition(
-                //       target: LatLng(31.5555, 111.3333),
-                //       zoom: 16
-                //   ),
-                //   onMapCreated: (controller) {},
-                //   zoomControlsEnabled: false,
-                //   markers: _buildMarkers(),
-                //   mapType: MapType.normal,
-                // ),
                 child: getMap(),
               ),
               SizedBox(height: 20),
@@ -220,7 +196,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 '사진 업로드',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(5, (index) {
@@ -235,10 +211,15 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                             height: 120,
                             color: Colors.grey[500],
                             child: _images[index] == null
-                                ? Icon(Icons.camera_alt, color: Colors.white70,)
+                                ? Icon(
+                              Icons.camera_alt,
+                              color: Colors.white70,
+                            )
                                 : kIsWeb
-                                ? Image.network(_images[index]!.path, fit: BoxFit.cover)
-                                : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
+                                ? Image.network(_images[index]!.path,
+                                fit: BoxFit.cover)
+                                : Image.file(File(_images[index]!.path),
+                                fit: BoxFit.cover),
                           ),
                         ),
                       ),
@@ -251,7 +232,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 '후기 작성',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
               TextField(
                 controller: _textController,
                 decoration: InputDecoration(
@@ -333,9 +314,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     onDeleted: () => _removeHashtag(tag),
                     backgroundColor: Colors.grey[200],
                     deleteIconColor: Colors.grey[600],
-                    // shape: RoundedRectangleBorder(
-                    //   borderRadius: BorderRadius.circular(10),
-                    // ),
                     shape: StadiumBorder(),
                     elevation: 4, // 그림자 설정
                   );
@@ -350,7 +328,8 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                       onPressed: () {
                         Navigator.push(
                           context!,
-                          MaterialPageRoute(builder: (context) => AllReviewScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => AllReviewScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -378,7 +357,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                         ),
                       ),
                       child: Text(
-                        '등록',
+                        '수정',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -392,6 +371,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       ),
     );
   }
+
   Set<Marker> _buildMarkers() {
     return {
       Marker(

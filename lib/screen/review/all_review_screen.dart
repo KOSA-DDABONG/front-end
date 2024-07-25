@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 
 import '../../component/dialog/passed_trip_dialog.dart';
-import '../../component/dialog/review_detail_dialog.dart';
+import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/header/header.dart';
 
 class AllReviewScreen extends StatefulWidget {
@@ -177,7 +177,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        showReviewDetailDialog(context, allReviews[index]);
+                        showDetailReviewDialog(context, allReviews[index]);
                       },
                       child: Column(
                         children: [
@@ -246,7 +246,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                showReviewDetailDialog(context, ranking['image']);
+                showDetailReviewDialog(context, ranking['image']);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

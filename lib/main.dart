@@ -54,12 +54,12 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: Colors.blue,
       ),
-      // home: LandingScreen(),
+      home: LandingScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
       // home: ContactScreen(),
-      home: AllReviewScreen(),
+      // home: AllReviewScreen(),
       // home: ResultScreen()
     );
   }
