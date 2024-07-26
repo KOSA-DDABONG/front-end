@@ -43,13 +43,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
-  // 호수 위치
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414
-  );
   //
 
 
@@ -209,28 +202,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
-                // child: GoogleMap(
-                //   onMapCreated: (controller) {
-                //     _controller = controller;
-                //   },
-                //   initialCameraPosition: CameraPosition(
-                //       target: LatLng(31.5555, 111.3333),
-                //       zoom: 15.0
-                //   ),
-                //   myLocationEnabled: true,
-                //   markers: _buildMarkers(),
-                // ),
-                // child: GoogleMap(
-                //   initialCameraPosition: CameraPosition(
-                //       target: LatLng(31.5555, 111.3333),
-                //       zoom: 16
-                //   ),
-                //   onMapCreated: (controller) {},
-                //   zoomControlsEnabled: false,
-                //   markers: _buildMarkers(),
-                //   mapType: MapType.normal,
-                // ),
-                /////////////////////////
                 // child: getMap(),
                 child: GoogleMap(
                   mapType: MapType.hybrid,
@@ -257,6 +228,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Container(
+                          child: Container(
                             height: 120,
                             color: Colors.grey[500],
                             child: _images[index] == null
@@ -264,6 +236,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                                 : kIsWeb
                                 ? Image.network(_images[index]!.path, fit: BoxFit.cover)
                                 : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
+                            ),
                           ),
                         ),
                       ),
