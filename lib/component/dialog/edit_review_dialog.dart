@@ -189,7 +189,8 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
-                child: getMap(),
+                // child: getMap(),
+                child:Text('getMap()')
               ),
               SizedBox(height: 20),
               Text(
