@@ -93,26 +93,22 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                ProgressHUD(
-                  inAsyncCall: isApiCallProcess,
-                  opacity: 0.3,
-                  key: UniqueKey(),
-                  child: Form(
-                    key: globalFormKey,
-                    child: _loginUIDesktop(context),
-                    // Responsive(
-                    //   mobile: _loginUIMobile(context),
-                    //   tablet: _loginUITablet(context),
-                    //   desktop: _loginUIDesktop(context),
-                    // ),
-                  )
+          ProgressHUD(
+              inAsyncCall: isApiCallProcess,
+              opacity: 0.3,
+              key: UniqueKey(),
+              child: Form(
+                key: globalFormKey,
+                child: SingleChildScrollView(
+                  child: _loginUI(context),
                 )
-              ],
-            ),
-          ),
+                // Responsive(
+                //   mobile: _loginUIMobile(context),
+                //   tablet: _loginUITablet(context),
+                //   desktop: _loginUIDesktop(context),
+                // ),
+              )
+          )
         ],
       ),
     );
@@ -145,22 +141,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // 로그인 UI
   Widget _loginUI(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const SizedBox(height: 60),
-        _buildIdField(),
-        const SizedBox(height: 30),
-        _buildPasswordField(),
-        const SizedBox(height: 30),
-        _checkboxRememberEmail(),
-        const SizedBox(height: 80),
-        _buildLoginButton(context),
-        const SizedBox(height: 50),
-        _buildOrText(),
-        const SizedBox(height: 30),
-        _buildSignupText(),
-        const SizedBox(height: 100),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 200, vertical: 30),
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 60),
+          _buildIdField(),
+          const SizedBox(height: 30),
+          _buildPasswordField(),
+          const SizedBox(height: 30),
+          _checkboxRememberEmail(),
+          const SizedBox(height: 80),
+          _buildLoginButton(context),
+          const SizedBox(height: 50),
+          _buildOrText(),
+          const SizedBox(height: 30),
+          _buildSignupText(),
+          const SizedBox(height: 100),
+        ],
+      ),
     );
   }
 
@@ -319,11 +318,14 @@ class _LoginScreenState extends State<LoginScreen> {
             try {
               final model = LoginRequestModel(userid: userId, password: password);
               final result = await SessionService.login(model);
+              print("Here is LoginPage : ${model.userid}, ${model.password}");
+              print("Here is LoginPage : ${result.value?.accessToken}");
+              print("Here is LoginPage : ${result.value?.user}");
 
               if (result.value != null) {
                 savePreferences();
                 final userProfileResult = await UserService.getUserProfile();
-                print("Here is LoginPage : ${userProfileResult.value}");
+                // print("Here is LoginPage : ${userProfileResult.value}");
 
                 setState(() {
                   isApiCallProcess = false;
