@@ -51,12 +51,12 @@ dependencies:
   responsive_builder: ^0.7.1
   google_maps_flutter: ^2.7.0
   google_maps_flutter_web: ^0.5.8
-  google_maps_flutter_platform_interface: ^2.8.0
+#  google_maps_flutter_platform_interface: ^2.8.0
 #  kakao_map_plugin: ^0.3.1
 #  webview_flutter: ^4.8.0
 #  kakaomap_webview: ^0.6.2
 #  webview_flutter: ^4.8.0
-  flutter_naver_map: ^1.2.3+1
+#  flutter_naver_map: ^1.2.3+1
   geolocator: ^12.0.0
   smooth_page_indicator: ^1.2.0+3
 

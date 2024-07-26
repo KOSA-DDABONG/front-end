@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/contact/contact_screen.dart';
@@ -54,8 +53,8 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: Colors.blue,
       ),
-      home: LandingScreen(),
-      // home: AddReviewScreen(),
+      // home: LandingScreen(),
+      home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
       // home: ContactScreen(),
