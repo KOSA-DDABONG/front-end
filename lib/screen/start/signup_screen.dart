@@ -69,95 +69,94 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                ProgressHUD(
-                    inAsyncCall: isApiCallProcess,
-                    opacity: 0.3,
-                    key: UniqueKey(),
-                    child: Form(
-                      key: globalFormKey,
-                      child: _registerUIDesktop(context),
-                      // Responsive(
-                      //   mobile: _registerUIMobile(context),
-                      //   tablet: _registerUITablet(context),
-                      //   desktop: _registerUIDesktop(context),
-                      // ),
-                    )
+          ProgressHUD(
+              inAsyncCall: isApiCallProcess,
+              opacity: 0.3,
+              key: UniqueKey(),
+              child: Form(
+                key: globalFormKey,
+                child: SingleChildScrollView(
+                  child:  _registerUI(context),
                 )
-              ],
-            ),
+                // Responsive(
+                //   mobile: _registerUIMobile(context),
+                //   tablet: _registerUITablet(context),
+                //   desktop: _registerUIDesktop(context),
+                // ),
+              )
           ),
         ],
       ),
     );
   }
 
-  Widget _registerUIMobile(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 2,
-          child: _registerUI(context),
-        ),
-      ),
-    );
-  }
-
-  Widget _registerUITablet(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 60),
-      child: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 2,
-          child: _registerUI(context),
-        ),
-      ),
-    );
-  }
-
-  Widget _registerUIDesktop(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 80),
-          height: MediaQuery.of(context).size.height * 2,
-          width: MediaQuery.of(context).size.width / 2,
-          child: _registerUI(context),
-        ),
-      ),
-    );
-  }
+  // Widget _registerUIMobile(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 20),
+  //     child: SingleChildScrollView(
+  //       child: Container(
+  //         height: MediaQuery.of(context).size.height * 2,
+  //         child: _registerUI(context),
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _registerUITablet(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 60),
+  //     child: SingleChildScrollView(
+  //       child: Container(
+  //         height: MediaQuery.of(context).size.height * 2,
+  //         child: _registerUI(context),
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _registerUIDesktop(BuildContext context) {
+  //   return Center(
+  //     child: SingleChildScrollView(
+  //       child: Container(
+  //         padding: const EdgeInsets.symmetric(horizontal: 80),
+  //         height: MediaQuery.of(context).size.height * 2,
+  //         width: MediaQuery.of(context).size.width / 2,
+  //         child: _registerUI(context),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // 로그인 UI
   Widget _registerUI(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const SizedBox(height: 60),
-        _buildUsernameField(),
-        const SizedBox(height: 30),
-        _buildEmailField(),
-        const SizedBox(height: 30),
-        _buildNumberField(),
-        const SizedBox(height: 30),
-        _buildBirthField(),
-        const SizedBox(height: 30),
-        _buildNicknameField(),
-        const SizedBox(height: 30),
-        _buildUserIdField(),
-        const SizedBox(height: 30),
-        _buildPasswordField(),
-        _buildPasswordCheckField(),
-        const SizedBox(height: 80),
-        _buildRegisterButton(),
-        const SizedBox(height: 50),
-        _buildOrText(),
-        const SizedBox(height: 30),
-        _buildLoginText(),
-        const SizedBox(height: 100),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 200, vertical: 30),
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 60),
+          _buildUsernameField(),
+          const SizedBox(height: 30),
+          _buildEmailField(),
+          const SizedBox(height: 30),
+          _buildNumberField(),
+          const SizedBox(height: 30),
+          _buildBirthField(),
+          const SizedBox(height: 30),
+          _buildNicknameField(),
+          const SizedBox(height: 30),
+          _buildUserIdField(),
+          const SizedBox(height: 30),
+          _buildPasswordField(),
+          _buildPasswordCheckField(),
+          const SizedBox(height: 80),
+          _buildRegisterButton(),
+          const SizedBox(height: 50),
+          _buildOrText(),
+          const SizedBox(height: 30),
+          _buildLoginText(),
+          const SizedBox(height: 100),
+        ],
+      ),
     );
   }
 
@@ -731,7 +730,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 if (result.value != null) {
                   showCustomSnackBar(context, '가입이 완료되었습니다.');
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );

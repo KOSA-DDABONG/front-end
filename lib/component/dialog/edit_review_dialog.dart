@@ -171,7 +171,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '여행 후기 작성',
+                '여행 후기 수정',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
