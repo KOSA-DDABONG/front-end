@@ -36,15 +36,22 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
 
-  //test
-  Completer<GoogleMapController> _controller = Completer();
-  // 초기 카메라 위치
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-  //
 
+
+  //Test
+  final List<LatLng> _day1Coordinates = [
+    LatLng(37.42796133580664, -122.085749655962),
+    LatLng(37.42896133580664, -122.086749655962),
+    LatLng(37.42996133580664, -122.087749655962),
+  ];
+
+  final List<LatLng> _day2Coordinates = [
+    LatLng(37.43096133580664, -122.088749655962),
+    LatLng(37.43196133580664, -122.089749655962),
+    LatLng(37.43296133580664, -122.090749655962),
+    LatLng(37.43396133580664, -122.091749655962),
+  ];
+  //
 
 
   @override
@@ -169,7 +176,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // GoogleMapController? _controller;
+
     return Scaffold(
       appBar: AfterLoginHeader(
         automaticallyImplyLeading: false,
@@ -202,14 +209,8 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
-                // child: getMap(),
-                child: GoogleMap(
-                  mapType: MapType.hybrid,
-                  initialCameraPosition: _kGooglePlex,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                ),
+                // child: GetMap(),
+                child: GetMap(day1Coordinates: _day1Coordinates, day2Coordinates: _day2Coordinates),
               ),
               SizedBox(height: 20),
               Text(
