@@ -1,18 +1,29 @@
-import 'dart:convert'; // For jsonDecode
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http; // For making HTTP requests
+import 'package:http/http.dart' as http;
 
-class Map2Screen extends StatefulWidget {
+class GetMap extends StatefulWidget {
+  final String apiKey;
+  final String origin;
+  final String destination;
+  final String waypoints;
+
+  GetMap({
+    required this.apiKey,
+    required this.origin,
+    required this.destination,
+    required this.waypoints,
+  });
+
   @override
-  _Map2ScreenState createState() => _Map2ScreenState();
+  _GetMapState createState() => _GetMapState();
 }
 
-class _Map2ScreenState extends State<Map2Screen> {
+class _GetMapState extends State<GetMap> {
   final Set<Polyline> _polylines = {};
   final Set<Marker> _markers = {};
-  final String _apiKey = '[YOUR API KEY]';
 
   @override
   void initState() {
@@ -21,15 +32,11 @@ class _Map2ScreenState extends State<Map2Screen> {
   }
 
   Future<void> _fetchRoute() async {
-    final origin = '37.819929,-122.478255'; // 출발지 좌표
-    final destination = '37.787994,-122.407437'; // 도착지 좌표
-    final waypoints = '37.76999,-122.44696|37.76899,-122.44596'; // 경유지 좌표
-
-    // https://cors-anywhere.herokuapp.com/corsdemo
-    final url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/directions/json'
-        '?origin=$origin&destination=$destination'
-        '&waypoints=$waypoints'
-        '&key=$_apiKey';
+    final url =
+        'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/directions/json'
+        '?origin=${widget.origin}&destination=${widget.destination}'
+        '&waypoints=${widget.waypoints}'
+        '&key=${widget.apiKey}';
 
     print('url: ' + url);
     try {
@@ -90,18 +97,13 @@ class _Map2ScreenState extends State<Map2Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Map Example'),
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(37.7881703, -122.4077324), // Start position
+        zoom: 12,
       ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(37.7881703, -122.4077324), // Start position
-          zoom: 12,
-        ),
-        polylines: _polylines,
-        markers: _markers, // 마커 추가
-      ),
+      polylines: _polylines,
+      markers: _markers,
     );
   }
 }
