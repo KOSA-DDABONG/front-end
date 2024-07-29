@@ -14,7 +14,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:provider/provider.dart';
 
-import 'component/map/test_map2.dart';
 import 'constants.dart';
 import 'controller/my_menu_controller.dart';
 
@@ -43,14 +42,13 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: Colors.blue,
       ),
-      // home: LandingScreen(),
+      home: LandingScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
       // home: ContactScreen(),
       // home: AllReviewScreen(),
       // home: ResultScreen()
-      home: Map2Screen(),
     );
   }
 }

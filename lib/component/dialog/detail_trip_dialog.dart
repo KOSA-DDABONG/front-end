@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
+import '../map/get_map.dart';
+
 void showDetailTripDialog(BuildContext context) {
   int selectedDay = 1;
   int? selectedIndex;
@@ -60,18 +63,11 @@ void showDetailTripDialog(BuildContext context) {
                               border: Border.all(color: Colors.blueAccent),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Stack(
-                              children: [
-                                ...itinerary[selectedDay - 1].asMap().entries.map((entry) {
-                                  int idx = entry.key;
-                                  var place = entry.value;
-                                  return Positioned(
-                                    top: 50.0 + (idx * 30),
-                                    left: 50.0 + (idx * 30),
-                                    child: Icon(Icons.location_on, color: Colors.red, size: 40),
-                                  );
-                                }).toList(),
-                              ],
+                            child: GetMap(
+                              apiKey: mapApiKey,
+                              origin: '37.819929,-122.478255', // 출발지 좌표
+                              destination: '37.787994,-122.407437', // 도착지 좌표
+                              waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
                             ),
                           ),
                         ),
