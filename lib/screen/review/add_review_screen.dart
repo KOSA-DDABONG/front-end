@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../component/header/header.dart';
+import '../../component/map/get_map.dart';
+import '../../constants.dart';
 
 //해결해야할 일
 //지도 api 불러와서 띄우기(웹)
@@ -207,12 +209,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
-                //1
-                // child: GetMap(),
-                //2
-                // child: GetMap(day1Coordinates: _day1Coordinates, day2Coordinates: _day2Coordinates),
-                //3
-
+                child: GetMap(
+                  apiKey: mapApiKey,
+                  origin: '37.819929,-122.478255', // 출발지 좌표
+                  destination: '37.787994,-122.407437', // 도착지 좌표
+                  waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
+                ),
               ),
               SizedBox(height: 20),
               Text(
