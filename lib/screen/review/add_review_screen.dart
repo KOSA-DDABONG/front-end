@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../component/map/get_map.dart';
 import '../../component/header/header.dart';
 
 //해결해야할 일
@@ -209,8 +207,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
+                //1
                 // child: GetMap(),
-                child: GetMap(day1Coordinates: _day1Coordinates, day2Coordinates: _day2Coordinates),
+                //2
+                // child: GetMap(day1Coordinates: _day1Coordinates, day2Coordinates: _day2Coordinates),
+                //3
+
               ),
               SizedBox(height: 20),
               Text(

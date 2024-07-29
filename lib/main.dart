@@ -14,22 +14,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:provider/provider.dart';
 
+import 'component/map/test_map2.dart';
 import 'constants.dart';
 import 'controller/my_menu_controller.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // var naverMapApiKey = 'Wqc2BU96WJi2KiRvnF0DgmOqlo7HUA2QuiYuQOmf';
-  // await NaverMapSdk.instance.initialize(
-  //   clientId: naverMapApiKey,
-  //   onAuthFailed: (ex) {
-  //     debugPrint("********* 네이버맵 인증오류 : $ex *********");
-  //   },
-  // );
 
-  // if (kIsWeb) {
-  //   GoogleMapsFlutterPlatform.instance = GoogleMapsFlutterWeb();
-  // }
   runApp(
     ChangeNotifierProvider(
       create: (context) => MyMenuController(),
@@ -54,12 +44,13 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.blue,
       ),
       // home: LandingScreen(),
-      home: AddReviewScreen(),
+      // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
       // home: ContactScreen(),
       // home: AllReviewScreen(),
       // home: ResultScreen()
+      home: Map2Screen(),
     );
   }
 }
