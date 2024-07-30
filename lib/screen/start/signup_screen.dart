@@ -70,62 +70,20 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
           ProgressHUD(
-              inAsyncCall: isApiCallProcess,
-              opacity: 0.3,
-              key: UniqueKey(),
-              child: Form(
-                key: globalFormKey,
-                child: SingleChildScrollView(
-                  child:  _registerUI(context),
-                )
-                // Responsive(
-                //   mobile: _registerUIMobile(context),
-                //   tablet: _registerUITablet(context),
-                //   desktop: _registerUIDesktop(context),
-                // ),
+            inAsyncCall: isApiCallProcess,
+            opacity: 0.3,
+            key: UniqueKey(),
+            child: Form(
+              key: globalFormKey,
+              child: SingleChildScrollView(
+                child:  _registerUI(context),
               )
+            )
           ),
         ],
       ),
     );
   }
-
-  // Widget _registerUIMobile(BuildContext context) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 20),
-  //     child: SingleChildScrollView(
-  //       child: Container(
-  //         height: MediaQuery.of(context).size.height * 2,
-  //         child: _registerUI(context),
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _registerUITablet(BuildContext context) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 60),
-  //     child: SingleChildScrollView(
-  //       child: Container(
-  //         height: MediaQuery.of(context).size.height * 2,
-  //         child: _registerUI(context),
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget _registerUIDesktop(BuildContext context) {
-  //   return Center(
-  //     child: SingleChildScrollView(
-  //       child: Container(
-  //         padding: const EdgeInsets.symmetric(horizontal: 80),
-  //         height: MediaQuery.of(context).size.height * 2,
-  //         width: MediaQuery.of(context).size.width / 2,
-  //         child: _registerUI(context),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   // 로그인 UI
   Widget _registerUI(BuildContext context) {
@@ -184,7 +142,7 @@ class _SignupScreenState extends State<SignupScreen> {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
+          const SizedBox(height: 5),
           TextFormField(
             validator: (val) {
               if (val!.isEmpty) {
@@ -202,7 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF003680), // Change the color as needed
+                  color: Color(0xFF003680),
                 ),
               ),
             ),
@@ -224,7 +182,7 @@ class _SignupScreenState extends State<SignupScreen> {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
+          const SizedBox(height: 5),
           Row(
             children: [
               Expanded(
@@ -234,20 +192,18 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: false,
                   style: const TextStyle(color: Colors.black),
                   enabled: verifyEmailSuccess != 1,
-                  // 이메일 인증 성공 시에만 수정 불가능하도록 설정
                   decoration: InputDecoration(
                     hintText: "이메일을 입력하세요.",
                     hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFF003680), // Change the color as needed
+                        color: Color(0xFF003680),
                       ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-              // Add some spacing between the TextFormField and the button
               Container(
                 height: 40,
                 child: ElevatedButton(
@@ -286,13 +242,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
-                    // Set button background color to orange
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
-                      // Set button border radius
                       side: const BorderSide(
-                          color: Color(0xFF003680)// Set button border color to orange
+                          color: Color(0xFF003680)
                       ),
                     ),
                   ),
@@ -457,7 +411,7 @@ class _SignupScreenState extends State<SignupScreen> {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
+          const SizedBox(height: 5),
           TextFormField(
             validator: (val) {
               if (val!.isEmpty) {
@@ -475,7 +429,7 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF003680),// Change the color as needed
+                  color: Color(0xFF003680),
                 ),
               ),
             ),
@@ -509,7 +463,7 @@ class _SignupScreenState extends State<SignupScreen> {
               if (pickedDate != null) {
                 setState(() {
                   birthDate = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
-                  isBirthSelected = true;  // 날짜가 선택되었음을 표시
+                  isBirthSelected = true;
                 });
               }
             },
@@ -552,7 +506,7 @@ class _SignupScreenState extends State<SignupScreen> {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
+          const SizedBox(height: 5),
           TextFormField(
             validator: (val) {
               if (val!.isEmpty) {
@@ -570,7 +524,7 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF003680), // Change the color as needed
+                  color: Color(0xFF003680),
                 ),
               ),
             ),
@@ -592,7 +546,7 @@ class _SignupScreenState extends State<SignupScreen> {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 5), // 제목과 입력 필드 사이의 간격 조절
+          const SizedBox(height: 5),
           TextFormField(
             validator: (val) {
               if (val!.isEmpty) {
@@ -610,7 +564,7 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF003680), // Change the color as needed
+                  color: Color(0xFF003680),
                 ),
               ),
             ),
@@ -659,7 +613,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF003680), // Change the color as needed
+                  color: Color(0xFF003680),
                 ),
               ),
             ),
@@ -690,7 +644,7 @@ class _SignupScreenState extends State<SignupScreen> {
               hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
               focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF003680), // Change the color as needed
+                  color: Color(0xFF003680),
                 ),
               ),
             ),
@@ -754,49 +708,6 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
-      // onTap: () async {
-      //   if (validateAndSave()) {
-      //     setState(() {
-      //       isApiCallProcess = true;
-      //     });
-      //
-      //     SignupRequestModel model = SignupRequestModel(
-      //       username: username,
-      //       nickname: nickname,
-      //       userId: userId,
-      //       password: password,
-      //       email: email,
-      //       phoneNumber: phoneNumber,
-      //       birth: birthDate
-      //     );
-      //
-      //     UserService.register(model).then(
-      //           (result) {
-      //         setState(() {
-      //           isApiCallProcess = false;
-      //         });
-      //
-      //         if (result.value != null) {
-      //           showCustomSnackBar(context, '가입이 완료되었습니다.');
-      //           Navigator.pushReplacement(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => LoginScreen()),
-      //           );
-      //         } else {
-      //           FormHelper.showSimpleAlertDialog(
-      //             context,
-      //             Config.appName,
-      //             "회원가입에 실패하였습니다. 입력하신 정보를 다시 확인해주세요.",
-      //             "확인",
-      //                 () {
-      //               Navigator.of(context, rootNavigator: true).pop();
-      //             },
-      //           );
-      //         }
-      //       },
-      //     );
-      //   }
-      // },
   }
 
   // OR 텍스트
@@ -831,7 +742,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    // Navigator.pushNamed(context, '/user/login');
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -861,7 +771,6 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   bool isNicknameValid(String nickname) {
-    // return nickname.isNotEmpty && nickname.length <= 20;
     final RegExp validCharacters = RegExp(r'^[a-zA-Z가-힣0-9]+$');
     return nickname.isNotEmpty &&
         nickname.length <= 20 &&
