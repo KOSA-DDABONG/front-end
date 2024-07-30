@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:front/component/map/get_map.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../constants.dart';
 
 void showEditReviewDialog(BuildContext context) {
   showDialog(
@@ -187,8 +190,12 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                     width: 2.0, // 테두리 두께
                   ),
                 ),
-                // child: getMap(),
-                child:Text('getMap()')
+                child: GetMap(
+                  apiKey: mapApiKey,
+                  origin: '37.819929,-122.478255', // 출발지 좌표
+                  destination: '37.787994,-122.407437', // 도착지 좌표
+                  waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
+                ),
               ),
               SizedBox(height: 20),
               Text(
@@ -326,7 +333,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
-                          context!,
+                          context,
                           MaterialPageRoute(
                               builder: (context) => AllReviewScreen()),
                         );

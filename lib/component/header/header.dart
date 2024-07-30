@@ -239,7 +239,7 @@ class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget
               OutlinedButton(
                 onPressed: () {
                   Navigator.push(
-                    context!,
+                    context,
                     MaterialPageRoute(builder: (context) => SignupScreen()),
                   );
                 },
@@ -258,7 +258,7 @@ class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                    context!,
+                    context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 },

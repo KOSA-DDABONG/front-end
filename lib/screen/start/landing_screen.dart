@@ -40,7 +40,6 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: kIsWeb
@@ -159,7 +158,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Navigator.push(
-                                      context!,
+                                      context,
                                       MaterialPageRoute(builder: (context) => SelectScreen()),
                                     );
                                   },
