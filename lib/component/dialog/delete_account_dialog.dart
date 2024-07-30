@@ -4,8 +4,6 @@ import '../../screen/start/landing_screen.dart';
 import '../snack_bar.dart';
 
 void showDeleteAccountDialog(BuildContext context) {
-  final TextEditingController phoneController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   showDialog(
     context: context,
