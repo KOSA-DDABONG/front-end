@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:front/component/header/header_drawer.dart';
+import 'package:front/screen/trip/select_screen.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,10 +21,9 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     _controller = AnimationController(
-      vsync: this, // 여기서 vsync 사용
+      vsync: this,
       duration: Duration(seconds: 1),
     );
-    // 애니메이션 시작을 지연시키고 싶다면 Future.delayed를 사용할 수 있습니다.
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
         opacityLevel = 1.0;
@@ -59,7 +59,6 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background image with custom shape and blur effect
           Positioned.fill(
             child: ClipPath(
               clipper: VerticalWaveClipper(),
@@ -105,7 +104,6 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Row(
                       children: [
-                        // Left side: Text and Button
                         Expanded(
                           flex: 1,
                           child: SizedBox(),
@@ -160,7 +158,10 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
                                 )),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    //
+                                    Navigator.push(
+                                      context!,
+                                      MaterialPageRoute(builder: (context) => SelectScreen()),
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
