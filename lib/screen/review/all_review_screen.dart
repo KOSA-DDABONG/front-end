@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/screen/review/add_review_screen.dart';
 
 import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
