@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:front/component/dialog/delete_account_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
@@ -181,6 +182,28 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
                 icon: Icon(
                   Icons.edit,         // 연필 모양 아이콘
                   color: Colors.grey, // 회색으로 설정
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 20),
+          Divider(
+            color: Colors.grey[300],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Text(
+                '회원 탈퇴하기',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                onPressed: () {
+                  showDeleteAccountDialog(context);
+                },
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Colors.grey,
                 ),
               )
             ],
