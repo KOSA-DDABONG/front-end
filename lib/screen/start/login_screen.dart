@@ -188,37 +188,37 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 5),
         Focus(
-            onFocusChange: (hasFocus) {
-              setState(() {
-                idIconColor =
-                hasFocus ? Color(0xFF003680) : Colors.grey.withOpacity(0.7);
-              });
-            },
-            child: Container(
-              height: 60,
-              child: TextFormField(
-                controller: idController,
-                // initialValue: email,
-                focusNode: idFocusNode,
-                validator: (val) => val!.isEmpty ? '아이디가 입력되지 않았습니다.' : null,
-                onChanged: (val) => userId = val,
-                obscureText: false,
-                style: TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  hintText: "아이디를 입력하세요.",
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: idIconColor,
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFF003680), // Change the color as needed
-                    ),
+          onFocusChange: (hasFocus) {
+            setState(() {
+              idIconColor =
+              hasFocus ? Color(0xFF003680) : Colors.grey.withOpacity(0.7);
+            });
+          },
+          child: Container(
+            height: 60,
+            child: TextFormField(
+              controller: idController,
+              // initialValue: email,
+              focusNode: idFocusNode,
+              validator: (val) => val!.isEmpty ? '아이디가 입력되지 않았습니다.' : null,
+              onChanged: (val) => userId = val,
+              obscureText: false,
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                hintText: "아이디를 입력하세요.",
+                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: idIconColor,
+                ),
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF003680),
                   ),
                 ),
               ),
-            )
+            ),
+          )
         ),
       ],
     );
@@ -275,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Color(0xFF003680), // Change the color as needed
+                    color: Color(0xFF003680),
                   ),
                 ),
               ),
@@ -325,7 +325,6 @@ class _LoginScreenState extends State<LoginScreen> {
               if (result.value != null) {
                 savePreferences();
                 final userProfileResult = await UserService.getUserProfile();
-                // print("Here is LoginPage : ${userProfileResult.value}");
 
                 setState(() {
                   isApiCallProcess = false;
@@ -333,9 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => MyMenuScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => MyMenuScreen()),
                 );
 
               } else {
