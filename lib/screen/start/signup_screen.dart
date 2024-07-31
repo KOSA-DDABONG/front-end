@@ -9,8 +9,14 @@ import 'package:front/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
+import '../../component/backgroundImg/login_signup_background.dart';
 import '../../component/header/header.dart';
 import '../../component/snack_bar.dart';
+import '../../component/validate/check_id_validate.dart';
+import '../../component/validate/check_input_validate.dart';
+import '../../component/validate/check_name_validate.dart';
+import '../../component/validate/check_nickname_validate.dart';
+import '../../component/validate/check_number_validate.dart';
 import '../../constants.dart';
 import 'login_screen.dart';
 
@@ -56,7 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
-          _backgroundImgUI(),
+          showLoginSignupBackgroungImg(context),
           ProgressHUD(
             inAsyncCall: isApiCallProcess,
             opacity: 0.3,
@@ -69,26 +75,6 @@ class _SignupScreenState extends State<SignupScreen> {
             )
           ),
         ],
-      ),
-    );
-  }
-
-  //배경 이미지
-  Widget _backgroundImgUI() {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return Positioned(
-      bottom: 0,
-      top: 0,
-      child: Opacity(
-        opacity: 0.15,
-        child: Image.asset(
-          '../assets/images/login_background.png',
-          width: screenWidth/2,
-          height: screenHeight * 2/3,
-          fit: BoxFit.fill,
-        ),
       ),
     );
   }
@@ -160,7 +146,7 @@ class _SignupScreenState extends State<SignupScreen> {
           validator: (val) {
             if (val!.isEmpty) {
               return '사용자 이름이 입력되지 않았습니다.';
-            } else if (!isNicknameValid(val)) {
+            } else if (!checkNameValidate(val, globalFormKey)) {
               return '형식을 확인해주세요.';
             }
             return null;
@@ -169,7 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
           obscureText: false,
           style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            hintText: "이름을 입력하세요. ex)홍길동",
+            hintText: "이름을 입력하세요. (한글/영어) ex)홍길동",
             hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
             focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(
@@ -429,7 +415,7 @@ class _SignupScreenState extends State<SignupScreen> {
           validator: (val) {
             if (val!.isEmpty) {
               return '전화번호가 입력되지 않았습니다.';
-            } else if (!isValidPhoneNumber(val)) {
+            } else if (!checkNumberValidate(val, globalFormKey)) {
               return '전화번호 형식을 확인해주세요. ex) 01011112222';
             }
             return null;
@@ -546,7 +532,7 @@ class _SignupScreenState extends State<SignupScreen> {
           validator: (val) {
             if (val!.isEmpty) {
               return '닉네임이 입력되지 않았습니다.';
-            } else if (!isNicknameValid(val)) {
+            } else if (!checkNicknameValidate(val, globalFormKey)) {
               return '닉네임 형식을 확인하세요.';
             }
             return null;
@@ -586,7 +572,7 @@ class _SignupScreenState extends State<SignupScreen> {
           validator: (val) {
             if (val!.isEmpty) {
               return '아이디가 입력되지 않았습니다.';
-            } else if (!isNicknameValid(val)) {
+            } else if (!checkIdValidate(val, globalFormKey)) {
               return '아이디 형식을 확인해주세요.';
             }
             return null;
@@ -696,7 +682,7 @@ class _SignupScreenState extends State<SignupScreen> {
       width: screenWidth,
       child: ElevatedButton(
         onPressed: () async {
-          if (validateAndSave()) {
+          if (checkInputValidate(globalFormKey)) {
             setState(() {
               isApiCallProcess = true;
             });
@@ -788,29 +774,5 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
-  }
-
-  //입력 유효성 검사
-  bool validateAndSave() {
-    final form = globalFormKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  //전화번호 유효성 검사
-  bool isValidPhoneNumber(String input) {
-    final RegExp regex = RegExp(r'^010\d{8}$');
-    return regex.hasMatch(input);
-  }
-
-  //닉네임 유효성 검사
-  bool isNicknameValid(String nickname) {
-    final RegExp validCharacters = RegExp(r'^[a-zA-Z가-힣0-9]+$');
-    return nickname.isNotEmpty &&
-        nickname.length <= 20 &&
-        validCharacters.hasMatch(nickname);
   }
 }
