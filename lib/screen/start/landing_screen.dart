@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../component/clipper/vertical_wave_clipper.dart';
 import '../../component/header/header.dart';
+import '../../constants.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
         context: context,
       ),
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white, // Color(0xffe4f4ff),
+      backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
           _backgroundImgUI(),
@@ -141,7 +142,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
       style: GoogleFonts.indieFlower(
         fontSize: 120,
         fontWeight: FontWeight.bold,
-        color: Color(0xFF003680),
+        color: pointColor
       ),
     );
   }
