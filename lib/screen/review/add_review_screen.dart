@@ -1,17 +1,13 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:front/screen/review/all_review_screen.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
 
 import '../../component/header/header.dart';
 import '../../component/map/get_map.dart';
 import '../../constants.dart';
-
-//해결해야할 일
-//지도 api 불러와서 띄우기(웹)
 
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({Key? key}) : super(key: key);
@@ -26,91 +22,166 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   final List<XFile?> _images = List<XFile?>.filled(5, null, growable: false);
   final ImagePicker _picker = ImagePicker();
   final List<String> _hashtags = [];
-  List<String?> _imageUrls = List<String?>.filled(5, null, growable: false);
-  List<File?> _imageFiles = List<File?>.filled(5, null, growable: false);
-  Position? _currentPosition;
-  int _charCount = 0;
-  final int _maxCharCount = 100;
+  final List<String?> _imageUrls = List<String?>.filled(5, null, growable: false);
+  final List<File?> _imageFiles = List<File?>.filled(5, null, growable: false);
   final int _maxHashtags = 5;
   bool _showHashtagLimitError = false;
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
 
-
-
-  //Test
-  final List<LatLng> _day1Coordinates = [
-    LatLng(37.42796133580664, -122.085749655962),
-    LatLng(37.42896133580664, -122.086749655962),
-    LatLng(37.42996133580664, -122.087749655962),
-  ];
-
-  final List<LatLng> _day2Coordinates = [
-    LatLng(37.43096133580664, -122.088749655962),
-    LatLng(37.43196133580664, -122.089749655962),
-    LatLng(37.43296133580664, -122.090749655962),
-    LatLng(37.43396133580664, -122.091749655962),
-  ];
-  //
-
-
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
-    _textController.addListener(_updateCharCount);
   }
 
   @override
   void dispose() {
-    _textController.removeListener(_updateCharCount);
     _textController.dispose();
     super.dispose();
   }
 
-  void _updateCharCount() {
-    setState(() {
-      _charCount = _textController.text.length;
-      if (_charCount > _maxCharCount) {
-        _textController.text = _textController.text.substring(0, _maxCharCount);
-        _textController.selection = TextSelection.fromPosition(
-          TextPosition(offset: _maxCharCount),
-        );
-      }
-    });
-  }
-
-  void _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AfterLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
+      ),
+      extendBodyBehindAppBar: false,
+      backgroundColor: Colors.white,
+      body: _addReviewPageUI(),
     );
-
-    setState(() {
-      _currentPosition = position;
-    });
   }
 
+  //후기 작성 페이지 UI
+  Widget _addReviewPageUI() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 200.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _titleText(),
+            SizedBox(height: 20),
+            _subtitleText('일정 지도'),
+            SizedBox(height: 10,),
+            _mapUI(),
+            SizedBox(height: 20),
+            _subtitleText('사진 업로드'),
+            SizedBox(height: 10,),
+            _imageSelectUI(),
+            SizedBox(height: 20),
+            _subtitleText('후기 작성'),
+            SizedBox(height: 10,),
+            _buildReviewContentField(maxLength: 100),
+            SizedBox(height: 20),
+            _subtitleText('해시태그 입력'),
+            SizedBox(height: 10),
+            _hashtagField(),
+            SizedBox(height: 10),
+            if (_showNoHashtagError)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  '입력된 해시태그가 없습니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            if (_showHashtagLimitError)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            if (_showDuplicateHashtagError)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  '이미 존재하는 해시태그입니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            SizedBox(height: 20),
+            _hashtagBtnUI(),
+            SizedBox(height: 30),
+            _buttonField(),
+            SizedBox(height: 50),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //타이틀 텍스트
+  Widget _titleText() {
+    return Text(
+      '여행 후기 작성',
+      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+    );
+  }
+
+  //서브 타이틀 텍스트
+  Widget _subtitleText(String subtitleText) {
+    return Text(
+      subtitleText,
+      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+    );
+  }
+
+  //지도
+  Widget _mapUI() {
+    return Container(
+      height: 300,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.blue,
+          width: 2.0,
+        ),
+      ),
+      child: GetMap(
+        apiKey: mapApiKey,
+        origin: '37.819929,-122.478255',
+        destination: '37.787994,-122.407437',
+        waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+      ),
+    );
+  }
+
+  //이미지 선택 UI
+  Widget _imageSelectUI() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(5, (index) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            child: GestureDetector(
+              onTap: () => _pickImage(index),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Container(
+                  child: Container(
+                    height: 120,
+                    color: Colors.grey[500],
+                    child: _images[index] == null
+                        ? Icon(Icons.camera_alt, color: Colors.white70,)
+                        : kIsWeb
+                        ? Image.network(_images[index]!.path, fit: BoxFit.cover)
+                        : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  //이미지 선택 기능
   void _pickImage(int index) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -128,6 +199,56 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     }
   }
 
+  //후기 내용 입력란
+  Widget _buildReviewContentField({int? maxLength}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        maxLines: 5,
+        maxLength: maxLength,
+        decoration: InputDecoration(
+          hintText: 'ex) 여름 휴가를 목적으로 부산에 놀러왔습니다.',
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+        ),
+        inputFormatters: [
+          if (maxLength != null) LengthLimitingTextInputFormatter(maxLength),
+        ],
+      ),
+    );
+  }
+
+  //해시태그 입력란
+  Widget _hashtagField() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _hashtagController,
+            decoration: InputDecoration(
+              hintText: '띄어쓰기 없이 입력하세요. ex) 힐링',
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 2.0), // 선택된 상태에서의 테두리 색상
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1.0), // 기본 상태에서의 테두리 색상
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: _addHashtag,
+        ),
+      ],
+    );
+  }
+
+  //해시태그 추가
   void _addHashtag() {
     final String tag = _hashtagController.text.trim();
     if(tag.isEmpty) {
@@ -164,244 +285,87 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     }
   }
 
+  //해시태그 제거
   void _removeHashtag(String tag) {
     setState(() {
       _hashtags.remove(tag);
     });
   }
 
-  void _submit() {
-    // Submit logic
+  //생성된 해시태그
+  Widget _hashtagBtnUI() {
+    return Wrap(
+      spacing: 10,
+      children: _hashtags.map((tag) {
+        return Chip(
+          label: Text(
+            '#$tag',
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+          onDeleted: () => _removeHashtag(tag),
+          backgroundColor: Colors.grey[200],
+          deleteIconColor: Colors.grey[600],
+          shape: StadiumBorder(),
+          elevation: 4,
+        );
+      }).toList(),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  //버튼 영역
+  Widget _buttonField() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _cancelBtnUI(),
+        SizedBox(width: 20),
+        _submitBtnUI(),
+      ],
+    );
+  }
 
-    return Scaffold(
-      appBar: AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
-      ),
-      extendBodyBehindAppBar: false,
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 200.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '여행 후기 작성',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20,),
-              Text(
-                '일정 지도',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10,),
-              Container(
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue, // 테두리 색상
-                    width: 2.0, // 테두리 두께
-                  ),
-                ),
-                child: GetMap(
-                  apiKey: mapApiKey,
-                  origin: '37.819929,-122.478255', // 출발지 좌표
-                  destination: '37.787994,-122.407437', // 도착지 좌표
-                  waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                '사진 업로드',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(5, (index) {
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                      child: GestureDetector(
-                        onTap: () => _pickImage(index),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Container(
-                          child: Container(
-                            height: 120,
-                            color: Colors.grey[500],
-                            child: _images[index] == null
-                                ? Icon(Icons.camera_alt, color: Colors.white70,)
-                                : kIsWeb
-                                ? Image.network(_images[index]!.path, fit: BoxFit.cover)
-                                : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-              SizedBox(height: 20),
-              Text(
-                '후기 작성',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10,),
-              TextField(
-                controller: _textController,
-                decoration: InputDecoration(
-                  hintText: 'ex) 여름 휴가를 목적으로 부산에 놀러 왔습니다.',
-                  counterText: '',
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                maxLines: null,
-              ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  '$_charCount/$_maxCharCount',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                '해시태그 입력',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _hashtagController,
-                      decoration: InputDecoration(
-                        hintText: '띄어쓰기 없이 입력하세요. ex) 힐링',
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: _addHashtag,
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              if (_showNoHashtagError)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    '입력된 해시태그가 없습니다.',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              if (_showHashtagLimitError)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              if (_showDuplicateHashtagError)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    '이미 존재하는 해시태그입니다.',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              SizedBox(height: 20),
-              Wrap(
-                spacing: 10,
-                children: _hashtags.map((tag) {
-                  return Chip(
-                    label: Text(
-                      '#$tag',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    onDeleted: () => _removeHashtag(tag),
-                    backgroundColor: Colors.grey[200],
-                    deleteIconColor: Colors.grey[600],
-                    // shape: RoundedRectangleBorder(
-                    //   borderRadius: BorderRadius.circular(10),
-                    // ),
-                    shape: StadiumBorder(),
-                    elevation: 4, // 그림자 설정
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AllReviewScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(color: Colors.blue, width: 1.0),
-                        ),
-                      ),
-                      child: Text(
-                        '취소',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(color: Colors.blue, width: 1.0),
-                        ),
-                      ),
-                      child: Text(
-                        '등록',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 50),
-            ],
+  //취소 버튼
+  Widget _cancelBtnUI() {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AllReviewScreen()),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(color: Colors.blue, width: 1.0),
           ),
+        ),
+        child: Text(
+          '취소',
+          style: TextStyle(color: Colors.blue),
         ),
       ),
     );
   }
-  Set<Marker> _buildMarkers() {
-    return {
-      Marker(
-        markerId: MarkerId('current location'),
-        position: LatLng(31.5555, 111.3333),
-        infoWindow: InfoWindow(title: '현재 위치'),
-      )
-    };
+
+  //등록 버튼
+  Widget _submitBtnUI() {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(color: Colors.blue, width: 1.0),
+          ),
+        ),
+        child: Text(
+          '등록',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
   }
 }
