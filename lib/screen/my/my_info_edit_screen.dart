@@ -180,8 +180,8 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
                   showEditPasswordDialog(context);
                 },
                 icon: Icon(
-                  Icons.edit,         // 연필 모양 아이콘
-                  color: Colors.grey, // 회색으로 설정
+                  Icons.edit,
+                  color: Colors.grey,
                 ),
               )
             ],

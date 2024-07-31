@@ -7,10 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
+import '../../component/backgroundImg/login_signup_background.dart';
+import '../../component/validate/check_input_validate.dart';
+import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
 import '../../service/user_service.dart';
 import '../../component/header/header.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -59,7 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void savePreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     prefs.setBool('rememberId', rememberId);
 
     if (rememberId) {
@@ -69,90 +70,47 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: NotLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
-      backgroundColor: Color(0xffe4f4ff),
+      backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
-          Positioned(
-            bottom: 0,
-            top: 0,
-            child: Opacity(
-              opacity: 0.15,
-              child: Image.asset(
-                '../assets/images/login_background.png',
-                width: screenWidth/2,
-                height: screenHeight * 2/3,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
+          showLoginSignupBackgroungImg(context),
           ProgressHUD(
-              inAsyncCall: isApiCallProcess,
-              opacity: 0.3,
-              key: UniqueKey(),
-              child: Form(
-                key: globalFormKey,
-                child: SingleChildScrollView(
-                  child: _loginUI(context),
-                )
-                // Responsive(
-                //   mobile: _loginUIMobile(context),
-                //   tablet: _loginUITablet(context),
-                //   desktop: _loginUIDesktop(context),
-                // ),
+            inAsyncCall: isApiCallProcess,
+            opacity: 0.3,
+            key: UniqueKey(),
+            child: Form(
+              key: globalFormKey,
+              child: SingleChildScrollView(
+                child: _loginUI(context),
               )
+            )
           )
         ],
       ),
     );
   }
 
-  Widget _loginUIMobile(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: _loginUI(context),
-    );
-  }
-
-  Widget _loginUITablet(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 60),
-      child: _loginUI(context),
-    );
-  }
-
-  Widget _loginUIDesktop(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80),
-        width: MediaQuery.of(context).size.width / 2,
-        child: _loginUI(context),
-      ),
-    );
-  }
-
-
-  // 로그인 UI
+  //로그인 페이지 UI
   Widget _loginUI(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 200, vertical: 30),
       child: Column(
         children: <Widget>[
           const SizedBox(height: 60),
+          _titleUI(),
+          const SizedBox(height: 50),
           _buildIdField(),
           const SizedBox(height: 30),
           _buildPasswordField(),
           const SizedBox(height: 30),
-          _checkboxRememberEmail(),
+          _checkboxRememberId(),
           const SizedBox(height: 80),
-          _buildLoginButton(context),
+          _buildLoginButton(),
           const SizedBox(height: 50),
           _buildOrText(),
           const SizedBox(height: 30),
@@ -163,21 +121,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //타이틀
+  Widget _titleUI() {
+    return Center(
+      child: Text(
+        'TripFlow',
+        style: GoogleFonts.indieFlower(
+          fontSize: 50,
+          fontWeight: FontWeight.bold,
+          color: pointColor,
+        ),
+      ),
+    );
+  }
+
+  //아이디 입력란
   Widget _buildIdField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Text(
-            'TripFlow',
-            style: GoogleFonts.indieFlower(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF003680),
-            ),
-          ),
-        ),
-        const SizedBox(height: 50),
         const Text(
           "아이디",
           style: TextStyle(
@@ -191,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onFocusChange: (hasFocus) {
             setState(() {
               idIconColor =
-              hasFocus ? Color(0xFF003680) : Colors.grey.withOpacity(0.7);
+              hasFocus ? pointColor : Colors.grey.withOpacity(0.7);
             });
           },
           child: Container(
@@ -224,6 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //비밀번호 입력란
   Widget _buildPasswordField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onFocusChange: (hasFocus) {
             setState(() {
               passwordIconColor =
-              hasFocus ? Color(0xFF003680) : Colors.grey.withOpacity(0.7);
+              hasFocus ? pointColor : Colors.grey.withOpacity(0.7);
             });
           },
           child: Container(
@@ -270,12 +233,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     hidePassword ? Icons.visibility_off : Icons.visibility,
                     color: hidePassword
                         ? Colors.grey.withOpacity(0.7)
-                        : Color(0xFF003680),
+                        : pointColor,
                   ),
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Color(0xFF003680),
+                    color: pointColor,
                   ),
                 ),
               ),
@@ -286,7 +249,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _checkboxRememberEmail() {
+  //아이디 기억하기
+  Widget _checkboxRememberId() {
     return Row(
       children: [
         Checkbox(
@@ -296,31 +260,28 @@ class _LoginScreenState extends State<LoginScreen> {
               rememberId = value!;
             });
           },
-          activeColor: Color(0xFF003680),
+          activeColor: pointColor,
         ),
         const Text("아이디 기억하기"),
       ],
     );
   }
 
-  // 로그인 버튼
-  Widget _buildLoginButton(BuildContext context) {
+  //로그인 버튼
+  Widget _buildLoginButton() {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       width: screenWidth,
       child: ElevatedButton(
         onPressed: () async {
-          if (validateAndSave()) {
+          if (checkInputValidate(globalFormKey)) {
             setState(() {
               isApiCallProcess = true;
             });
             try {
               final model = LoginRequestModel(userid: userId, password: password);
               final result = await SessionService.login(model);
-              print("Here is LoginPage : ${model.userid}, ${model.password}");
-              print("Here is LoginPage : ${result.value?.accessToken}");
-              print("Here is LoginPage : ${result.value?.user}");
 
               if (result.value != null) {
                 savePreferences();
@@ -378,7 +339,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // OR 텍스트
+  //OR 텍스트
   Widget _buildOrText() {
     return const Center(
       child: Text(
@@ -412,7 +373,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ..onTap = () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignupScreen()),
+                      MaterialPageRoute(builder: (context) => const SignupScreen()),
                     );
                   },
               ),
@@ -421,15 +382,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  //입력 유효성 검사
-  bool validateAndSave() {
-    final form = globalFormKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
   }
 }

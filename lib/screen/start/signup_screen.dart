@@ -1,14 +1,23 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:front/dto/signup/signup_request_model.dart';
 import 'package:front/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
+import '../../component/backgroundImg/login_signup_background.dart';
 import '../../component/header/header.dart';
 import '../../component/snack_bar.dart';
+import '../../component/validate/check_id_validate.dart';
+import '../../component/validate/check_input_validate.dart';
+import '../../component/validate/check_name_validate.dart';
+import '../../component/validate/check_nickname_validate.dart';
+import '../../component/validate/check_number_validate.dart';
+import '../../constants.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -45,30 +54,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: NotLoginHeader(
         automaticallyImplyLeading: false,
         context: context,
       ),
-      backgroundColor: Color(0xffe4f4ff),
+      backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
-          Positioned(
-            bottom: 0,
-            top: 0,
-            child: Opacity(
-              opacity: 0.15,
-              child: Image.asset(
-                '../assets/images/login_background.png',
-                width: screenWidth/2,
-                height: screenHeight * 2/3,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
+          showLoginSignupBackgroungImg(context),
           ProgressHUD(
             inAsyncCall: isApiCallProcess,
             opacity: 0.3,
@@ -85,13 +79,15 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  // 로그인 UI
+  //회원가입 페이지 UI
   Widget _registerUI(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 200, vertical: 30),
       child: Column(
         children: <Widget>[
           const SizedBox(height: 60),
+          _titleUI(),
+          const SizedBox(height: 50),
           _buildUsernameField(),
           const SizedBox(height: 30),
           _buildEmailField(),
@@ -118,164 +114,167 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  //이름 필드
-  Widget _buildUsernameField() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text(
-              'TripFlow',
-              style: GoogleFonts.indieFlower(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF003680),
-              ),
-            ),
-          ),
-          const SizedBox(height: 50),
-          const Text(
-            "이름",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            validator: (val) {
-              if (val!.isEmpty) {
-                return '사용자 이름이 입력되지 않았습니다.';
-              } else if (!isNicknameValid(val)) {
-                return '형식을 확인해주세요.';
-              }
-              return null;
-            },
-            onChanged: (val) => username = val,
-            obscureText: false,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "이름을 입력하세요. ex)홍길동",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF003680),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
+  //타이틀
+  Widget _titleUI() {
+    return Center(
+      child: Text(
+        'TripFlow',
+        style: GoogleFonts.indieFlower(
+          fontSize: 50,
+          fontWeight: FontWeight.bold,
+          color: pointColor,
+        ),
+      ),
+    );
   }
 
-  // 이메일 필드
-  Widget _buildEmailField() {
+  //이름 입력란
+  Widget _buildUsernameField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "이메일",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "이름",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '사용자 이름이 입력되지 않았습니다.';
+            } else if (!checkNameValidate(val, globalFormKey)) {
+              return '형식을 확인해주세요.';
+            }
+            return null;
+          },
+          onChanged: (val) => username = val,
+          obscureText: false,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "이름을 입력하세요. (한글/영어) ex)홍길동",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: pointColor,
+              ),
             ),
           ),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
-                  onChanged: (val) => email = val,
-                  obscureText: false,
-                  style: const TextStyle(color: Colors.black),
-                  enabled: verifyEmailSuccess != 1,
-                  decoration: InputDecoration(
-                    hintText: "이메일을 입력하세요.",
-                    hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF003680),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () async {
-                  //   try {
-                  //     final response =
-                  //     await UserService.emailVerifyRequest(email!);
-                  //     if (response.statusCode == 200) {
-                  //       expectedToken = response.data['token'];
-                  //       showVerificationDialog();
-                  //       print("TokenToken : $response");
-                  //     } else {
-                  //       print("TokenToken : $response");
-                  //       FormHelper.showSimpleAlertDialog(
-                  //         context,
-                  //         Config.appName,
-                  //         "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
-                  //         "확인",
-                  //             () {
-                  //           Navigator.of(context, rootNavigator: true).pop();
-                  //         },
-                  //       );
-                  //     }
-                  //   } catch (e) {
-                  //     print("Error: $e");
-                  //     FormHelper.showSimpleAlertDialog(
-                  //       context,
-                  //       Config.appName,
-                  //       "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
-                  //       "확인",
-                  //           () {
-                  //         Navigator.of(context, rootNavigator: true).pop();
-                  //       },
-                  //     );
-                  //   }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      side: const BorderSide(
-                          color: Color(0xFF003680)
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    '인증',
-                    style: TextStyle(fontSize: 15, color: Color(0xFF003680)),
-                  ),
-                ),
-              ),
-            ],
+        ),
+      ],
+    );
+  }
+
+  //이메일 입력란
+  Widget _buildEmailField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "이메일",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
           ),
-          // if (verifyEmailSuccess == 1)
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 8.0),
-          //     child: Text(
-          //       '이메일 인증이 완료되었습니다.',
-          //       style: TextStyle(color: Colors.green),
-          //     ),
-          //   )
-          // else if (verifyEmailSuccess == 2)
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 8.0),
-          //     child: Text(
-          //       '이메일 인증에 실패했습니다.',
-          //       style: TextStyle(color: Colors.red),
-          //     ),
-          //   )
-        ],
-      );
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                validator: (val) => val!.isEmpty ? '이메일이 입력되지 않았습니다.' : null,
+                onChanged: (val) => email = val,
+                obscureText: false,
+                style: const TextStyle(color: Colors.black),
+                enabled: verifyEmailSuccess != 1,
+                decoration: InputDecoration(
+                  hintText: "이메일을 입력하세요.",
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: pointColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Container(
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () async {
+                //   try {
+                //     final response =
+                //     await UserService.emailVerifyRequest(email!);
+                //     if (response.statusCode == 200) {
+                //       expectedToken = response.data['token'];
+                //       showVerificationDialog();
+                //       print("TokenToken : $response");
+                //     } else {
+                //       print("TokenToken : $response");
+                //       FormHelper.showSimpleAlertDialog(
+                //         context,
+                //         Config.appName,
+                //         "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
+                //         "확인",
+                //             () {
+                //           Navigator.of(context, rootNavigator: true).pop();
+                //         },
+                //       );
+                //     }
+                //   } catch (e) {
+                //     print("Error: $e");
+                //     FormHelper.showSimpleAlertDialog(
+                //       context,
+                //       Config.appName,
+                //       "인증코드 요청에 실패했습니다. 이미 등록된 이메일인지 확인해주세요.",
+                //       "확인",
+                //           () {
+                //         Navigator.of(context, rootNavigator: true).pop();
+                //       },
+                //     );
+                //   }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    side: const BorderSide(
+                        color: pointColor
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  '인증',
+                  style: TextStyle(fontSize: 15, color: pointColor),
+                ),
+              ),
+            ),
+          ],
+        ),
+        // if (verifyEmailSuccess == 1)
+        //   const Padding(
+        //     padding: EdgeInsets.only(top: 8.0),
+        //     child: Text(
+        //       '이메일 인증이 완료되었습니다.',
+        //       style: TextStyle(color: Colors.green),
+        //     ),
+        //   )
+        // else if (verifyEmailSuccess == 2)
+        //   const Padding(
+        //     padding: EdgeInsets.only(top: 8.0),
+        //     child: Text(
+        //       '이메일 인증에 실패했습니다.',
+        //       style: TextStyle(color: Colors.red),
+        //     ),
+        //   )
+      ],
+    );
   }
 
   // //인증코드 입력 다이어로그
@@ -398,262 +397,284 @@ class _SignupScreenState extends State<SignupScreen> {
   //   );
   // }
 
-  //전화번호 필드
+  //전화번호 입력란
   Widget _buildNumberField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "전화번호",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "전화번호",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
           ),
-          const SizedBox(height: 5),
-          TextFormField(
-            validator: (val) {
-              if (val!.isEmpty) {
-                return '전화번호가 입력되지 않았습니다.';
-              } else if (!isValidPhoneNumber(val)) {
-                return '전화번호 형식을 확인해주세요. ex) 01011112222';
-              }
-              return null;
-            },
-            onChanged: (val) => phoneNumber = val,
-            obscureText: false,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "전화번호를 입력하세요. ('-' 없이 입력하세요.)",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF003680),
-                ),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '전화번호가 입력되지 않았습니다.';
+            } else if (!checkNumberValidate(val, globalFormKey)) {
+              return '전화번호 형식을 확인해주세요. ex) 01011112222';
+            }
+            return null;
+          },
+          onChanged: (val) => phoneNumber = val,
+          obscureText: false,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "전화번호를 입력하세요. ('-' 없이 입력하세요.)",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: pointColor,
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  //생년월일 필드
+  //생년월일 입력란
   Widget _buildBirthField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "생년월일",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "생년월일",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
           ),
-          const SizedBox(height: 5),
-          GestureDetector(
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-              );
-              if (pickedDate != null) {
-                setState(() {
-                  birthDate = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
-                  isBirthSelected = true;
-                });
-              }
-            },
-            child: AbsorbPointer(
-              child: TextFormField(
-                validator: (val) {
-                  if (!isBirthSelected) {
-                    return '생년월일이 선택되지 않았습니다.';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  hintText: birthDate ?? "생년월일을 선택하세요.",
-                  hintStyle: TextStyle(
-                    color: isBirthSelected ? Colors.black : Colors.grey.withOpacity(0.7),  // 텍스트 색상 설정
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFF003680),
+        ),
+        const SizedBox(height: 5),
+        GestureDetector(
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: Colors.blue,
+                      onPrimary: Colors.black,
+                      onSurface: Colors.blue,
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blueGrey,
+                      ),
+                    ),
+                    dialogTheme: DialogTheme(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                   ),
+                  child: child!,
+                );
+              },
+            );
+            if (pickedDate != null) {
+              setState(() {
+                birthDate = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
+                isBirthSelected = true;
+              });
+            }
+          },
+          child: AbsorbPointer(
+            child: TextFormField(
+              validator: (val) {
+                if (!isBirthSelected) {
+                  return '생년월일이 선택되지 않았습니다.';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: birthDate ?? "생년월일을 선택하세요.",
+                hintStyle: TextStyle(
+                  color: isBirthSelected ? Colors.black : Colors.grey.withOpacity(0.7),  // 텍스트 색상 설정
+                ),
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: pointColor,
+                  ),
                 ),
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  //닉네임 필드
+  //닉네임 입력란
   Widget _buildNicknameField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "닉네임",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "닉네임",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
           ),
-          const SizedBox(height: 5),
-          TextFormField(
-            validator: (val) {
-              if (val!.isEmpty) {
-                return '닉네임이 입력되지 않았습니다.';
-              } else if (!isNicknameValid(val)) {
-                return '닉네임 형식을 확인하세요.';
-              }
-              return null;
-            },
-            onChanged: (val) => nickname = val,
-            obscureText: false,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "사용하실 닉네임을 입력하세요. (한글, 영어, 숫자 조합)",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF003680),
-                ),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '닉네임이 입력되지 않았습니다.';
+            } else if (!checkNicknameValidate(val, globalFormKey)) {
+              return '닉네임 형식을 확인하세요.';
+            }
+            return null;
+          },
+          onChanged: (val) => nickname = val,
+          obscureText: false,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "사용하실 닉네임을 입력하세요. (한글, 영어, 숫자 조합)",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: pointColor,
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  //아이디 필드
+  //아이디 입력란
   Widget _buildUserIdField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "아이디",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "아이디",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
           ),
-          const SizedBox(height: 5),
-          TextFormField(
-            validator: (val) {
-              if (val!.isEmpty) {
-                return '아이디가 입력되지 않았습니다.';
-              } else if (!isNicknameValid(val)) {
-                return '아이디 형식을 확인해주세요.';
-              }
-              return null;
-            },
-            onChanged: (val) => userId = val,
-            obscureText: false,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "사용하실 아이디를 입력하세요. (영어, 숫자 조합)",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF003680),
-                ),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '아이디가 입력되지 않았습니다.';
+            } else if (!checkIdValidate(val, globalFormKey)) {
+              return '아이디 형식을 확인해주세요.';
+            }
+            return null;
+          },
+          onChanged: (val) => userId = val,
+          obscureText: false,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "사용하실 아이디를 입력하세요. (영어, 숫자 조합)",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: pointColor,
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  // 비밀번호 필드
+  //비밀번호 입력란
   Widget _buildPasswordField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "비밀번호 입력",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 16,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "비밀번호 입력",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 16,
           ),
-          const SizedBox(height: 5),
-          TextFormField(
-            onChanged: (val) => password = val,
-            validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
-            obscureText: hidePassword,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "비밀번호를 입력하세요.",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    hidePassword = !hidePassword;
-                  });
-                },
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          onChanged: (val) => password = val,
+          validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
+          obscureText: hidePassword,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "비밀번호를 입력하세요.",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  hidePassword = !hidePassword;
+                });
+              },
+              color: hidePassword
+                  ? Colors.grey.withOpacity(0.7)
+                  : pointColor,
+              icon: Icon(
+                hidePassword ? Icons.visibility_off : Icons.visibility,
                 color: hidePassword
                     ? Colors.grey.withOpacity(0.7)
-                    : Color(0xFF003680),
-                icon: Icon(
-                  hidePassword ? Icons.visibility_off : Icons.visibility,
-                  color: hidePassword
-                      ? Colors.grey.withOpacity(0.7)
-                      : Color(0xFF003680),
-                ),
+                    : pointColor,
               ),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF003680),
-                ),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: pointColor,
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  // 비밀번호 확인 필드
+  //비밀번호 확인 입력란
   Widget _buildPasswordCheckField() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            onChanged: (val) => checkpassword = val,
-            validator: (val) {
-              if (val!.isEmpty) {
-                return '비밀번호가 입력되지 않았습니다.';
-              } else if (val != password) {
-                return '비밀번호가 일치하지 않습니다.';
-              }
-              return null;
-            },
-            obscureText: hidePassword,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              hintText: "비밀번호를 한번 더 입력하세요.",
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF003680),
-                ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          onChanged: (val) => checkpassword = val,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '비밀번호가 입력되지 않았습니다.';
+            } else if (val != password) {
+              return '비밀번호가 일치하지 않습니다.';
+            }
+            return null;
+          },
+          obscureText: hidePassword,
+          style: const TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            hintText: "비밀번호를 한번 더 입력하세요.",
+            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: pointColor,
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  // 회원가입 버튼
+  //등록 버튼
   Widget _buildRegisterButton() {
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -661,7 +682,7 @@ class _SignupScreenState extends State<SignupScreen> {
       width: screenWidth,
       child: ElevatedButton(
         onPressed: () async {
-          if (validateAndSave()) {
+          if (checkInputValidate(globalFormKey)) {
             setState(() {
               isApiCallProcess = true;
             });
@@ -710,7 +731,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  // OR 텍스트
+  //OR 텍스트
   Widget _buildOrText() {
     return const Center(
       child: Text(
@@ -723,7 +744,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  // 로그인 텍스트
+  //로그인 텍스트
   Widget _buildLoginText() {
     return Align(
       alignment: Alignment.center,
@@ -737,14 +758,14 @@ class _SignupScreenState extends State<SignupScreen> {
               TextSpan(
                 text: '로그인 하기',
                 style: const TextStyle(
-                  color: Color(0xFF003680),
+                  color: pointColor,
                   fontWeight: FontWeight.bold,
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
                     );
                   },
               ),
@@ -753,27 +774,5 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
-  }
-
-  // 입력 유효성 검사
-  bool validateAndSave() {
-    final form = globalFormKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  bool isValidPhoneNumber(String input) {
-    final RegExp regex = RegExp(r'^010\d{8}$');
-    return regex.hasMatch(input);
-  }
-
-  bool isNicknameValid(String nickname) {
-    final RegExp validCharacters = RegExp(r'^[a-zA-Z가-힣0-9]+$');
-    return nickname.isNotEmpty &&
-        nickname.length <= 20 &&
-        validCharacters.hasMatch(nickname);
   }
 }
