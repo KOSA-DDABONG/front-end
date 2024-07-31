@@ -38,10 +38,9 @@ class _GetMapState extends State<GetMap> {
         '&waypoints=${widget.waypoints}'
         '&key=${widget.apiKey}';
 
-    print('url: ' + url);
     try {
       final response = await http.get(Uri.parse(url));
-      print('response: ' + response.statusCode.toString());
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final encodedPoints = data['routes'][0]['overview_polyline']['points'];
