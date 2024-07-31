@@ -459,6 +459,28 @@ class _SignupScreenState extends State<SignupScreen> {
                 initialDate: DateTime.now(),
                 firstDate: DateTime(1900),
                 lastDate: DateTime.now(),
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: ColorScheme.light(
+                        primary: Colors.blue,
+                        onPrimary: Colors.black,
+                        onSurface: Colors.blue,
+                      ),
+                      textButtonTheme: TextButtonThemeData(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blueGrey,
+                        ),
+                      ),
+                      dialogTheme: DialogTheme(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ),
+                    child: child!,
+                  );
+                },
               );
               if (pickedDate != null) {
                 setState(() {
