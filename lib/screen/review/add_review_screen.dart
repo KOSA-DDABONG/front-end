@@ -62,23 +62,23 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _titleText(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _subtitleText('일정 지도'),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             _mapUI(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _subtitleText('사진 업로드'),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             _imageSelectUI(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _subtitleText('후기 작성'),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             _buildReviewContentField(maxLength: 100),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _subtitleText('해시태그 입력'),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             _hashtagField(),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_showNoHashtagError)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -103,11 +103,11 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _hashtagBtnUI(),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             _buttonField(),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
           ],
         ),
       ),
@@ -116,7 +116,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   //타이틀 텍스트
   Widget _titleText() {
-    return Text(
+    return const Text(
       '여행 후기 작성',
       style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
     );
@@ -126,7 +126,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   Widget _subtitleText(String subtitleText) {
     return Text(
       subtitleText,
-      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
     );
   }
 
@@ -167,7 +167,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     height: 120,
                     color: Colors.grey[500],
                     child: _images[index] == null
-                        ? Icon(Icons.camera_alt, color: Colors.white70,)
+                        ? const Icon(Icons.camera_alt, color: Colors.white70,)
                         : kIsWeb
                         ? Image.network(_images[index]!.path, fit: BoxFit.cover)
                         : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
@@ -241,7 +241,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: _addHashtag,
         ),
       ],
@@ -305,7 +305,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           onDeleted: () => _removeHashtag(tag),
           backgroundColor: Colors.grey[200],
           deleteIconColor: Colors.grey[600],
-          shape: StadiumBorder(),
+          shape: const StadiumBorder(),
           elevation: 4,
         );
       }).toList(),
@@ -318,7 +318,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _cancelBtnUI(),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         _submitBtnUI(),
       ],
     );
@@ -331,17 +331,17 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AllReviewScreen()),
+            MaterialPageRoute(builder: (context) => const AllReviewScreen()),
           );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(color: Colors.blue, width: 1.0),
+            side: const BorderSide(color: Colors.blue, width: 1.0),
           ),
         ),
-        child: Text(
+        child: const Text(
           '취소',
           style: TextStyle(color: Colors.blue),
         ),
@@ -358,10 +358,10 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           backgroundColor: Colors.blue,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(color: Colors.blue, width: 1.0),
+            side: const BorderSide(color: Colors.blue, width: 1.0),
           ),
         ),
-        child: Text(
+        child: const Text(
           '등록',
           style: TextStyle(color: Colors.white),
         ),
