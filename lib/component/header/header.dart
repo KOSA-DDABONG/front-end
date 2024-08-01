@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/component/mypage/my_menu.dart';
+import 'package:front/constants.dart';
 import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
@@ -32,15 +33,15 @@ class NotLoginHeader extends AppBar {
               Image.asset(
                 '../assets/images/tripflow_logo.png',
                 height: 30,
-                color: Color(0xFF003680),
+                color: pointColor,
               ),
-              SizedBox(width: 5,),
+              const SizedBox(width: 5,),
               Text(
                 'TripFlow',
                 style: GoogleFonts.indieFlower(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF003680),
+                  color: pointColor
                 ),
               ),
             ],

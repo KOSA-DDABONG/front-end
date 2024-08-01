@@ -4,7 +4,6 @@ import '../../screen/start/landing_screen.dart';
 import '../snack_bar.dart';
 
 void showDeleteAccountDialog(BuildContext context) {
-
   showDialog(
     context: context,
     builder: (BuildContext context) {

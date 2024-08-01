@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import '../../component/dialog/edit_number_dialog.dart';
 import '../../component/dialog/edit_pwd_dialog.dart';
+import '../../component/mypage/my_title.dart';
+import '../../component/mypage/profile_form_field.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
@@ -21,8 +23,8 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   bool hidePrevPassword = true;
   bool hidePassword = true;
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  String? _imageUrl;  // 웹 플랫폼용 이미지 URL
-  File? _image;      // 모바일/데스크톱 플랫폼용 이미지 파일
+  String? _imageUrl; //웹 플랫폼용 이미지 URL
+  File? _image; //모바일or데스크톱 플랫폼용 이미지 파일
   String? password;
   String? checkpassword;
 
@@ -41,9 +43,9 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
     setState(() {
       if (pickedFile != null) {
         if (kIsWeb) {
-          _imageUrl = pickedFile.path;  // 웹 플랫폼에서는 URL 사용
+          _imageUrl = pickedFile.path; //웹 플랫폼에서는 URL 사용
         } else {
-          _image = File(pickedFile.path);  // 모바일/데스크톱 플랫폼에서는 파일 사용
+          _image = File(pickedFile.path); //모바일or데스크톱 플랫폼에서는 파일 사용
         }
       } else {
         print('이미지 선택이 취소되었습니다.');
@@ -57,350 +59,204 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ProgressHUD(
+          inAsyncCall: isApiCallProcess,
+          opacity: 0.3,
+          key: UniqueKey(),
           child: Form(
             key: globalFormKey,
             child: profileEditUI(context),
           ),
-          inAsyncCall: isApiCallProcess,
-          opacity: 0.3,
-          key: UniqueKey(),
         ),
       ),
     );
   }
 
+  //프로필 수정 페이지 UI
   Widget profileEditUI(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '내 정보 수정',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
-          Center(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[200],
-                      backgroundImage: _image == null && _imageUrl == null
-                          ? null
-                          : kIsWeb
-                          ? NetworkImage(_imageUrl!)
-                          : FileImage(_image!) as ImageProvider,
-                      child: _image == null && _imageUrl == null
-                          ? Icon(Icons.person, size: 50)
-                          : null,
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _getImage,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, // Background color
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                          ),
-                          child: Text(
-                            '이미지 변경',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Text(
-                          '* 프로필 이미지 참고사항\n최소한 400 x 400px 이상 / 파일 크기 2MB 미만',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 40),
-          ProfileFormField(
-            label: '이름',
-          ),
-          SizedBox(height: 20),
-          ProfileFormField(
-            label: '이메일',
-          ),
-          SizedBox(height: 20),
+          showTitle('내 정보 수정'),
+          const SizedBox(height: 20),
           Row(
             children: [
-              ProfileFormField(
-                label: '전화번호',
-              ),
-              IconButton(
-                onPressed: () {
-                  showEditNumberDialog(context);
-                },
-                icon: Icon(
-                  Icons.edit,         // 연필 모양 아이콘
-                  color: Colors.grey, // 회색으로 설정
-                ),
-              )
+              _profileImgUI(),
+              const SizedBox(width: 20),
+              _profileImgField(),
             ],
           ),
-          SizedBox(height: 20),
-          ProfileFormField(
-            label: '생년월일',
-          ),
-          SizedBox(height: 20),
-          ProfileFormField(
-            label: '닉네임',
-          ),
-          SizedBox(height: 20),
-          ProfileFormField(
-            label: '아이디',
-          ),
-          SizedBox(height: 20),
-          Divider(
-            color: Colors.grey[300],
-          ),
-          SizedBox(height: 20),
+          const SizedBox(height: 40),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          _subTitleTextUI('회원 정보'),
+          const SizedBox(height: 20),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
           Row(
             children: [
-              Text(
-                '비밀번호 변경',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                onPressed: () {
-                  showEditPasswordDialog(context);
-                },
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.grey,
+              Expanded(
+                child: ProfileFormField(
+                  label: '이름',
+                  value: '{이름}', // 실제 값으로 대체
                 ),
-              )
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: ProfileFormField(
+                  label: '이메일',
+                  value: '{이메일}', // 실제 값으로 대체
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 20),
-          Divider(
-            color: Colors.grey[300],
-          ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             children: [
-              Text(
-                '회원 탈퇴하기',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                onPressed: () {
-                  showDeleteAccountDialog(context);
-                },
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: Colors.grey,
+              Expanded(
+                child: ProfileFormField(
+                  label: '전화번호',
+                  value: '{전화번호}', // 실제 값으로 대체
+                  withEditButton: true,
+                  onEdit: () => showEditNumberDialog(context),
                 ),
-              )
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: ProfileFormField(
+                  label: '생년월일',
+                  value: '{생년월일}', // 실제 값으로 대체
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 50),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ProfileFormField(
+                  label: '닉네임',
+                  value: '{닉네임}', // 실제 값으로 대체
+                ),
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: ProfileFormField(
+                  label: '아이디',
+                  value: '{아이디}', // 실제 값으로 대체
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          _changePasswordField(),
+          const SizedBox(height: 20),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          _deleteInfo(),
+          const SizedBox(height: 50),
         ],
       ),
     );
   }
 
-  Widget _buildPrevPasswordField() {
+  //프로필 이미지
+  Widget _profileImgUI() {
+    return CircleAvatar(
+      radius: 50,
+      backgroundColor: Colors.grey[200],
+      backgroundImage: _image == null && _imageUrl == null
+          ? null
+          : kIsWeb
+          ? NetworkImage(_imageUrl!)
+          : FileImage(_image!) as ImageProvider,
+      child: _image == null && _imageUrl == null
+          ? const Icon(Icons.person, size: 50)
+          : null,
+    );
+  }
+
+  //이미지 변경 필드
+  Widget _profileImgField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "현재 비밀번호",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            fontSize: 16,
-          ),
-        ),
-        const SizedBox(height: 5),
-        TextFormField(
-          onChanged: (val) => password = val,
-          validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
-          obscureText: hidePrevPassword,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "비밀번호를 입력하세요.",
-            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  hidePrevPassword = !hidePrevPassword;
-                });
-              },
-              color: hidePrevPassword
-                  ? Colors.grey.withOpacity(0.7)
-                  : Color(0xFF003680),
-              icon: Icon(
-                hidePrevPassword ? Icons.visibility_off : Icons.visibility,
-                color: hidePrevPassword
-                    ? Colors.grey.withOpacity(0.7)
-                    : Color(0xFF003680),
-              ),
-            ),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFF003680), // Change the color as needed
-              ),
-            ),
-          ),
-        ),
+        _imgChangeBtn(),
+        const SizedBox(height: 10,),
+        _imgConditionText(),
       ],
     );
   }
 
-  // 비밀번호 필드
-  Widget _buildPasswordField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "변경 비밀번호",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            fontSize: 16,
-          ),
+  //이미지 변경 버튼
+  Widget _imgChangeBtn() {
+    return ElevatedButton(
+      onPressed: _getImage,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
         ),
-        const SizedBox(height: 5),
-        TextFormField(
-          onChanged: (val) => password = val,
-          validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
-          obscureText: hidePassword,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "비밀번호를 입력하세요.",
-            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  hidePassword = !hidePassword;
-                });
-              },
-              color: hidePassword
-                  ? Colors.grey.withOpacity(0.7)
-                  : Color(0xFF003680),
-              icon: Icon(
-                hidePassword ? Icons.visibility_off : Icons.visibility,
-                color: hidePassword
-                    ? Colors.grey.withOpacity(0.7)
-                    : Color(0xFF003680),
-              ),
-            ),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFF003680), // Change the color as needed
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
+      child: const Text(
+        '이미지 변경',
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 
-  // 비밀번호 확인 필드
-  Widget _buildPasswordCheckField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  //변경 이미지 조건 텍스트
+  Widget _imgConditionText() {
+    return const Text(
+      '* 프로필 이미지 참고사항\n최소한 400 x 400px 이상 / 파일 크기 2MB 미만',
+      textAlign: TextAlign.left,
+      style: TextStyle(color: Colors.grey),
+    );
+  }
+
+  //서브 타이틀 텍스트 UI
+  Widget _subTitleTextUI(String subtitle) {
+    return Text(
+      subtitle,
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    );
+  }
+
+  //비밀번호 변경 필드
+  Widget _changePasswordField() {
+    return Row(
       children: [
-        TextFormField(
-          onChanged: (val) => checkpassword = val,
-          validator: (val) {
-            if (val!.isEmpty) {
-              return '비밀번호가 입력되지 않았습니다.';
-            } else if (val != password) {
-              return '비밀번호가 일치하지 않습니다.';
-            }
-            return null;
+        _subTitleTextUI('비밀번호 변경'),
+        IconButton(
+          onPressed: () {
+            showEditPasswordDialog(context);
           },
-          obscureText: hidePassword,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "비밀번호를 한번 더 입력하세요.",
-            hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFF003680), // Change the color as needed
-              ),
-            ),
+          icon: const Icon(
+            Icons.edit,
+            color: Colors.grey,
           ),
-        ),
+        )
       ],
     );
   }
-}
 
-class ProfileFormField extends StatelessWidget {
-  final String label;
-
-  ProfileFormField({
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  //회원탈퇴 필드
+  Widget _deleteInfo() {
+    return Row(
       children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          '{'+label+'}',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
-    );
-  }
-}
-
-class ProfileEditFormField extends StatelessWidget {
-  final String label;
-  final String hint;
-  final String? validationMessage;
-  final Color validationColor;
-
-  ProfileEditFormField({
-    required this.label,
-    required this.hint,
-    this.validationMessage,
-    this.validationColor = Colors.red,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: hint,
-            border: UnderlineInputBorder(),
+        _subTitleTextUI('회원 탈퇴하기'),
+        IconButton(
+          onPressed: () {
+            showDeleteAccountDialog(context);
+          },
+          icon: const Icon(
+            Icons.delete_outline,
+            color: Colors.grey,
           ),
-        ),
-        if (validationMessage != null)
-          Text(
-            validationMessage!,
-            style: TextStyle(color: validationColor),
-          ),
+        )
       ],
     );
   }

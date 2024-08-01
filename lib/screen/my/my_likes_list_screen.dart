@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/component/dialog/detail_review_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyLikesListScreen extends StatefulWidget {
@@ -37,10 +38,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '나의 좋아요',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
+          showTitle('나의 좋아요'),
           SizedBox(height: 50),
           GridView.builder(
             shrinkWrap: true,
