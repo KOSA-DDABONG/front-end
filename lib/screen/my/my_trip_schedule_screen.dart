@@ -4,11 +4,8 @@ import 'package:front/screen/review/add_review_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/detail_trip_dialog.dart';
+import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
-
-// 마무리 할일
-// 리스트타일 클릭하면 모달창 띄우기 (일정)
-// 리스트 타일 현재날짜 기준으로 지났으면 두번째 탭, 안지났으면 첫번째 탭
 
 class MyTripScheduleScreen extends StatefulWidget {
   const MyTripScheduleScreen({Key? key}) : super(key: key);
@@ -33,11 +30,8 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '나의 일정',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
+          showTitle('나의 일정'),
+          const SizedBox(height: 20),
           DefaultTabController(
             length: 3,
             child: Expanded(
