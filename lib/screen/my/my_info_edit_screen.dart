@@ -99,14 +99,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormField(
                   label: '이름',
-                  value: '{이름}', // 실제 값으로 대체
+                  value: '{이름}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormField(
                   label: '이메일',
-                  value: '{이메일}', // 실제 값으로 대체
+                  value: '{이메일}',
                 ),
               ),
             ],
@@ -117,7 +117,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormField(
                   label: '전화번호',
-                  value: '{전화번호}', // 실제 값으로 대체
+                  value: '{전화번호}',
                   withEditButton: true,
                   onEdit: () => showEditNumberDialog(context),
                 ),
@@ -126,7 +126,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormField(
                   label: '생년월일',
-                  value: '{생년월일}', // 실제 값으로 대체
+                  value: '{생년월일}',
                 ),
               ),
             ],
@@ -137,14 +137,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormField(
                   label: '닉네임',
-                  value: '{닉네임}', // 실제 값으로 대체
+                  value: '{닉네임}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormField(
                   label: '아이디',
-                  value: '{아이디}', // 실제 값으로 대체
+                  value: '{아이디}',
                 ),
               ),
             ],
@@ -221,7 +221,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   Widget _subTitleTextUI(String subtitle) {
     return Text(
       subtitle,
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
 

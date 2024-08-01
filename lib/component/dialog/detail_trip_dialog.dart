@@ -33,12 +33,12 @@ void showDetailTripDialog(BuildContext context) {
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0), // Ensure corner radius is set to 10
+              borderRadius: BorderRadius.circular(10.0),
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white, // Set background color to white
-                borderRadius: BorderRadius.circular(10.0), // Ensure corner radius is set to 10
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
               ),
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.8,
@@ -46,38 +46,27 @@ void showDetailTripDialog(BuildContext context) {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            '생성된 여행 일정',
-                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
-                          ),
+                    child: Container(
+                      margin: EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: GetMap(
+                          apiKey: mapApiKey,
+                          origin: '37.819929,-122.478255',
+                          destination: '37.787994,-122.407437',
+                          waypoints: '37.76999,-122.44696|37.76899,-122.44596',
                         ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blueAccent),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: GetMap(
-                              apiKey: mapApiKey,
-                              origin: '37.819929,-122.478255', // 출발지 좌표
-                              destination: '37.787994,-122.407437', // 도착지 좌표
-                              waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 2,
                     child: Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.fromLTRB(10, 20, 25, 30),
                       child: Column(
                         children: [
                           Row(
@@ -85,7 +74,7 @@ void showDetailTripDialog(BuildContext context) {
                             children: List.generate(3, (index) {
                               return Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 40, 5, 20),
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
                                   child: ElevatedButton(
                                     onPressed: () {
                                       setState(() {
@@ -99,7 +88,7 @@ void showDetailTripDialog(BuildContext context) {
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: selectedDay == index + 1 ? Color(0xFF005AA7) : Colors.grey,
-                                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                                       textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                                   ),
