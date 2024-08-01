@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import '../../component/dialog/edit_number_dialog.dart';
 import '../../component/dialog/edit_pwd_dialog.dart';
+import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
@@ -75,10 +76,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '내 정보 수정',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
+          showTitle('내 정보 수정'),
           SizedBox(height: 20),
           Center(
             child: Column(

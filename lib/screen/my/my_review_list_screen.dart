@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
+import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
 
 class MyReviewListScreen extends StatefulWidget {
@@ -37,11 +38,8 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '나의 후기',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
+          showTitle('나의 후기'),
+          const SizedBox(height: 20),
           // 작성한 후기 카드
           _myReviewCard(context),
         ],
