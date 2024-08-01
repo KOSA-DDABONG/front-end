@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/dialog/delete_my_review_dialog.dart';
 import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
@@ -27,51 +28,27 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _myScheduleUI(context),
+        child: _myReviewPageUI(context),
       ),
     );
   }
 
-  Widget _myScheduleUI(BuildContext context) {
+  //나의 후기 페이지 UI
+  Widget _myReviewPageUI(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showTitle('나의 후기'),
           const SizedBox(height: 20),
-          // 작성한 후기 카드
           _myReviewCard(context),
         ],
       ),
     );
   }
 
-  Widget _myScheduleUIMobile(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: _myScheduleUI(context),
-    );
-  }
-
-  Widget _myScheduleUITablet(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 60),
-      child: _myScheduleUI(context),
-    );
-  }
-
-  Widget _myScheduleUIDesktop(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80),
-        width: MediaQuery.of(context).size.width / 2,
-        child: _myScheduleUI(context),
-      ),
-    );
-  }
-
-  //최근 작성 후기
+  //내가 작성 후기 카드
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -88,13 +65,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('최근 작성한 후기'),
-                    SizedBox(height: 20), // 다가오는 일정 텍스트 아래 여백 추가
-                  ],
-                ),
+                title: _cardTitleTextUI(),
                 subtitle: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -112,7 +83,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
                     ),
                     const SizedBox(width: 10),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,  // 왼쪽 정렬 추가
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                         Row(
@@ -129,29 +100,44 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
                 ),
               ),
             ),
-            Positioned(
-              right: 8,
-              top: 8,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.edit_outlined),
-                    onPressed: () {
-                      showEditReviewDialog(context);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete_outline),
-                    onPressed: () {
-                      // Delete action here
-                    },
-                  ),
-                ],
-              ),
-            ),
+            _cardIconBtn(const Icon(Icons.edit_outlined), const Icon(Icons.delete_outline)),
           ],
         ),
+      ),
+    );
+  }
+
+  //카드 타이틀
+  Widget _cardTitleTextUI() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('내가 작성한 후기'),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  //카드 내 아이콘 버튼
+  Widget _cardIconBtn(Icon icon1, Icon icon2) {
+    return Positioned(
+      right: 10,
+      top: 10,
+      child: Row(
+        children: [
+          IconButton(
+            icon: icon1,
+            onPressed: () {
+              showEditReviewDialog(context);
+            },
+          ),
+          IconButton(
+            icon: icon2,
+            onPressed: () {
+              showDeleteMyReviewDialog(context);
+            },
+          ),
+        ],
       ),
     );
   }
