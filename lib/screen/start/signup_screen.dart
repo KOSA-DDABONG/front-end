@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:front/dto/signup/signup_request_model.dart';
 import 'package:front/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -703,7 +701,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   isApiCallProcess = false;
                 });
 
-                if (result.value != null) {
+                // if (result.value != null) {
+                if (result.value == "Success") {
                   showCustomSnackBar(context, '가입이 완료되었습니다.');
                   Navigator.push(
                     context,
