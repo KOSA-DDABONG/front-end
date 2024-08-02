@@ -10,15 +10,39 @@ import 'session_service.dart';
 
 class UserService {
 
+  // //회원가입
+  // static Future<Result<SignupResponseModel>> register(SignupRequestModel model) async {
+  //   print('register0: ');
+  //   print(model.userId);
+  //   print(model.username);
+  //   print('-------');
+  //   final url = Uri.http(Config.apiURL, Config.signupAPI).toString();
+  //   print('register1: ');
+  //   print(url);
+  //   print('-------');
+  //   try {
+  //     print('this is try section');
+  //     print('-------');
+  //     final response = await DioClient.sendRequest('POST', url, body: model.toFormData);
+  //     print('register2: ');
+  //     print(response.data);
+  //     print('-------');
+  //     return Result.success(
+  //         signupResponseJson(response.data['data'] as Map<String, dynamic>)
+  //     );
+  //   } catch (e) {
+  //     print(e);
+  //     print('-------');
+  //     return Result.failure("[Signup] An Error Occurred: ${e}");
+  //   }
+  // }
   //회원가입
-  static Future<Result<SignupResponseModel>> register(SignupRequestModel model) async {
+  static Future<Result<String>> register(SignupRequestModel model) async {
     final url = Uri.http(Config.apiURL, Config.signupAPI).toString();
-    try {
-      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
 
-      return Result.success(
-          signupResponseJson(response.data['data'] as Map<String, dynamic>)
-      );
+    try {
+      final response = await DioClient.sendRequest('POST', url, body: model.toFormData);
+      return Result.success("Success");
     } catch (e) {
       return Result.failure("[Signup] An Error Occurred: ${e}");
     }
