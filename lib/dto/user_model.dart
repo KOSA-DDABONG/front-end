@@ -2,26 +2,26 @@ class User {
   User({
     required this.username,
     required this.nickname,
-    required this.userid,
+    required this.userId,
     this.password,
     required this.email,
-    required this.phonenumber,
+    required this.phoneNumber,
     required this.birth,
     this.profileimage,
-    // this.createdtime,
-    // this.recentaccess,
+    this.createdTime,
+    this.recessAccess,
   });
 
   late final String username;
   late final String nickname;
-  late final String userid;
+  late final String userId;
   late final String? password;
   late final String email;
-  late final String phonenumber;
+  late final String phoneNumber;
   late final String birth;
   late final String? profileimage;
-  // late final DateTime? createdtime;
-  // late final DateTime? recentaccess;
+  late final DateTime? createdTime;
+  late final DateTime? recessAccess;
 
   @override
   String toString() {
@@ -29,12 +29,14 @@ class User {
       User {
         username: $username,
         nickname: $nickname,
-        userid: $userid,
+        userId: $userId,
         password: $password,
         email: $email,
-        phonenumber: $phonenumber,
+        phoneNumber: $phoneNumber,
         birth: $birth,
         profileimage: $profileimage,
+        createdTime: $createdTime,
+        recessAccess: $recessAccess
       }''';
   }
 
@@ -42,14 +44,18 @@ class User {
     return User(
       username: json['username'] ?? '',
       nickname: json['nickname'] ?? '',
-      userid: json['userid'] ?? '',
+      userId: json['userId'] ?? '',
       password: json['password'] ?? '',
       email: json['email'] ?? '',
-      phonenumber: json['phonenumber'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
       birth: json['birth'] ?? '',
       profileimage: json['profileimage'] ?? '',
-      // createdtime: DateTime.parse(json['createdtime'] ?? ''),
-      // recentaccess: DateTime.parse(json['recentaccess'] ?? ''),
+      createdTime: json['createdTime'] != null && json['createdTime'].isNotEmpty
+          ? DateTime.parse(json['createdTime'])
+          : null,
+      recessAccess: json['recessAccess'] != null && json['recessAccess'].isNotEmpty
+          ? DateTime.parse(json['recessAccess'])
+          : null,
     );
   }
 
@@ -57,14 +63,14 @@ class User {
     return {
       'username': username,
       'nickname': nickname,
-      'userid': userid,
+      'userId': userId,
       'password': password,
       'email': email,
-      'phonenumber': phonenumber,
+      'phoneNumber': phoneNumber,
       'birth': birth,
       'profileimage': profileimage,
-      // 'createdtime': createdtime?.toIso8601String(),
-      // 'recentaccess': recentaccess?.toIso8601String(),
+      'createdTime': createdTime?.toIso8601String(),
+      'recessAccess': recessAccess?.toIso8601String(),
     };
   }
 

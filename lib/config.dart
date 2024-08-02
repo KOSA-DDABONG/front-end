@@ -1,7 +1,7 @@
 class Config {
   static const String appName = "TripFlow";
 
-  //Config
+  //Server
   static const apiURL = "localhost:8443";
 
   //User Info
