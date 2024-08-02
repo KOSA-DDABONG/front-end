@@ -39,7 +39,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   //리뷰 조회 페이지 UI
   Widget _allReviewPageUI() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 120),
+      padding: const EdgeInsets.symmetric(horizontal: 120),
       child: Column(
         children: [
           _searchBarUI(),
