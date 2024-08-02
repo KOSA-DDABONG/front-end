@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 class SignupRequestModel {
   SignupRequestModel({
     this.username,
@@ -27,6 +29,7 @@ class SignupRequestModel {
     birth = json['birth'];
   }
 
+  //Json 형태(Raw)로 변환하는 메서드
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['username'] = username;
@@ -37,5 +40,19 @@ class SignupRequestModel {
     _data['phoneNumber'] = phoneNumber;
     _data['birth'] = birth;
     return _data;
+  }
+
+  // FormData로 변환하는 메서드
+  FormData toFormData() {
+    final _formData = FormData.fromMap({
+      'username': username,
+      'nickname': nickname,
+      'userId': userId,
+      'password': password,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'birth': birth,
+    });
+    return _formData;
   }
 }
