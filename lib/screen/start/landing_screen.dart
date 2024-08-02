@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/screen/trip/select_screen.dart';
+import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
 
@@ -164,7 +164,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
      onPressed: () {
        Navigator.push(
          context,
-         MaterialPageRoute(builder: (context) => SelectScreen()),
+         MaterialPageRoute(builder: (context) => CreateTripScreen()),
        );
      },
      style: ElevatedButton.styleFrom(
