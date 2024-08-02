@@ -19,11 +19,10 @@ class SessionService {
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
 
     try{
-      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
+      final response = await DioClient.sendRequest('POST', url, body: model.toFormData());
       return Result.success(
           loginResponseJson(response.data['data'] as Map<String, dynamic>));
     } catch (e) {

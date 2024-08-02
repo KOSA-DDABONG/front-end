@@ -15,14 +15,14 @@ class LoginResponseModel {
   late final User user;
 
   LoginResponseModel.fromJson(Map<String, dynamic> json) {
-    accessToken = json['jwttoken'];
+    accessToken = json['jwtToken'];
     // refreshToken = json['refreshToken'];
     user = User.fromJson(json['user'] ?? {});
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['jwttoken'] = accessToken;
+    _data['jwtToken'] = accessToken;
     // _data['refreshToken'] = refreshToken;
     _data['user'] = user.toJson();
     return _data;

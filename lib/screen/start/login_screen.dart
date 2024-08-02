@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/component/mypage/my_menu.dart';
+import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/service/session_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -160,7 +161,6 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 60,
             child: TextFormField(
               controller: idController,
-              // initialValue: email,
               focusNode: idFocusNode,
               validator: (val) => val!.isEmpty ? '아이디가 입력되지 않았습니다.' : null,
               onChanged: (val) => userId = val,
@@ -210,7 +210,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             height: 60,
             child: TextFormField(
-              // initialValue: '1234',
               focusNode: passwordFocusNode,
               validator: (val) => val!.isEmpty ? '비밀번호가 입력되지 않았습니다.' : null,
               onChanged: (val) => password = val,
@@ -280,7 +279,7 @@ class _LoginScreenState extends State<LoginScreen> {
               isApiCallProcess = true;
             });
             try {
-              final model = LoginRequestModel(userid: userId, password: password);
+              final model = LoginRequestModel(userId: userId, password: password);
               final result = await SessionService.login(model);
 
               if (result.value != null) {
@@ -293,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyMenuScreen()),
+                  MaterialPageRoute(builder: (context) => LandingScreen()),
                 );
 
               } else {
