@@ -5,7 +5,7 @@ import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
-import 'package:front/screen/trip/select_screen.dart';
+import 'package:front/screen/trip/create_trip_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../screen/start/login_screen.dart';
@@ -69,7 +69,7 @@ class NotLoginHeader extends AppBar {
               onPressed: () {
                 Navigator.push(
                   context!,
-                  MaterialPageRoute(builder: (context) => SelectScreen()),
+                  MaterialPageRoute(builder: (context) => CreateTripScreen()),
                 );
               },
               child: Text(
@@ -354,7 +354,7 @@ class AfterLoginHeader extends AppBar {
               onPressed: () {
                 Navigator.push(
                   context!,
-                  MaterialPageRoute(builder: (context) => SelectScreen()),
+                  MaterialPageRoute(builder: (context) => CreateTripScreen()),
                 );
               },
               child: Text(

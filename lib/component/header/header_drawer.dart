@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../screen/contact/contact_screen.dart';
 import '../../screen/review/all_review_screen.dart';
 import '../../screen/start/landing_screen.dart';
-import '../../screen/trip/select_screen.dart';
+import '../../screen/trip/create_trip_screen.dart';
 import '../mypage/my_menu.dart';
 
 class HeaderDrawer extends StatelessWidget {
@@ -39,7 +39,7 @@ class HeaderDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SelectScreen()),
+                MaterialPageRoute(builder: (context) => CreateTripScreen()),
               );
             },
           ),
