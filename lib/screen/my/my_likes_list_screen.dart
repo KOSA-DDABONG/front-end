@@ -13,7 +13,6 @@ class MyLikesListScreen extends StatefulWidget {
 }
 
 class _MyLikesListScreenState extends State<MyLikesListScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -27,23 +26,24 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _myScheduleUI(context),
+        child: _myLikesUI(context),
       ),
     );
   }
 
-  Widget _myScheduleUI(BuildContext context) {
+  //나의 좋아요 리스트 페이지 UI
+  Widget _myLikesUI(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showTitle('나의 좋아요'),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           GridView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 5,
               crossAxisSpacing: 30.0,
               mainAxisSpacing: 30.0,
@@ -58,6 +58,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
     );
   }
 
+  //좋아요 누른 후기 이미지 카드
   Widget _buildImageCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -65,59 +66,42 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
       },
       child: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 1.0),
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.transparent,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                '../assets/images/noImg.jpg',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-            ),
-          ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: IconButton(
-              icon: Icon(Icons.favorite_border, color: Colors.black),
-              onPressed: () {
-                // 좋아요 버튼 클릭 시 동작
-              },
-            ),
-          ),
+          _cardImgUI(),
+          _heartBtn()
         ],
       ),
     );
   }
 
-  Widget _myScheduleUIMobile(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: _myScheduleUI(context),
-    );
-  }
-
-  Widget _myScheduleUITablet(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 60),
-      child: _myScheduleUI(context),
-    );
-  }
-
-  Widget _myScheduleUIDesktop(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80),
-        width: MediaQuery.of(context).size.width / 2,
-        child: _myScheduleUI(context),
+  //대표이미지
+  Widget _cardImgUI() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black, width: 1.0),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.transparent,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.asset(
+          '../assets/images/noImg.jpg',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
       ),
     );
   }
 
+  //좋아요 버튼
+  Widget _heartBtn() {
+    return Positioned(
+      top: 10,
+      right: 10,
+      child: IconButton(
+        icon: const Icon(Icons.favorite_border, color: Colors.black),
+        onPressed: () {},
+      ),
+    );
+  }
 }
