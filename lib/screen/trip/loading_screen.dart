@@ -55,38 +55,49 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
     );
   }
 
+  //여행 일정 생성 로딩 페이지 UI
   Widget _loadingTripScreenUI() {
     return Center(
       child: Stack(
         alignment: Alignment.center,
         children: [
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              if (!mounted) return SizedBox.shrink();
-              return Positioned(
-                left: _animation.value,
-                child: child!,
-              );
-            },
-            child: Image.asset(
-              '../assets/images/yellow_car.png',
-              width: _imageWidth,
-              height: 100,
-            ),
-          ),
-          const Positioned(
-            bottom: 200,
-            child: Text(
-              'Loading...',
-              style: TextStyle(
-                color: pointColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          _imgAnimationUI(),
+          _loadingTestUI(),
         ],
+      ),
+    );
+  }
+
+  //이미지 애니메이션 UI
+  Widget _imgAnimationUI() {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        if (!mounted) return const SizedBox.shrink();
+        return Positioned(
+          left: _animation.value,
+          child: child!,
+        );
+      },
+      child: Image.asset(
+        '../assets/images/yellow_car.png',
+        width: _imageWidth,
+        height: 100,
+      ),
+    );
+  }
+
+  //로딩중 텍스트
+  Widget _loadingTestUI() {
+    return const Positioned(
+      bottom: 200,
+      child: Text(
+        'Loading...',
+        style: TextStyle(
+          color: pointColor,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
