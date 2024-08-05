@@ -33,12 +33,12 @@ void showDetailTripDialog(BuildContext context) {
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.8,
@@ -47,7 +47,7 @@ void showDetailTripDialog(BuildContext context) {
                   Expanded(
                     flex: 3,
                     child: Container(
-                      margin: EdgeInsets.all(20.0),
+                      margin: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
                         borderRadius: BorderRadius.circular(5),
@@ -66,7 +66,7 @@ void showDetailTripDialog(BuildContext context) {
                   Expanded(
                     flex: 2,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 20, 25, 30),
+                      padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
                       child: Column(
                         children: [
                           Row(
@@ -74,7 +74,7 @@ void showDetailTripDialog(BuildContext context) {
                             children: List.generate(3, (index) {
                               return Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
+                                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
                                   child: ElevatedButton(
                                     onPressed: () {
                                       setState(() {
@@ -82,14 +82,14 @@ void showDetailTripDialog(BuildContext context) {
                                         selectedIndex = null;
                                       });
                                     },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+                                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    ),
                                     child: Text(
                                       '${index + 1}일차',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: selectedDay == index + 1 ? Color(0xFF005AA7) : Colors.grey,
-                                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                                      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(color: Colors.white),
                                     ),
                                   ),
                                 ),
@@ -123,10 +123,10 @@ void showDetailTripDialog(BuildContext context) {
                                             radius: 12,
                                             child: Text(
                                               '${index + 1}',
-                                              style: TextStyle(color: Colors.white, fontSize: 12),
+                                              style: const TextStyle(color: Colors.white, fontSize: 12),
                                             ),
                                           ),
-                                          SizedBox(width: 8),
+                                          const SizedBox(width: 8),
                                           Expanded(
                                             child: GestureDetector(
                                               onTap: () {
@@ -138,17 +138,20 @@ void showDetailTripDialog(BuildContext context) {
                                                 color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                 child: ListTile(
                                                   leading: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(10),
+                                                    borderRadius: BorderRadius.circular(5),
                                                     child: Image.asset(place['image']!,
-                                                        width: 60, height: 60, fit: BoxFit.cover),
+                                                        width: 60, height: 60, fit: BoxFit.cover
+                                                    ),
                                                   ),
                                                   title: Text(
                                                     place['title']!,
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight.bold, fontSize: 16),
+                                                    style: const TextStyle(
+                                                        fontWeight: FontWeight.bold, fontSize: 16
+                                                    ),
                                                   ),
                                                   subtitle: Text(place['time']!,
-                                                      style: TextStyle(fontSize: 14)),
+                                                      style: const TextStyle(fontSize: 14)
+                                                  ),
                                                 ),
                                               ),
                                             ),

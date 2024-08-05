@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/constants.dart';
 
 import '../snack_bar.dart';
 
@@ -8,13 +9,13 @@ void showEditPasswordDialog(BuildContext context) {
     builder: (BuildContext context) {
       return Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // 모서리 둥글기
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Container(
-          width: MediaQuery.of(context).size.width / 3, // 다이얼로그 넓이 설정
+          width: MediaQuery.of(context).size.width / 3,
           decoration: BoxDecoration(
-            color: Colors.white, // 배경색 흰색으로 설정
-            borderRadius: BorderRadius.circular(10), // 컨테이너의 모서리 둥글기 설정
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
           ),
           child: _EditPasswordDialogContent(),
         ),
@@ -40,9 +41,9 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min, // 내용의 크기에 맞게 다이얼로그 높이 조정
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
+        const Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(
             '비밀번호 변경',
@@ -60,7 +61,7 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
             });
           },
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildPasswordField(
           label: '새 비밀번호',
           hint: '사용하실 비밀번호를 입력하세요',
@@ -72,7 +73,7 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
             });
           },
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildPasswordField(
           label: '비밀번호 확인',
           hint: '비밀번호를 한번 더 입력하세요',
@@ -84,9 +85,9 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
             });
           },
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Row(
             children: [
               Expanded(
@@ -95,19 +96,19 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // Background color
+                    backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(color: Colors.blue, width: 1.0),
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: const BorderSide(color: Colors.blue, width: 1.0),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     '취소',
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
@@ -115,13 +116,13 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
                     showCustomSnackBar(context, '비밀번호가 변경되었습니다.');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Background color
+                    backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(color: Colors.blue, width: 1.0),
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: const BorderSide(color: Colors.blue, width: 1.0),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     '변경',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -148,9 +149,9 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           TextFormField(
             onChanged: onChanged,
             obscureText: obscureText,
@@ -159,12 +160,12 @@ class _EditPasswordDialogContentState extends State<_EditPasswordDialogContent> 
               suffixIcon: IconButton(
                 icon: Icon(
                   obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: obscureText ? Colors.grey.withOpacity(0.7) : Color(0xFF003680),
+                  color: obscureText ? Colors.grey.withOpacity(0.7) : pointColor,
                 ),
                 onPressed: toggleVisibility,
               ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF003680)),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: pointColor),
               ),
             ),
           ),
