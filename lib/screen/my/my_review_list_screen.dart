@@ -48,7 +48,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
     );
   }
 
-  //내가 작성 후기 카드
+  //내가 작성한 후기 카드
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -62,45 +62,50 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
         ),
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: _cardTitleTextUI(),
-                subtitle: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 10),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: const DecorationImage(
-                          image: AssetImage('../assets/images/landing_background.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        Row(
-                          children: [
-                            Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                            const SizedBox(width: 10),
-                            Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                          ],
-                        ),
-                        SizedBox(height: 50),
-                      ],
-                    ),
-                  ],
+            _cardContent(),
+            _cardIconBtn(const Icon(Icons.edit_outlined), const Icon(Icons.delete_outline)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //카드 내용
+  Widget _cardContent() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        title: _cardTitleTextUI(),
+        subtitle: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 10),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: const DecorationImage(
+                  image: AssetImage('../assets/images/landing_background.jpg'),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-            _cardIconBtn(const Icon(Icons.edit_outlined), const Icon(Icons.delete_outline)),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Row(
+                  children: [
+                    Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 10),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                ),
+                SizedBox(height: 50),
+              ],
+            ),
           ],
         ),
       ),

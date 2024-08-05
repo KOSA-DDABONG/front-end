@@ -35,24 +35,24 @@ void showPassedTripDialog(BuildContext context) {
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0), // Set border radius to 10
+              borderRadius: BorderRadius.circular(5.0),
             ),
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.8, // Set to 80% of screen width
-              height: MediaQuery.of(context).size.height * 0.8, // Set to 80% of screen height
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.8,
               decoration: BoxDecoration(
-                color: Colors.white, // Set background color to white
-                borderRadius: BorderRadius.circular(10.0), // Set border radius to 10
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       '후기를 작성하실 여행을 선택해주세요',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Expanded(
                       child: ListView.builder(
                         itemCount: trips.length,
@@ -64,18 +64,18 @@ void showPassedTripDialog(BuildContext context) {
                               });
                             },
                             child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 10.0),
+                              margin: const EdgeInsets.symmetric(vertical: 10.0),
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: selectedIndex == index ? Colors.blue : Colors.grey,
                                   width: selectedIndex == index ? 3.0 : 1.0,
                                 ),
-                                borderRadius: BorderRadius.circular(10.0),
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
                               child: Row(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                     child: Image.asset(
                                       trips[index]['image']!,
                                       width: 100,
@@ -83,7 +83,7 @@ void showPassedTripDialog(BuildContext context) {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Expanded(
                                     child: Text(trips[index]['dates']!),
                                   ),
@@ -102,25 +102,25 @@ void showPassedTripDialog(BuildContext context) {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white, // Background color
+                              backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(color: Colors.blue, width: 1.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               '취소',
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
                               if (selectedIndex == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('후기를 작성할 일정을 선택해주세요.')),
+                                  const SnackBar(content: Text('후기를 작성할 일정을 선택해주세요.')),
                                 );
                               } else {
                                 Navigator.of(context).pop();
@@ -131,13 +131,13 @@ void showPassedTripDialog(BuildContext context) {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue, // Background color
+                              backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(color: Colors.blue, width: 1.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               '선택',
                               style: TextStyle(color: Colors.white),
                             ),

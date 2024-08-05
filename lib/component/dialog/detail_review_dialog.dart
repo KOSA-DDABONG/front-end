@@ -23,17 +23,16 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(5.0),
               child: Container(
                 color: Colors.white,
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.9,
                 child: Row(
                   children: [
-                    // 좌측
                     Expanded(
                       flex: 3,
                       child: Column(
@@ -49,7 +48,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                     controller: pageController,
                                     children: images.map((image) {
                                       return ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(5.0),
                                         child: Image.asset(
                                           image,
                                           fit: BoxFit.cover,
@@ -62,7 +61,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                     child: SmoothPageIndicator(
                                       controller: pageController,
                                       count: images.length,
-                                      effect: WormEffect(
+                                      effect: const WormEffect(
                                         dotHeight: 8.0,
                                         dotWidth: 8.0,
                                         spacing: 16.0,
@@ -82,7 +81,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                               child: PageView(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                     child: GetMap(
                                       apiKey: mapApiKey,
                                       origin: '37.819929,-122.478255', // 출발지 좌표
@@ -97,15 +96,14 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                         ],
                       ),
                     ),
-                    // 우측
                     Expanded(
                       flex: 2,
                       child: Column(
                         children: [
-                          Align(
+                          const Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
+                              padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                               child: Text(
                                 "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.",
                                 style: TextStyle(fontSize: 18),
@@ -113,10 +111,10 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                               ),
                             ),
                           ),
-                          Align(
+                          const Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
+                              padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                               child: Text(
                                 "#힐링 #호캉스 #해운대",
                                 style: TextStyle(
@@ -143,12 +141,12 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                     });
                                   },
                                 ),
-                                Padding(
+                                const Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                                   child: Text('116'),
                                 ),
-                                Icon(Icons.comment),
-                                Padding(
+                                const Icon(Icons.comment),
+                                const Padding(
                                   padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                   child: Text('99'),
                                 ),
@@ -162,7 +160,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                 return Column(
                                   children: [
                                     ListTile(
-                                      leading: CircleAvatar(
+                                      leading: const CircleAvatar(
                                         backgroundImage: AssetImage('../assets/images/profile_pic.png'), // Placeholder image
                                       ),
                                       title: Column(
@@ -170,28 +168,28 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                         children: [
                                           Text(
                                             'Nickname $index',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          SizedBox(height: 4),
+                                          const SizedBox(height: 4),
                                           Text('Comment $index'),
                                         ],
                                       ),
                                     ),
-                                    Divider(color: Colors.grey[200]), // Add this line
+                                    Divider(color: Colors.grey[200]),
                                   ],
                                 );
                               },
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                               child: Row(
                                 children: [
-                                  Expanded(
+                                  const Expanded(
                                     child: TextField(
                                       decoration: InputDecoration(
                                         hintText: '댓글을 입력하세요...',
@@ -200,10 +198,8 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.send),
-                                    onPressed: () {
-                                      // Handle send action
-                                    },
+                                    icon: const Icon(Icons.send),
+                                    onPressed: () {},
                                   ),
                                 ],
                               ),
