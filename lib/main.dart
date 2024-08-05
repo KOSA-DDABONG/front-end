@@ -9,6 +9,7 @@ import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/login_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
+import 'package:front/screen/trip/loading_screen.dart';
 import 'package:front/screen/trip/result_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: Colors.blue,
       ),
-      home: LandingScreen(),
+      // home: LandingScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
       // home: AllReviewScreen(),
       // home: ResultScreen()
       // home: LoginScreen(),
+      home: LoadingScreen(),
     );
   }
 }
