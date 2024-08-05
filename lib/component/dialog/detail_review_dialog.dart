@@ -102,12 +102,29 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                       flex: 2,
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                            child: Text(
-                              "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.",
-                              style: TextStyle(fontSize: 18),
-                              textAlign: TextAlign.left,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
+                              child: Text(
+                                "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.",
+                                style: TextStyle(fontSize: 18),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
+                              child: Text(
+                                "#힐링 #호캉스 #해운대",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blueGrey,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
                             ),
                           ),
                           Padding(
