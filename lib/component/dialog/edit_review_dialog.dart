@@ -48,9 +48,9 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white, // 배경색 흰색으로 설정
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+        borderRadius: BorderRadius.circular(5.0),
       ),
       child: SingleChildScrollView(
         child: Padding(
@@ -88,7 +88,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
             _hashtagField(),
             const SizedBox(height: 10),
             if (_showNoHashtagError)
-              Padding(
+              const Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   '입력된 해시태그가 없습니다.',
@@ -100,11 +100,11 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               ),
             if (_showDuplicateHashtagError)
-              Padding(
+              const Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   '이미 존재하는 해시태그입니다.',
@@ -169,7 +169,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
             child: GestureDetector(
               onTap: () => _pickImage(index),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5.0),
                 child: Container(
                   child: Container(
                     height: 120,
@@ -342,7 +342,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(5.0),
             side: const BorderSide(color: Colors.blue, width: 1.0),
           ),
         ),
@@ -364,7 +364,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(5.0),
             side: const BorderSide(color: Colors.blue, width: 1.0),
           ),
         ),

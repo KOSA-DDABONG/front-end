@@ -11,13 +11,13 @@ void showDeleteTripScheduleDialog(BuildContext context) {
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
             child: Container(
               width: MediaQuery.of(context).size.width * 0.5,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -25,16 +25,16 @@ void showDeleteTripScheduleDialog(BuildContext context) {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       '저장된 여행 일정 삭제하기',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       '정말 삭제하시겠습니까?',
                       style: TextStyle(fontSize: 15),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
@@ -43,19 +43,19 @@ void showDeleteTripScheduleDialog(BuildContext context) {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white, // Background color
+                              backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(color: Colors.blue, width: 1.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               '취소',
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
@@ -67,13 +67,13 @@ void showDeleteTripScheduleDialog(BuildContext context) {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue, // Background color
+                              backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(color: Colors.blue, width: 1.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               '확인',
                               style: TextStyle(color: Colors.white),
                             ),

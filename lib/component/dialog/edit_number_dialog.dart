@@ -13,13 +13,13 @@ void showEditNumberDialog(BuildContext context) {
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 10으로 설정
+              borderRadius: BorderRadius.circular(5.0),
             ),
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.5, // 화면 가로 사이즈의 1/2로 설정
+              width: MediaQuery.of(context).size.width * 0.5,
               decoration: BoxDecoration(
-                color: Colors.white, // 배경색 흰색으로 설정
-                borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 10으로 설정
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -27,12 +27,12 @@ void showEditNumberDialog(BuildContext context) {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       '전화번호 변경',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 20),
-                    Row(
+                    const SizedBox(height: 20),
+                    const Row(
                       children: [
                         Expanded(
                           child: Text(
@@ -51,18 +51,18 @@ void showEditNumberDialog(BuildContext context) {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       '변경할 전화번호',
                       style: TextStyle(fontSize: 15),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Form(
                       key: _formKey,
                       child: TextFormField(
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '전화번호를 입력하세요.',
                           border: OutlineInputBorder(),
                         ),
@@ -78,7 +78,7 @@ void showEditNumberDialog(BuildContext context) {
                         },
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
@@ -87,19 +87,19 @@ void showEditNumberDialog(BuildContext context) {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white, // Background color
+                              backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(color: Colors.blue, width: 1.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               '취소',
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
@@ -109,13 +109,13 @@ void showEditNumberDialog(BuildContext context) {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue, // Background color
+                              backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.blue, width: 1.0),
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(color: Colors.blue, width: 1.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               '변경',
                               style: TextStyle(color: Colors.white),
                             ),
