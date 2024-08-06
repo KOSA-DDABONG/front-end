@@ -39,7 +39,7 @@ class MyMenuScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              '../assets/images/banner.png',
+              'assets/images/banner.png',
               width: screenWidth,
               height: screenHeight * 1 / 5,
               fit: BoxFit.fill,

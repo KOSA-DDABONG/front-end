@@ -5,23 +5,23 @@ import '../../screen/review/add_review_screen.dart';
 void showPassedTripDialog(BuildContext context) {
   final List<Map<String, String>> trips = [
     {
-      'image': '../assets/images/noImg.jpg',
+      'image': 'assets/images/noImg.jpg',
       'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
     },
     {
-      'image': '../assets/images/noImg.jpg',
+      'image': 'assets/images/noImg.jpg',
       'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
     },
     {
-      'image': '../assets/images/noImg.jpg',
+      'image': 'assets/images/noImg.jpg',
       'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
     },
     {
-      'image': '../assets/images/noImg.jpg',
+      'image': 'assets/images/noImg.jpg',
       'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
     },
     {
-      'image': '../assets/images/noImg.jpg',
+      'image': 'assets/images/noImg.jpg',
       'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
     },
   ];

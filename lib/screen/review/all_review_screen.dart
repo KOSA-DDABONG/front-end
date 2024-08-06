@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/constants.dart';
 
 import '../../component/dialog/passed_trip_dialog.dart';
@@ -13,11 +14,13 @@ class AllReviewScreen extends StatefulWidget {
 }
 
 class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
-  List<String> allReviews = List.generate(20, (index) => '../assets/images/noImg.jpg');
+  List<String> allReviews = List.generate(20, (index) => 'assets/images/noImg.jpg');
 
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
   bool _isContestExpanded = false;
+
+  String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {
@@ -137,9 +140,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   //탭 선택에 따른 순위 내용
   Widget _buildContestTab() {
     List<Map<String, dynamic>> rankings = [
-      {'icon': Icons.looks_one, 'image': '../assets/images/noImg.jpg'}, //1st
-      {'icon': Icons.looks_two, 'image': '../assets/images/noImg.jpg'}, //2nd
-      {'icon': Icons.looks_3, 'image': '../assets/images/noImg.jpg'}, //3rd
+      {'icon': Icons.looks_one, 'image': 'assets/images/noImg.jpg'}, //1st
+      {'icon': Icons.looks_two, 'image': 'assets/images/noImg.jpg'}, //2nd
+      {'icon': Icons.looks_3, 'image': 'assets/images/noImg.jpg'}, //3rd
     ];
 
     return Padding(
@@ -150,7 +153,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                showDetailReviewDialog(context, ranking['image']);
+                showDetailReviewDialog(context, ranking['image'], mapApiKey);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -244,7 +247,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                showDetailReviewDialog(context, allReviews[index]);
+                showDetailReviewDialog(context, allReviews[index], mapApiKey);
               },
               child: Column(
                 children: [

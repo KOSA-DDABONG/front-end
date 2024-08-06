@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/constants.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
@@ -17,6 +18,8 @@ class MyTripScheduleScreen extends StatefulWidget {
 }
 
 class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
+  String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
+
   @override
   void initState() {
     super.initState();
@@ -143,7 +146,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage('../assets/images/noImg.jpg'),
+                      image: AssetImage('assets/images/noImg.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -166,7 +169,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context);
+              showDetailTripDialog(context, mapApiKey);
             },
           ),
           _cardIconBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline)),
@@ -198,7 +201,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage('../assets/images/noImg.jpg'),
+                      image: AssetImage('assets/images/noImg.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -221,7 +224,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context);
+              showDetailTripDialog(context, mapApiKey);
             },
           ),
           _cardIconBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline)),
@@ -253,7 +256,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage('../assets/images/noImg.jpg'),
+                      image: AssetImage('assets/images/noImg.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -276,7 +279,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context);
+              showDetailTripDialog(context, mapApiKey);
             },
           ),
           _cardIconBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline)),

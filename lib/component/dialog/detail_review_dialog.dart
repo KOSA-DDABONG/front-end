@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../constants.dart';
 import '../map/get_map.dart';
 
-void showDetailReviewDialog(BuildContext context, String imageUrl) {
+void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey) {
   final PageController pageController = PageController();
 
   List<String> images = [
     imageUrl,
-    '../assets/images/noImg.jpg',
-    '../assets/images/login_background.png',
-    '../assets/images/noImg.jpg',
+    'assets/images/noImg.jpg',
+    'assets/images/login_background.png',
+    'assets/images/noImg.jpg',
   ];
 
   showDialog(
@@ -83,7 +82,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(5.0),
                                     child: GetMap(
-                                      apiKey: mapApiKey,
+                                      apiKey: apiKey,
                                       origin: '37.819929,-122.478255', // 출발지 좌표
                                       destination: '37.787994,-122.407437', // 도착지 좌표
                                       waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
@@ -161,7 +160,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                   children: [
                                     ListTile(
                                       leading: const CircleAvatar(
-                                        backgroundImage: AssetImage('../assets/images/profile_pic.png'), // Placeholder image
+                                        backgroundImage: AssetImage('assets/images/profile_pic.png'), // Placeholder image
                                       ),
                                       title: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,

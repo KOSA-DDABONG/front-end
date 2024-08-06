@@ -80,7 +80,7 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
         );
       },
       child: Image.asset(
-        '../assets/images/yellow_car.png',
+        'assets/images/yellow_car.png',
         width: _imageWidth,
         height: 100,
       ),

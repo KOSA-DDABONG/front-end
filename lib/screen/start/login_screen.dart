@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/service/session_service.dart';

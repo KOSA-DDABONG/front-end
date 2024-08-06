@@ -5,9 +5,9 @@ void showCustomSnackBar(BuildContext context, String message) {
     SnackBar(
       content: Text(
         message,
-        style: TextStyle(color: Colors.blue), // 글씨 색상 파란색
+        style: const TextStyle(color: Colors.blue),
       ),
-      backgroundColor: Colors.white, // 배경색 흰색
+      backgroundColor: Colors.white,
     ),
   );
 }
