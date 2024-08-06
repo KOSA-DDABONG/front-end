@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../constants.dart';
+import '../../key.dart';
 import '../map/get_map.dart';
 
 void showDetailReviewDialog(BuildContext context, String imageUrl) {

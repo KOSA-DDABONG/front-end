@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
@@ -12,20 +12,27 @@ import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/trip/loading_screen.dart';
 import 'package:front/screen/trip/result_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
 import 'controller/my_menu_controller.dart';
+import 'key.dart';
 
 void main() async {
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => MyMenuController(),
       child: MyApp(),
     ),
   );
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 비동기적으로 JavaScript와 상호작용
+  await Future.delayed(Duration.zero, () {
+    // JavaScript의 loadGoogleMaps 함수 호출
+    js.context.callMethod('loadGoogleMaps', [mapApiKey]);
+  });
 }
 
 

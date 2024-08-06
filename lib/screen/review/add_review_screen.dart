@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../component/header/header.dart';
 import '../../component/map/get_map.dart';
-import '../../constants.dart';
+import '../../key.dart';
 
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({Key? key}) : super(key: key);
