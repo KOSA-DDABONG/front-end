@@ -9,7 +9,7 @@ Widget showLoginSignupBackgroungImg(BuildContext context) {
     child: Opacity(
       opacity: 0.15,
       child: Image.asset(
-        '../assets/images/login_background.png',
+        'assets/images/login_background.png',
         width: screenWidth / 2,
         height: screenHeight * 2 / 3,
         fit: BoxFit.fill,
