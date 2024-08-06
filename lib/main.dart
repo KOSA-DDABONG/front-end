@@ -18,6 +18,8 @@ import 'package:provider/provider.dart';
 import 'controller/my_menu_controller.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => MyMenuController(),
@@ -26,8 +28,6 @@ void main() async {
   );
 
   await dotenv.load();
-
-  WidgetsFlutterBinding.ensureInitialized();
 
   // 비동기적으로 JavaScript와 상호작용
   await Future.delayed(Duration.zero, () {
