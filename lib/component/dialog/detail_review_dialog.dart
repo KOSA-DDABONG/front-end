@@ -9,9 +9,9 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
 
   List<String> images = [
     imageUrl,
-    '../assets/images/noImg.jpg',
-    '../assets/images/login_background.png',
-    '../assets/images/noImg.jpg',
+    'assets/images/noImg.jpg',
+    'assets/images/login_background.png',
+    'assets/images/noImg.jpg',
   ];
 
   showDialog(
@@ -161,7 +161,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl) {
                                   children: [
                                     ListTile(
                                       leading: const CircleAvatar(
-                                        backgroundImage: AssetImage('../assets/images/profile_pic.png'), // Placeholder image
+                                        backgroundImage: AssetImage('assets/images/profile_pic.png'), // Placeholder image
                                       ),
                                       title: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -52,7 +52,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, '../assets/images/landing_background.jpg');
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg');
       },
       child: Container(
         decoration: BoxDecoration(
@@ -86,7 +86,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/landing_background.jpg'),
+                  image: AssetImage('assets/images/landing_background.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -143,7 +143,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage('../assets/images/noImg.jpg'),
+                      image: AssetImage('assets/images/noImg.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -198,7 +198,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage('../assets/images/noImg.jpg'),
+                      image: AssetImage('assets/images/noImg.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -253,7 +253,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage('../assets/images/noImg.jpg'),
+                      image: AssetImage('assets/images/noImg.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),

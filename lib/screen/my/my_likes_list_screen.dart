@@ -62,7 +62,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   Widget _buildImageCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, '../assets/images/landing_background.jpg');
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg');
       },
       child: Stack(
         children: [
@@ -84,7 +84,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.asset(
-          '../assets/images/noImg.jpg',
+          'assets/images/noImg.jpg',
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,

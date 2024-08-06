@@ -81,7 +81,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('../assets/images/landing_background.jpg'),
+                    image: AssetImage('assets/images/landing_background.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),

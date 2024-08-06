@@ -31,7 +31,7 @@ class NotLoginHeader extends AppBar {
           child: Row(
             children: [
               Image.asset(
-                '../assets/images/tripflow_logo.png',
+                'assets/images/tripflow_logo.png',
                 height: 30,
                 color: pointColor,
               ),
@@ -219,7 +219,7 @@ class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget
             child: Row(
               children: [
                 Image.asset(
-                  '../assets/images/tripflow_logo.png',
+                  'assets/images/tripflow_logo.png',
                   height: 30,
                   color: Color(0xFF003680),
                 ),
@@ -316,7 +316,7 @@ class AfterLoginHeader extends AppBar {
           child: Row(
             children: [
               Image.asset(
-                '../assets/images/tripflow_logo.png',
+                'assets/images/tripflow_logo.png',
                 height: 30,
                 color: Color(0xFF003680),
               ),
@@ -485,7 +485,7 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
             child: Row(
               children: [
                 Image.asset(
-                  '../assets/images/tripflow_logo.png',
+                  'assets/images/tripflow_logo.png',
                   height: 30,
                   color: Color(0xFF003680),
                 ),

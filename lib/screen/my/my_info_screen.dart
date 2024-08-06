@@ -116,7 +116,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/noImg.jpg'),
+                  image: AssetImage('assets/images/noImg.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -193,7 +193,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/noImg.jpg'),
+                  image: AssetImage('assets/images/noImg.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -270,7 +270,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/noImg.jpg'),
+                  image: AssetImage('assets/images/noImg.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -282,7 +282,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/noImg.jpg'),
+                  image: AssetImage('assets/images/noImg.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -294,7 +294,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/noImg.jpg'),
+                  image: AssetImage('assets/images/noImg.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -306,7 +306,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 image: const DecorationImage(
-                  image: AssetImage('../assets/images/noImg.jpg'),
+                  image: AssetImage('assets/images/noImg.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),

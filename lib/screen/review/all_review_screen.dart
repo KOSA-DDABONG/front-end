@@ -13,7 +13,7 @@ class AllReviewScreen extends StatefulWidget {
 }
 
 class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
-  List<String> allReviews = List.generate(20, (index) => '../assets/images/noImg.jpg');
+  List<String> allReviews = List.generate(20, (index) => 'assets/images/noImg.jpg');
 
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
@@ -137,9 +137,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   //탭 선택에 따른 순위 내용
   Widget _buildContestTab() {
     List<Map<String, dynamic>> rankings = [
-      {'icon': Icons.looks_one, 'image': '../assets/images/noImg.jpg'}, //1st
-      {'icon': Icons.looks_two, 'image': '../assets/images/noImg.jpg'}, //2nd
-      {'icon': Icons.looks_3, 'image': '../assets/images/noImg.jpg'}, //3rd
+      {'icon': Icons.looks_one, 'image': 'assets/images/noImg.jpg'}, //1st
+      {'icon': Icons.looks_two, 'image': 'assets/images/noImg.jpg'}, //2nd
+      {'icon': Icons.looks_3, 'image': 'assets/images/noImg.jpg'}, //3rd
     ];
 
     return Padding(

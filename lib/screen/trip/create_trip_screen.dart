@@ -89,7 +89,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           child: Text('추천 결과입니다.'),
                         ),
                         SizedBox(height: 5),
-                        Image.network('../assets/images/noImg.jpg'), // Replace with the actual image URL
+                        Image.network('assets/images/noImg.jpg'), // Replace with the actual image URL
                         TextButton(
                           onPressed: () {},
                           child: Text('더보기'),

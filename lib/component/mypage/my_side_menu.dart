@@ -33,7 +33,7 @@ class SideMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: "개인 정보",
-            svgSrc: "../assets/icons/menu_dashboard.svg",
+            svgSrc: "assets/icons/menu_dashboard.svg",
             press: () {
               context.read<MyMenuController>().toggleSubMenu();
               context.read<MyMenuController>().setSelectedScreen('myInfo');
@@ -60,7 +60,7 @@ class SideMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: "나의 일정",
-            svgSrc: "../assets/icons/menu_tran.svg",
+            svgSrc: "assets/icons/menu_tran.svg",
             press: () {
               context.read<MyMenuController>().setSelectedScreen('mySchedule');
             },
@@ -68,7 +68,7 @@ class SideMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: "나의 후기",
-            svgSrc: "../assets/icons/menu_doc.svg",
+            svgSrc: "assets/icons/menu_doc.svg",
             press: () {
               context.read<MyMenuController>().setSelectedScreen('myReview');
             },
@@ -76,7 +76,7 @@ class SideMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: "나의 좋아요",
-            svgSrc: "../assets/icons/menu_task.svg",
+            svgSrc: "assets/icons/menu_task.svg",
             press: () {
               context.read<MyMenuController>().setSelectedScreen('myLikes');
             },

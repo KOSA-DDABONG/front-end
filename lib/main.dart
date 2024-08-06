@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: Colors.blue,
       ),
-      // home: LandingScreen(),
+      home: LandingScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
       // home: AllReviewScreen(),
       // home: ResultScreen()
       // home: LoginScreen(),
-      home: LoadingScreen(),
+      // home: LoadingScreen(),
     );
   }
 }

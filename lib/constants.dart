@@ -6,4 +6,5 @@ const pointColor = Color(0xFF003680);
 const mainBackgroundColor = Colors.white;
 const subBackgroundColor = Color(0xffe4f4ff);
 
-const mapApiKey = '[YOUR API KEY]';
+// const mapApiKey = '[YOUR API KEY]';
+const mapApiKey = 'AIzaSyBqFhlY9_6H7ZddukaBR7RCwzg_wYT0x1A';
