@@ -97,7 +97,7 @@ class _GetMapState extends State<GetMap> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      initialCameraPosition: CameraPosition(
+      initialCameraPosition: const CameraPosition(
         target: LatLng(37.7881703, -122.4077324), // Start position
         zoom: 12,
       ),

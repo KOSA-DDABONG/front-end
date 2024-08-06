@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/constants.dart';
 
 import '../../component/dialog/passed_trip_dialog.dart';
@@ -18,6 +19,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
   bool _isContestExpanded = false;
+
+  String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {
@@ -150,7 +153,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                showDetailReviewDialog(context, ranking['image']);
+                showDetailReviewDialog(context, ranking['image'], mapApiKey);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -244,7 +247,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                showDetailReviewDialog(context, allReviews[index]);
+                showDetailReviewDialog(context, allReviews[index], mapApiKey);
               },
               child: Column(
                 children: [

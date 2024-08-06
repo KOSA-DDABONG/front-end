@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
-import '../../key.dart';
 import '../map/get_map.dart';
 
-void showDetailTripDialog(BuildContext context) {
+void showDetailTripDialog(BuildContext context, String apiKey) {
   int selectedDay = 1;
   int? selectedIndex;
 
@@ -56,7 +55,7 @@ void showDetailTripDialog(BuildContext context) {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
                         child: GetMap(
-                          apiKey: mapApiKey,
+                          apiKey: apiKey,
                           origin: '37.819929,-122.478255',
                           destination: '37.787994,-122.407437',
                           waypoints: '37.76999,-122.44696|37.76899,-122.44596',
