@@ -10,6 +10,7 @@ class ChatbotScreen extends StatefulWidget {
 }
 
 class _ChatbotScreenState extends State<ChatbotScreen> {
+
   int selectedDay = 1;
   int? selectedIndex;
 
@@ -46,6 +47,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       ),
       body: Row(
         children: [
+          // Itinerary Section
           Expanded(
             flex: 2,
             child: Padding(
