@@ -17,5 +17,3 @@ git submodule sync
 git submodule update --init
 
 flutter/bin/flutter build web --release
-# The original build script
-#npm run generate

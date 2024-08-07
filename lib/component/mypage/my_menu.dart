@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../header/header.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../responsive.dart';
+import '../header/header_drawer.dart';
 import 'my_side_menu.dart';
 
 class MyMenuScreen extends StatelessWidget {
@@ -26,14 +27,23 @@ class MyMenuScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AfterLoginHeader(
-          automaticallyImplyLeading: false,
-          context: context,
+        preferredSize: const Size.fromHeight(100.0), // Default height
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return ShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return AfterLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
         ),
       ),
-      // key: context.read<MenuAppController>().scaffoldKey,
-      // drawer: SideMenu(),
+      drawer: AfterLoginHeaderDrawer(),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

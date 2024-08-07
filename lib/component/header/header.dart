@@ -156,7 +156,7 @@ class NotLoginHeader extends AppBar {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Background color
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 ),
@@ -166,133 +166,21 @@ class NotLoginHeader extends AppBar {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
           ],
         ),
       ],
     ),
     iconTheme: IconThemeData(
-      color: Color(0xFF003680),
+      color: pointColor,
     ),
     leading: automaticallyImplyLeading == true
         ? IconButton(
       onPressed: () => Navigator.of(context!).pop(true),
-      icon: Icon(Icons.arrow_back_ios),
+      icon: const Icon(Icons.arrow_back_ios),
     )
         : null,
   );
-}
-
-class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget {
-  final bool automaticallyImplyLeading;
-
-  NotLoginShortHeader({Key? key, required this.automaticallyImplyLeading}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      key: key,
-      backgroundColor: Colors.transparent,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      elevation: 0,
-      centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            },
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LandingScreen()),
-              );
-            },
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/tripflow_logo.png',
-                  height: 30,
-                  color: Color(0xFF003680),
-                ),
-                SizedBox(width: 5),
-                Text(
-                  'TripFlow',
-                  style: GoogleFonts.indieFlower(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF003680),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignupScreen()),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.blue),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                ),
-                child: Text(
-                  'Sign up',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-              SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Background color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                ),
-                child: Text(
-                  'Login',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              SizedBox(width: 20),
-            ],
-          ),
-        ],
-      ),
-      iconTheme: IconThemeData(
-        color: Color(0xFF003680),
-      ),
-      leading: automaticallyImplyLeading
-          ? IconButton(
-        onPressed: () => Navigator.of(context).pop(true),
-        icon: Icon(Icons.arrow_back_ios),
-      )
-          : null,
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 class AfterLoginHeader extends AppBar {
@@ -302,7 +190,7 @@ class AfterLoginHeader extends AppBar {
     backgroundColor: Colors.transparent,
     automaticallyImplyLeading: automaticallyImplyLeading,
     elevation: 0,
-    centerTitle: true, // This centers the title, but we'll adjust the layout further
+    centerTitle: true,
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -318,15 +206,15 @@ class AfterLoginHeader extends AppBar {
               Image.asset(
                 'assets/images/tripflow_logo.png',
                 height: 30,
-                color: Color(0xFF003680),
+                color: pointColor,
               ),
-              SizedBox(width: 5,),
+              const SizedBox(width: 5,),
               Text(
                 'TripFlow',
                 style: GoogleFonts.indieFlower(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF003680),
+                  color: pointColor,
                 ),
               ),
             ],
@@ -422,7 +310,7 @@ class AfterLoginHeader extends AppBar {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Background color
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 ),
@@ -438,7 +326,7 @@ class AfterLoginHeader extends AppBar {
       ],
     ),
     iconTheme: IconThemeData(
-      color: Color(0xFF003680),
+      color: pointColor,
     ),
     leading: automaticallyImplyLeading == true
         ? IconButton(
@@ -449,10 +337,10 @@ class AfterLoginHeader extends AppBar {
   );
 }
 
-class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidget {
+class ShortHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool automaticallyImplyLeading;
 
-  AfterLoginShortHeader({Key? key, required this.automaticallyImplyLeading}) : super(key: key);
+  ShortHeader({Key? key, required this.automaticallyImplyLeading}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -461,20 +349,15 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading: automaticallyImplyLeading,
       elevation: 0,
-      centerTitle: true,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
             },
           ),
+          Spacer(),
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -483,11 +366,12 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
               );
             },
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
                   'assets/images/tripflow_logo.png',
                   height: 30,
-                  color: Color(0xFF003680),
+                  color: pointColor,
                 ),
                 SizedBox(width: 5),
                 Text(
@@ -495,39 +379,22 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
                   style: GoogleFonts.indieFlower(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF003680),
+                    color: pointColor,
                   ),
                 ),
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              ),
-            ),
-            child: Text(
-              'Logout',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          Spacer(),
         ],
       ),
       iconTheme: IconThemeData(
-        color: Color(0xFF003680),
+        color: pointColor,
       ),
       leading: automaticallyImplyLeading
           ? IconButton(
         onPressed: () => Navigator.of(context).pop(true),
-        icon: Icon(Icons.arrow_back_ios),
+        icon: const Icon(Icons.arrow_back_ios),
       )
           : null,
     );
