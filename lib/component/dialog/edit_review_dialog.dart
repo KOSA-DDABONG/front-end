@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/component/map/get_map.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../key.dart';
 
 void showEditReviewDialog(BuildContext context) {
   showDialog(
@@ -33,12 +35,11 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
 
-  String apiKey = dotenv.get("GOOGLE_MAP_KEY");
+  // String apiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {
     super.initState();
-    dotenv.load();
   }
 
   @override
@@ -152,7 +153,8 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
         ),
       ),
       child: GetMap(
-        apiKey: apiKey,
+        // apiKey: apiKey,
+        apiKey: GOOGLE_MAP_KEY,
         origin: '37.819929,-122.478255',
         destination: '37.787994,-122.407437',
         waypoints: '37.76999,-122.44696|37.76899,-122.44596',

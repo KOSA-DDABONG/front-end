@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/delete_my_review_dialog.dart';
@@ -7,6 +7,7 @@ import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../key.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
-  String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
+  // String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', mapApiKey);
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY);
       },
       child: Container(
         decoration: BoxDecoration(

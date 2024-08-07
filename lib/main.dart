@@ -1,6 +1,6 @@
 import 'dart:js' as js;
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/contact/contact_screen.dart';
@@ -16,6 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/my_menu_controller.dart';
+import 'key.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,12 +28,13 @@ void main() async {
     ),
   );
 
-  await dotenv.load();
+  // await dotenv.load();
 
   // 비동기적으로 JavaScript와 상호작용
   await Future.delayed(Duration.zero, () {
     // JavaScript의 loadGoogleMaps 함수 호출
-    js.context.callMethod('loadGoogleMaps', [dotenv.get('GOOGLE_MAP_KEY')]);
+    // js.context.callMethod('loadGoogleMaps', [dotenv.get('GOOGLE_MAP_KEY')]);
+    js.context.callMethod('loadGoogleMaps', [GOOGLE_MAP_KEY]);
   });
 }
 

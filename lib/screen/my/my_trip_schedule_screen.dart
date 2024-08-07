@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/constants.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
@@ -9,6 +9,7 @@ import '../../component/dialog/delete_trip_schedule_dialog.dart';
 import '../../component/dialog/detail_trip_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../key.dart';
 
 class MyTripScheduleScreen extends StatefulWidget {
   const MyTripScheduleScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class MyTripScheduleScreen extends StatefulWidget {
 }
 
 class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
-  String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
+  // String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {
@@ -169,7 +170,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, mapApiKey);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
           _cardIconBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline)),
@@ -224,7 +225,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, mapApiKey);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
           _cardIconBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline)),
@@ -279,7 +280,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, mapApiKey);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
           _cardIconBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline)),

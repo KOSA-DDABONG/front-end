@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/component/dialog/detail_review_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../key.dart';
 
 class MyLikesListScreen extends StatefulWidget {
   const MyLikesListScreen({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class MyLikesListScreen extends StatefulWidget {
 }
 
 class _MyLikesListScreenState extends State<MyLikesListScreen> {
-  String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
+  // String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   Widget _buildImageCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', mapApiKey);
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY);
       },
       child: Stack(
         children: [

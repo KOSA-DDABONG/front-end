@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:front/key.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -142,7 +143,8 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         ),
       ),
       child: GetMap(
-        apiKey: dotenv.get('GOOGLE_MAP_KEY'),
+        // apiKey: dotenv.get('GOOGLE_MAP_KEY'),
+        apiKey: GOOGLE_MAP_KEY,
         origin: '37.819929,-122.478255',
         destination: '37.787994,-122.407437',
         waypoints: '37.76999,-122.44696|37.76899,-122.44596',
