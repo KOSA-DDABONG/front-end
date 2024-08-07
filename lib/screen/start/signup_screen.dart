@@ -18,6 +18,7 @@ import '../../component/validate/check_name_validate.dart';
 import '../../component/validate/check_nickname_validate.dart';
 import '../../component/validate/check_number_validate.dart';
 import '../../constants.dart';
+import '../../responsive.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -55,24 +56,17 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return NotLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : NotLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: NotLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? NotLoginHeaderDrawer()
+          : null,
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [

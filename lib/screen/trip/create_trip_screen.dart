@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
+import '../../responsive.dart';
 
 class CreateTripScreen extends StatefulWidget {
   const CreateTripScreen({Key? key}) : super(key: key);
@@ -20,24 +21,17 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return AfterLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : AfterLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: AfterLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? AfterLoginHeaderDrawer()
+          : null,
       body: _createTripScreen(),
     );
   }

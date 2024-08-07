@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../component/header/header.dart';
 import '../../component/map/get_map.dart';
+import '../../responsive.dart';
 
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({Key? key}) : super(key: key);
@@ -44,24 +45,17 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return AfterLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
+      appBar: Responsive.isNarrowWidth(context)
+        ? ShortHeader(
+            automaticallyImplyLeading: false
+          )
+        : AfterLoginHeader(
+            automaticallyImplyLeading: false,
+            context: context,
         ),
-      ),
-      drawer: AfterLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+        ? AfterLoginHeaderDrawer()
+        : null,
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.white,
       body: _addReviewPageUI(),

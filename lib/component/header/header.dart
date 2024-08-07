@@ -178,8 +178,7 @@ class NotLoginHeader extends AppBar {
         ? IconButton(
       onPressed: () => Navigator.of(context!).pop(true),
       icon: const Icon(Icons.arrow_back_ios),
-    )
-        : null,
+    ) : null,
   );
 }
 
@@ -332,8 +331,7 @@ class AfterLoginHeader extends AppBar {
         ? IconButton(
       onPressed: () => Navigator.of(context!).pop(true),
       icon: Icon(Icons.arrow_back_ios),
-    )
-        : null,
+    ) : null,
   );
 }
 
@@ -395,8 +393,7 @@ class ShortHeader extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
         onPressed: () => Navigator.of(context).pop(true),
         icon: const Icon(Icons.arrow_back_ios),
-      )
-          : null,
+      ) : null,
     );
   }
 

@@ -6,6 +6,7 @@ import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../key/key.dart';
+import '../../responsive.dart';
 
 class AllReviewScreen extends StatefulWidget {
   const AllReviewScreen({Key? key}) : super(key: key);
@@ -30,24 +31,17 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return AfterLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
+        appBar: Responsive.isNarrowWidth(context)
+            ? ShortHeader(
+            automaticallyImplyLeading: false
+        )
+            : AfterLoginHeader(
+          automaticallyImplyLeading: false,
+          context: context,
         ),
-      ),
-      drawer: AfterLoginHeaderDrawer(),
+        drawer: Responsive.isNarrowWidth(context)
+            ? AfterLoginHeaderDrawer()
+            : null,
       body: _allReviewPageUI()
     );
   }

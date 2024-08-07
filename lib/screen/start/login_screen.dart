@@ -12,6 +12,7 @@ import '../../component/header/header_drawer.dart';
 import '../../component/validate/check_input_validate.dart';
 import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
+import '../../responsive.dart';
 import '../../service/user_service.dart';
 import '../../component/header/header.dart';
 
@@ -72,24 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return NotLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : NotLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: NotLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? NotLoginHeaderDrawer()
+          : null,
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
