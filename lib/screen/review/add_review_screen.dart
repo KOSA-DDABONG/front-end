@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:front/key.dart';
+import '../../key/key.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:image_picker/image_picker.dart';

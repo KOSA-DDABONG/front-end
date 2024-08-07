@@ -9,7 +9,7 @@ import '../../component/dialog/delete_trip_schedule_dialog.dart';
 import '../../component/dialog/detail_trip_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../key.dart';
+import '../../key/key.dart';
 
 class MyTripScheduleScreen extends StatefulWidget {
   const MyTripScheduleScreen({Key? key}) : super(key: key);

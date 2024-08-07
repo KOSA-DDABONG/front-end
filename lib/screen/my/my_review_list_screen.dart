@@ -7,7 +7,7 @@ import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../key.dart';
+import '../../key/key.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({Key? key}) : super(key: key);

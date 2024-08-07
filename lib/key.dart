@@ -1,1 +1,0 @@
-const GOOGLE_MAP_KEY = 'AIzaSyBqFhlY9_6H7ZddukaBR7RCwzg_wYT0x1A';

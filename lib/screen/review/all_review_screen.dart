@@ -5,7 +5,7 @@ import 'package:front/constants.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/header/header.dart';
-import '../../key.dart';
+import '../../key/key.dart';
 
 class AllReviewScreen extends StatefulWidget {
   const AllReviewScreen({Key? key}) : super(key: key);

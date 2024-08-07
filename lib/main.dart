@@ -16,7 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/my_menu_controller.dart';
-import 'key.dart';
+import '../../key/key.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

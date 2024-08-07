@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:front/component/map/get_map.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../key.dart';
+import '../../key/key.dart';
 
 void showEditReviewDialog(BuildContext context) {
   showDialog(

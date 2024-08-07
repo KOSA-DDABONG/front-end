@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../key.dart';
+import '../../key/key.dart';
 
 class MyLikesListScreen extends StatefulWidget {
   const MyLikesListScreen({Key? key}) : super(key: key);
