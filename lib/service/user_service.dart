@@ -41,7 +41,8 @@ class UserService {
     final url = Uri.http(Config.apiURL, Config.signupAPI).toString();
 
     try {
-      final response = await DioClient.sendRequest('POST', url, body: model.toFormData);
+      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
+      print('**' + response.toString());
       return Result.success("Success");
     } catch (e) {
       return Result.failure("[Signup] An Error Occurred: ${e}");

@@ -22,7 +22,7 @@ class SessionService {
     final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
 
     try{
-      final response = await DioClient.sendRequest('POST', url, body: model.toFormData());
+      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
       return Result.success(
           loginResponseJson(response.data['data'] as Map<String, dynamic>));
     } catch (e) {
