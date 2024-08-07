@@ -4,6 +4,7 @@ import 'package:front/service/result.dart';
 import '../config.dart';
 import '../dto/login/login_request_model.dart';
 import '../dto/login/login_response_model.dart';
+import '../key/key.dart';
 
 class ServiceTest {
 
@@ -15,7 +16,7 @@ class ServiceTest {
     print(model.password);
     print('----');
 
-    final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
+    final url = Uri.http(API_URL, Config.loginAPI).toString();
     print('login service1: ' + url);
     print('----');
 
