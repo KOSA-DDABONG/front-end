@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../component/header/header_drawer.dart';
 import '../../key/key.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -44,10 +44,24 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100.0), // Default height
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return ShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return AfterLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
+        ),
       ),
+      drawer: AfterLoginHeaderDrawer(),
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.white,
       body: _addReviewPageUI(),

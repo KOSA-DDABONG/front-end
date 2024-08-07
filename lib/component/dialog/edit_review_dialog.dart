@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/component/map/get_map.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -34,8 +33,6 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
   bool _showHashtagLimitError = false;
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
-
-  // String apiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {

@@ -7,6 +7,7 @@ import '../config.dart';
 import '../dto/login/login_request_model.dart';
 import '../dto/login/login_response_model.dart';
 import '../dto/user_model.dart';
+import '../key/key.dart';
 import 'dio_client.dart';
 
 class SessionService {
@@ -19,10 +20,10 @@ class SessionService {
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-    final url = Uri.http(Config.apiURL, Config.loginAPI).toString();
+    final url = Uri.http(API_URL, Config.loginAPI).toString();
 
     try{
-      final response = await DioClient.sendRequest('POST', url, body: model.toFormData());
+      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
       return Result.success(
           loginResponseJson(response.data['data'] as Map<String, dynamic>));
     } catch (e) {
@@ -63,7 +64,7 @@ class SessionService {
     final accessToken = await SessionService.getAccessToken();
     final refreshToken = await SessionService.getRefreshToken();
 
-    final url = Uri.http(Config.apiURL, Config.sampleAPI).toString();
+    final url = Uri.http(API_URL, Config.sampleAPI).toString();
 
     final headers = {
       'Authorization': 'Bearer $accessToken',

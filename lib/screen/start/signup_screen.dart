@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dto/signup/signup_request_model.dart';
@@ -9,6 +10,7 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../component/backgroundImg/login_signup_background.dart';
 import '../../component/header/header.dart';
+import '../../component/header/header_drawer.dart';
 import '../../component/snack_bar.dart';
 import '../../component/validate/check_id_validate.dart';
 import '../../component/validate/check_input_validate.dart';
@@ -53,10 +55,24 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NotLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100.0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return ShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return NotLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
+        ),
       ),
+      drawer: NotLoginHeaderDrawer(),
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
@@ -709,7 +725,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 } else {
-                  showCustomSnackBar(context, '회원가입에 실패하였습니다. 다시 시도해주세요.');
+                  showCustomSnackBar(context, '회원가입에 실패하였습니다. 잠시 후 다시 시도해주세요.');
                 }
               },
             );

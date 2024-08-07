@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 import '../../component/backgroundImg/login_signup_background.dart';
+import '../../component/header/header_drawer.dart';
 import '../../component/validate/check_input_validate.dart';
 import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
@@ -71,10 +72,24 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NotLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100.0), // Default height
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return ShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return NotLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
+        ),
       ),
+      drawer: NotLoginHeaderDrawer(),
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
@@ -301,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('로그인에 실패하였습니다. 이메일과 비밀번호를 다시 확인해주세요.'),
+                    content: Text('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 확인해주세요.'),
                   ),
                 );
               }

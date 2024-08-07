@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:html' as html;
 
 import '../../component/header/header.dart';
+import '../../component/header/header_drawer.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({Key? key}) : super(key: key);
@@ -24,10 +25,24 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100.0), // Default height
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return ShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return AfterLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
+        ),
       ),
+      drawer: AfterLoginHeaderDrawer(),
       body: _contactPageUI(),
     );
   }

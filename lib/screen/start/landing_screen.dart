@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;
@@ -5,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../component/clipper/vertical_wave_clipper.dart';
 import '../../component/header/header.dart';
+import '../../component/header/header_drawer.dart';
 import '../../constants.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -40,10 +42,24 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NotLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100.0), // Default height
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return ShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return NotLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
+        ),
       ),
+      drawer: NotLoginHeaderDrawer(),
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
       body: Stack(
@@ -96,7 +112,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
   //내용
   Widget _contentUI() {
     return AnimatedOpacity(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       opacity: opacityLevel,
       child: Column(
         children: [
@@ -137,13 +153,16 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
 
   //타이틀
   Widget _titleUI() {
-    return Text(
+    return AutoSizeText(
       'TripFlow',
+      maxFontSize: 120,
+      minFontSize: 80,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       style: GoogleFonts.indieFlower(
-        fontSize: 120,
         fontWeight: FontWeight.bold,
-        color: pointColor
-      ),
+        color: pointColor,
+      )
     );
   }
 
