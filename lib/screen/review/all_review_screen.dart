@@ -31,7 +31,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
+        preferredSize: const Size.fromHeight(100.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {

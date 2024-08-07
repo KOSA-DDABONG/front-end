@@ -56,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
+        preferredSize: const Size.fromHeight(100.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
@@ -725,7 +725,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 } else {
-                  showCustomSnackBar(context, '회원가입에 실패하였습니다. 다시 시도해주세요.');
+                  showCustomSnackBar(context, '회원가입에 실패하였습니다. 잠시 후 다시 시도해주세요.');
                 }
               },
             );
