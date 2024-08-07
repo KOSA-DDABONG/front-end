@@ -11,7 +11,7 @@ echo "If the submodule update fails, please regenerate the Vercel submodule toke
 echo "https://github.com/settings/tokens?type=beta"
 echo "https://vercel.com/leezeuns-projects/tripflow/settings/environment-variables"
 
-git submodule set-url TripFlow_FE_Hidden "https://${GITHUB_PAT}@github.com/LeeZEun/TripFlow_FE_Hidden.git"
+git submodule set-url lib/key "https://${GITHUB_PAT}@github.com/LeeZEun/TripFlow_FE_Hidden.git"
 
 git submodule sync
 git submodule update --init
