@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 
 import '../../component/header/header.dart';
+import '../../component/header/header_drawer.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
@@ -45,10 +46,24 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100.0), // Default height
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth <= 800) {
+              return AfterLoginShortHeader(
+                automaticallyImplyLeading: false,
+              );
+            } else {
+              return AfterLoginHeader(
+                automaticallyImplyLeading: false,
+                context: context,
+              );
+            }
+          },
+        ),
       ),
+      drawer: HeaderDrawer(),
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
       body: _loadingTripScreenUI(),

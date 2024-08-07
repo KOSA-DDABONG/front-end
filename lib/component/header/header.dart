@@ -183,6 +183,10 @@ class NotLoginHeader extends AppBar {
   );
 }
 
+
+
+
+//
 class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool automaticallyImplyLeading;
 
@@ -197,18 +201,15 @@ class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget
       elevation: 0,
       centerTitle: true,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start, // Align items to the start (left)
         children: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
             },
           ),
+          SizedBox(width: 10), // Add spacing between menu icon and GestureDetector
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -235,6 +236,7 @@ class NotLoginShortHeader extends StatelessWidget implements PreferredSizeWidget
               ],
             ),
           ),
+          Spacer(), // Pushes the remaining content to the right
           Row(
             children: [
               OutlinedButton(
@@ -463,18 +465,14 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
       elevation: 0,
       centerTitle: true,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
             },
           ),
+          SizedBox(width: 10), // Add spacing between menu icon and GestureDetector
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -501,6 +499,7 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
               ],
             ),
           ),
+          Spacer(), // Pushes the button to the right
           ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -536,3 +535,4 @@ class AfterLoginShortHeader extends StatelessWidget implements PreferredSizeWidg
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
+
