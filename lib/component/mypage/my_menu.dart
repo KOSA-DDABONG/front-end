@@ -31,7 +31,7 @@ class MyMenuScreen extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -43,7 +43,7 @@ class MyMenuScreen extends StatelessWidget {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

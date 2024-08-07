@@ -25,7 +25,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -37,7 +37,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       body: _createTripScreen(),
     );
   }

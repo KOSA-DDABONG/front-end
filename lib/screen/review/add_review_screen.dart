@@ -49,7 +49,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -61,7 +61,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.white,
       body: _addReviewPageUI(),

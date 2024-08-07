@@ -60,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return NotLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -72,7 +72,7 @@ class _SignupScreenState extends State<SignupScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: NotLoginHeaderDrawer(),
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [

@@ -51,7 +51,7 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -63,7 +63,7 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
       body: _loadingTripScreenUI(),

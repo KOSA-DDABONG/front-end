@@ -30,7 +30,7 @@ class _ContactScreenState extends State<ContactScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -42,7 +42,7 @@ class _ContactScreenState extends State<ContactScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       body: _contactPageUI(),
     );
   }

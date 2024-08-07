@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return NotLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: NotLoginHeaderDrawer(),
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [

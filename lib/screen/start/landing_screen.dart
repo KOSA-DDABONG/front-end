@@ -47,7 +47,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return NotLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -59,7 +59,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: NotLoginHeaderDrawer(),
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
       body: Stack(

@@ -41,7 +41,7 @@ class _ResultScreenState extends State<ResultScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -53,7 +53,7 @@ class _ResultScreenState extends State<ResultScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       body: Row(
         children: [
           Expanded(

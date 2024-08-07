@@ -47,7 +47,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -59,7 +59,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       body: Row(
         children: [
           // Itinerary Section

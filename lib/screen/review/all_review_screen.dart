@@ -35,7 +35,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
         child: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth <= 800) {
-              return AfterLoginShortHeader(
+              return ShortHeader(
                 automaticallyImplyLeading: false,
               );
             } else {
@@ -47,7 +47,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           },
         ),
       ),
-      drawer: HeaderDrawer(),
+      drawer: AfterLoginHeaderDrawer(),
       body: _allReviewPageUI()
     );
   }
