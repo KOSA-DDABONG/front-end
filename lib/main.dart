@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.blue,
       ),
       home: LandingScreen(),
+      // home: ContactScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),

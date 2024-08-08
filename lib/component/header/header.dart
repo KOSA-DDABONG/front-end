@@ -363,24 +363,13 @@ class ShortHeader extends StatelessWidget implements PreferredSizeWidget {
                 MaterialPageRoute(builder: (context) => LandingScreen()),
               );
             },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  'assets/images/tripflow_logo.png',
-                  height: 30,
-                  color: pointColor,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  'TripFlow',
-                  style: GoogleFonts.indieFlower(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: pointColor,
-                  ),
-                ),
-              ],
+            child: Text(
+              'TripFlow',
+              style: GoogleFonts.indieFlower(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: pointColor,
+              ),
             ),
           ),
           Spacer(),
