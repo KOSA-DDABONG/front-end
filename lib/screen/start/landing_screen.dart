@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:front/responsive.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
@@ -42,24 +43,17 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return NotLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : NotLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: NotLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? NotLoginHeaderDrawer()
+          : null,
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
       body: Stack(

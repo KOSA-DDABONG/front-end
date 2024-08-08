@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/dto/signup/signup_request_model.dart';
@@ -18,6 +17,7 @@ import '../../component/validate/check_name_validate.dart';
 import '../../component/validate/check_nickname_validate.dart';
 import '../../component/validate/check_number_validate.dart';
 import '../../constants.dart';
+import '../../responsive.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -55,24 +55,17 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return NotLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : NotLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: NotLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? NotLoginHeaderDrawer()
+          : null,
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
@@ -84,7 +77,9 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Form(
               key: globalFormKey,
               child: SingleChildScrollView(
-                child:  _registerUI(context),
+                child: Responsive.isNarrowWidth(context)
+                  ? _registerNarrowUI()
+                  : _registerWideUI()
               )
             )
           ),
@@ -93,38 +88,95 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  //회원가입 페이지 UI
-  Widget _registerUI(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200, vertical: 30),
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: 60),
-          _titleUI(),
-          const SizedBox(height: 50),
-          _buildUsernameField(),
-          const SizedBox(height: 30),
-          _buildEmailField(),
-          const SizedBox(height: 30),
-          _buildNumberField(),
-          const SizedBox(height: 30),
-          _buildBirthField(),
-          const SizedBox(height: 30),
-          _buildNicknameField(),
-          const SizedBox(height: 30),
-          _buildUserIdField(),
-          const SizedBox(height: 30),
-          _buildPasswordField(),
-          _buildPasswordCheckField(),
-          const SizedBox(height: 80),
-          _buildRegisterButton(),
-          const SizedBox(height: 50),
-          _buildOrText(),
-          const SizedBox(height: 30),
-          _buildLoginText(),
-          const SizedBox(height: 100),
-        ],
-      ),
+  //회원가입 페이지 UI(화면 좁을 때)
+  Widget _registerNarrowUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 13,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 100),
+              _buildUsernameField(),
+              const SizedBox(height: 35),
+              _buildEmailField(),
+              const SizedBox(height: 35),
+              _buildNumberField(),
+              const SizedBox(height: 35),
+              _buildBirthField(),
+              const SizedBox(height: 35),
+              _buildNicknameField(),
+              const SizedBox(height: 35),
+              _buildUserIdField(),
+              const SizedBox(height: 35),
+              _buildPasswordField(),
+              _buildPasswordCheckField(),
+              const SizedBox(height: 60),
+              _buildRegisterButton(),
+              const SizedBox(height: 35),
+              _buildOrText(),
+              const SizedBox(height: 35),
+              _buildLoginText(),
+              const SizedBox(height: 100),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 4,
+          child: Container(),
+        ),
+      ],
+    );
+  }
+
+  //회원가입 페이지 UI(화면 넓을 때)
+  Widget _registerWideUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 60),
+              _titleUI(),
+              const SizedBox(height: 50),
+              _buildUsernameField(),
+              const SizedBox(height: 35),
+              _buildEmailField(),
+              const SizedBox(height: 35),
+              _buildNumberField(),
+              const SizedBox(height: 35),
+              _buildBirthField(),
+              const SizedBox(height: 35),
+              _buildNicknameField(),
+              const SizedBox(height: 35),
+              _buildUserIdField(),
+              const SizedBox(height: 35),
+              _buildPasswordField(),
+              _buildPasswordCheckField(),
+              const SizedBox(height: 60),
+              _buildRegisterButton(),
+              const SizedBox(height: 35),
+              _buildOrText(),
+              const SizedBox(height: 35),
+              _buildLoginText(),
+              const SizedBox(height: 100),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ],
     );
   }
 

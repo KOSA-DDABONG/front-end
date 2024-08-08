@@ -26,24 +26,17 @@ class MyMenuScreen extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return AfterLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : AfterLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: AfterLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? AfterLoginHeaderDrawer()
+          : null,
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -58,7 +51,7 @@ class MyMenuScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (Responsive.isDesktop(context))
+                  if (Responsive.isWideWidth(context))
                     Expanded(
                       child: SideMenu(),
                     ),

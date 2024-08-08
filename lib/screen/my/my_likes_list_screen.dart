@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:front/component/dialog/detail_review_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../key/key.dart';

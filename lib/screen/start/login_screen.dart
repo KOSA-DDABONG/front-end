@@ -12,6 +12,7 @@ import '../../component/header/header_drawer.dart';
 import '../../component/validate/check_input_validate.dart';
 import '../../constants.dart';
 import '../../dto/login/login_request_model.dart';
+import '../../responsive.dart';
 import '../../service/user_service.dart';
 import '../../component/header/header.dart';
 
@@ -72,24 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return NotLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
-      ),
-      drawer: NotLoginHeaderDrawer(),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+              automaticallyImplyLeading: false
+          )
+          : NotLoginHeader(
+              automaticallyImplyLeading: false,
+              context: context,
+            ),
+      drawer: Responsive.isNarrowWidth(context)
+          ? NotLoginHeaderDrawer()
+          : null,
       backgroundColor: subBackgroundColor,
       body: Stack(
         children: [
@@ -101,7 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Form(
               key: globalFormKey,
               child: SingleChildScrollView(
-                child: _loginUI(context),
+                child: Responsive.isNarrowWidth(context)
+                  ? _loginNarrowUI()
+                  : _loginWideUI()
               )
             )
           )
@@ -109,30 +105,78 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+  
+  //로그인 페이지 UI(화면 좁을 때)
+  Widget _loginNarrowUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 13,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 100),
+              _buildIdField(),
+              const SizedBox(height: 30),
+              _buildPasswordField(),
+              const SizedBox(height: 20),
+              _checkboxRememberId(),
+              const SizedBox(height: 60),
+              _buildLoginButton(),
+              const SizedBox(height: 30),
+              _buildOrText(),
+              const SizedBox(height: 30),
+              _buildSignupText(),
+              const SizedBox(height: 100),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 4,
+          child: Container(),
+        ),
+      ],
+    );
+  }
 
-  //로그인 페이지 UI
-  Widget _loginUI(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 200, vertical: 30),
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: 60),
-          _titleUI(),
-          const SizedBox(height: 50),
-          _buildIdField(),
-          const SizedBox(height: 30),
-          _buildPasswordField(),
-          const SizedBox(height: 30),
-          _checkboxRememberId(),
-          const SizedBox(height: 80),
-          _buildLoginButton(),
-          const SizedBox(height: 50),
-          _buildOrText(),
-          const SizedBox(height: 30),
-          _buildSignupText(),
-          const SizedBox(height: 100),
-        ],
-      ),
+  //로그인 페이지 UI(화면 넓을 때)
+  Widget _loginWideUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 60),
+              _titleUI(),
+              const SizedBox(height: 50),
+              _buildIdField(),
+              const SizedBox(height: 30),
+              _buildPasswordField(),
+              const SizedBox(height: 20),
+              _checkboxRememberId(),
+              const SizedBox(height: 60),
+              _buildLoginButton(),
+              const SizedBox(height: 30),
+              _buildOrText(),
+              const SizedBox(height: 30),
+              _buildSignupText(),
+              const SizedBox(height: 100),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ],
     );
   }
 
@@ -189,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Color(0xFF003680),
+                    color: pointColor,
                   ),
                 ),
               ),
@@ -379,7 +423,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextSpan(
                 text: '회원가입 하기',
                 style: const TextStyle(
-                  color: Color(0xFF003680),
+                  color: pointColor,
                   fontWeight: FontWeight.bold,
                 ),
                 recognizer: TapGestureRecognizer()

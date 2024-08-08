@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/delete_my_review_dialog.dart';
-import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
+import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../key/key.dart';
+import '../../responsive.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({Key? key}) : super(key: key);
