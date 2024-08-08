@@ -178,8 +178,7 @@ class NotLoginHeader extends AppBar {
         ? IconButton(
       onPressed: () => Navigator.of(context!).pop(true),
       icon: const Icon(Icons.arrow_back_ios),
-    )
-        : null,
+    ) : null,
   );
 }
 
@@ -332,8 +331,7 @@ class AfterLoginHeader extends AppBar {
         ? IconButton(
       onPressed: () => Navigator.of(context!).pop(true),
       icon: Icon(Icons.arrow_back_ios),
-    )
-        : null,
+    ) : null,
   );
 }
 
@@ -366,14 +364,13 @@ class ShortHeader extends StatelessWidget implements PreferredSizeWidget {
               );
             },
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
                   'assets/images/tripflow_logo.png',
                   height: 30,
                   color: pointColor,
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5,),
                 Text(
                   'TripFlow',
                   style: GoogleFonts.indieFlower(
@@ -385,7 +382,6 @@ class ShortHeader extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
           ),
-          Spacer(),
         ],
       ),
       iconTheme: IconThemeData(
@@ -395,8 +391,7 @@ class ShortHeader extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
         onPressed: () => Navigator.of(context).pop(true),
         icon: const Icon(Icons.arrow_back_ios),
-      )
-          : null,
+      ) : null,
     );
   }
 

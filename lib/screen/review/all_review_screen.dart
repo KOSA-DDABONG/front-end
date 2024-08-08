@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 
-import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
+import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../key/key.dart';
+import '../../responsive.dart';
 
 class AllReviewScreen extends StatefulWidget {
   const AllReviewScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class AllReviewScreen extends StatefulWidget {
 }
 
 class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
-  List<String> allReviews = List.generate(20, (index) => 'assets/images/noImg.jpg');
+  List<String> allReviews = List.generate(15, (index) => 'assets/images/noImg.jpg');
 
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
@@ -30,37 +31,30 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return AfterLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
+        appBar: Responsive.isNarrowWidth(context)
+            ? ShortHeader(
+          automaticallyImplyLeading: false,
+        )
+            : AfterLoginHeader(
+          automaticallyImplyLeading: false,
+          context: context,
         ),
-      ),
-      drawer: AfterLoginHeaderDrawer(),
-      body: _allReviewPageUI()
+        drawer: Responsive.isNarrowWidth(context)
+            ? AfterLoginHeaderDrawer()
+            : null,
+        body: _allReviewPageUI()
     );
   }
 
   //리뷰 조회 페이지 UI
   Widget _allReviewPageUI() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 120),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
           _searchBarUI(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -91,7 +85,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               ],
             ),
           ),
-          _allReviewContentUI(),
+          Expanded(child: _allReviewContentUI()),
         ],
       ),
     );
@@ -102,8 +96,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
     return Text(
         subtitle,
         style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold
+            fontSize: 20,
+            fontWeight: FontWeight.bold
         )
     );
   }
@@ -117,7 +111,6 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           const Spacer(),
           Expanded(
             child: Container(
-              // width: MediaQuery.of(context).size.width * 0.2,
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -168,18 +161,18 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               onTap: () {
                 showDetailReviewDialog(context, ranking['image'], GOOGLE_MAP_KEY);
               },
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(ranking['icon'], size: 40),
                   const SizedBox(height: 5),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
+                    child: Image.asset(
                       ranking['image'],
                       fit: BoxFit.cover,
-                      width: 150, //MediaQuery.of(context).size.width
-                      height: 100
+                      width: 150,
+                      height: 100,
                     ),
                   ),
                 ],
@@ -200,16 +193,27 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       ),
       child: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.black,
-            tabs: const [
-              Tab(text: '후기 콘테스트'),
-              Tab(text: '주간 콘테스트'),
-              Tab(text: '월간 콘테스트'),
-              Tab(text: '시즌 콘테스트'),
-            ],
-          ),
+          Responsive.isNarrowWidth(context)
+          ? TabBar(
+              controller: _tabController,
+              labelColor: Colors.black,
+              tabs: const [
+                Tab(text: '전체'),
+                Tab(text: '주간'),
+                Tab(text: '월간'),
+                Tab(text: '시즌'),
+              ],
+            )
+          : TabBar(
+              controller: _tabController,
+              labelColor: Colors.black,
+              tabs: const [
+                Tab(text: '전체 콘테스트'),
+                Tab(text: '주간 콘테스트'),
+                Tab(text: '월간 콘테스트'),
+                Tab(text: '시즌 콘테스트'),
+              ],
+            ),
           Container(
             height: 200,
             child: TabBarView(
@@ -247,12 +251,12 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //전체 후기 내용 영역
   Widget _allReviewContentUI() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: GridView.builder(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount = (constraints.maxWidth / 150).floor();
+        return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+            crossAxisCount: crossAxisCount,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
           ),
@@ -269,7 +273,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       builder: (context, constraints) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
+                          child: Image.asset(
                             allReviews[index],
                             fit: BoxFit.cover,
                             width: constraints.maxWidth,
@@ -284,8 +288,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               ),
             );
           },
-        ),
-      ),
+        );
+      },
     );
   }
 

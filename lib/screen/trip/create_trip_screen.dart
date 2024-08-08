@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/loading/creating_screen.dart';
+import 'package:front/screen/trip/result_screen.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
+import '../../responsive.dart';
 
 class CreateTripScreen extends StatefulWidget {
   const CreateTripScreen({Key? key}) : super(key: key);
@@ -20,24 +23,17 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0), // Default height
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth <= 800) {
-              return ShortHeader(
-                automaticallyImplyLeading: false,
-              );
-            } else {
-              return AfterLoginHeader(
-                automaticallyImplyLeading: false,
-                context: context,
-              );
-            }
-          },
-        ),
+      appBar: Responsive.isNarrowWidth(context)
+          ? ShortHeader(
+          automaticallyImplyLeading: false
+      )
+          : AfterLoginHeader(
+        automaticallyImplyLeading: false,
+        context: context,
       ),
-      drawer: AfterLoginHeaderDrawer(),
+      drawer: Responsive.isNarrowWidth(context)
+          ? AfterLoginHeaderDrawer()
+          : null,
       body: _createTripScreen(),
     );
   }
@@ -104,9 +100,14 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           child: Text('추천 결과입니다.'),
                         ),
                         SizedBox(height: 5),
-                        Image.network('assets/images/noImg.jpg'), // Replace with the actual image URL
+                        Image.asset('assets/images/noImg.jpg'),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => CreatingScreen()),
+                            );
+                          },
                           child: Text('더보기'),
                         ),
                       ],
