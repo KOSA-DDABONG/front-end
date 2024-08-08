@@ -18,6 +18,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
     context: context,
     builder: (BuildContext context) {
       bool isLiked = false;
+      bool showComments = false;
       if(Responsive.isNarrowWidth(context)) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -31,173 +32,196 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: MediaQuery.of(context).size.height * 0.9,
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Expanded(
-                        flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              PageView(
-                                controller: pageController,
-                                children: images.map((image) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    child: Image.asset(
-                                      image,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                              Positioned(
-                                bottom: 8.0,
-                                child: SmoothPageIndicator(
-                                  controller: pageController,
-                                  count: images.length,
-                                  effect: const WormEffect(
-                                    dotHeight: 8.0,
-                                    dotWidth: 8.0,
-                                    spacing: 16.0,
-                                    activeDotColor: Colors.black,
-                                    dotColor: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // 지도
-                      Expanded(
-                        flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5.0),
-                            child: GetMap(
-                              apiKey: apiKey,
-                              origin: '37.819929,-122.478255',
-                              destination: '37.787994,-122.407437',
-                              waypoints: '37.76999,-122.44696|37.76899,-122.44596',
-                            ),
-                          ),
-                        ),
-                      ),
-                      // 전체 내용
-                      Expanded(
-                        flex: 4,
-                        child: Stack(
-                          children: [
-                            SingleChildScrollView(
-                              padding: const EdgeInsets.only(bottom: 70.0), // 댓글 입력란의 높이만큼 여백 추가
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      Column(
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
                                 children: [
-                                  // 리뷰 내용 및 해시태그
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.",
-                                          style: TextStyle(fontSize: 18),
+                                  PageView(
+                                    controller: pageController,
+                                    children: images.map((image) {
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                        child: Image.asset(
+                                          image,
+                                          fit: BoxFit.cover,
                                         ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "#힐링 #호캉스 #해운대",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blueGrey,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(
-                                                isLiked ? Icons.favorite : Icons.favorite_border,
-                                                color: isLiked ? Colors.red : Colors.black,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isLiked = !isLiked;
-                                                });
-                                              },
-                                            ),
-                                            const Text('116'),
-                                            const SizedBox(width: 16),
-                                            Icon(Icons.comment),
-                                            const SizedBox(width: 8),
-                                            const Text('99'),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  // 댓글 리스트
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: 100,
-                                    itemBuilder: (context, index) {
-                                      return Column(
-                                        children: [
-                                          ListTile(
-                                            leading: const CircleAvatar(
-                                              backgroundImage: AssetImage('assets/images/profile_pic.png'),
-                                            ),
-                                            title: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Nickname $index',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text('Comment $index'),
-                                              ],
-                                            ),
-                                          ),
-                                          Divider(color: Colors.grey[200]),
-                                        ],
                                       );
-                                    },
+                                    }).toList(),
+                                  ),
+                                  Positioned(
+                                    bottom: 8.0,
+                                    child: SmoothPageIndicator(
+                                      controller: pageController,
+                                      count: images.length,
+                                      effect: const WormEffect(
+                                        dotHeight: 8.0,
+                                        dotWidth: 8.0,
+                                        spacing: 16.0,
+                                        activeDotColor: Colors.black,
+                                        dotColor: Colors.grey,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                color: Colors.white,
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          hintText: '댓글을 입력하세요...',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.send),
-                                      onPressed: () {},
-                                    ),
-                                  ],
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: GetMap(
+                                  apiKey: apiKey,
+                                  origin: '37.819929,-122.478255',
+                                  destination: '37.787994,-122.407437',
+                                  waypoints: '37.76999,-122.44696|37.76899,-122.44596',
                                 ),
                               ),
                             ),
-                          ],
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    isLiked ? Icons.favorite : Icons.favorite_border,
+                                    color: isLiked ? Colors.red : Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isLiked = !isLiked;
+                                    });
+                                  },
+                                ),
+                                const Text('116'),
+                                const SizedBox(width: 16),
+                                IconButton(
+                                  icon: Icon(Icons.comment),
+                                  onPressed: () {
+                                    setState(() {
+                                      showComments = !showComments;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                                const Text('99'),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 9,
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.only(bottom: 70.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (!showComments) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              child: Text(
+                                                "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n",
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            )
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              child: Text(
+                                                "#힐링 #호캉스 #해운대",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.blueGrey,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  if (showComments) ...[
+                                    // 댓글 리스트
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: 100,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          children: [
+                                            ListTile(
+                                              leading: const CircleAvatar(
+                                                backgroundImage: AssetImage('assets/images/profile_pic.png'),
+                                              ),
+                                              title: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Nickname $index',
+                                                    style: const TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text('Comment $index'),
+                                                ],
+                                              ),
+                                            ),
+                                            Divider(color: Colors.grey[200]),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    hintText: '댓글을 입력하세요...',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.send),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -290,33 +314,42 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                         flex: 2,
                         child: Column(
                           children: [
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                                child: Text(
-                                  "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.",
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
+                            Expanded(
+                              flex: 5,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                                        child: Text(
+                                          "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n",
+                                          style: TextStyle(fontSize: 18),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                                        child: Text(
+                                          "#힐링 #호캉스 #해운대",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.blueGrey,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              )
                             ),
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                                child: Text(
-                                  "#힐링 #호캉스 #해운대",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.blueGrey,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            Expanded(
+                              flex: 1,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -344,6 +377,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                               ),
                             ),
                             Expanded(
+                              flex: 6,
                               child: ListView.builder(
                                 itemCount: 100,
                                 itemBuilder: (context, index) {
@@ -351,7 +385,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                     children: [
                                       ListTile(
                                         leading: const CircleAvatar(
-                                          backgroundImage: AssetImage('assets/images/profile_pic.png'), // Placeholder image
+                                          backgroundImage: AssetImage('assets/images/profile_pic.png'),
                                         ),
                                         title: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
