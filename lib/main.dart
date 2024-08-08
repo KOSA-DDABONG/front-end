@@ -6,8 +6,6 @@ import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/my/my_info_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 import 'package:front/screen/review/all_review_screen.dart';
-import 'package:front/screen/start/login_screen.dart';
-import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/trip/loading_screen.dart';
 import 'package:front/screen/trip/result_screen.dart';
@@ -49,14 +47,12 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: Colors.blue,
       ),
-      home: LandingScreen(),
+      // home: LandingScreen(),
       // home: AddReviewScreen(),
       // home: MyMenuScreen(),
       // home: ChatbotScreen(),
-      // home: ContactScreen(),
-      // home: AllReviewScreen(),
-      // home: ResultScreen()
-      // home: LoginScreen(),
+      home: AllReviewScreen(),
+      // home: ResultScreen(),
       // home: LoadingScreen(),
     );
   }

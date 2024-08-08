@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/trip/result_screen.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
@@ -98,9 +99,14 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           child: Text('추천 결과입니다.'),
                         ),
                         SizedBox(height: 5),
-                        Image.network('assets/images/noImg.jpg'), // Replace with the actual image URL
+                        Image.network('assets/images/noImg.jpg'),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ResultScreen()),
+                            );
+                          },
                           child: Text('더보기'),
                         ),
                       ],

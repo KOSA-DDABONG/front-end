@@ -16,7 +16,7 @@ class AllReviewScreen extends StatefulWidget {
 }
 
 class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
-  List<String> allReviews = List.generate(20, (index) => 'assets/images/noImg.jpg');
+  List<String> allReviews = List.generate(15, (index) => 'assets/images/noImg.jpg');
 
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
@@ -33,7 +33,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
     return Scaffold(
         appBar: Responsive.isNarrowWidth(context)
             ? ShortHeader(
-            automaticallyImplyLeading: false
+          automaticallyImplyLeading: false,
         )
             : AfterLoginHeader(
           automaticallyImplyLeading: false,
@@ -42,19 +42,19 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
         drawer: Responsive.isNarrowWidth(context)
             ? AfterLoginHeaderDrawer()
             : null,
-      body: _allReviewPageUI()
+        body: _allReviewPageUI()
     );
   }
 
   //리뷰 조회 페이지 UI
   Widget _allReviewPageUI() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 120),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
           _searchBarUI(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -85,7 +85,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               ],
             ),
           ),
-          _allReviewContentUI(),
+          Expanded(child: _allReviewContentUI()),
         ],
       ),
     );
@@ -96,8 +96,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
     return Text(
         subtitle,
         style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold
+            fontSize: 20,
+            fontWeight: FontWeight.bold
         )
     );
   }
@@ -111,7 +111,6 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           const Spacer(),
           Expanded(
             child: Container(
-              // width: MediaQuery.of(context).size.width * 0.2,
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -162,7 +161,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               onTap: () {
                 showDetailReviewDialog(context, ranking['image'], GOOGLE_MAP_KEY);
               },
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(ranking['icon'], size: 40),
@@ -172,8 +171,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                     child: Image.network(
                       ranking['image'],
                       fit: BoxFit.cover,
-                      width: 150, //MediaQuery.of(context).size.width
-                      height: 100
+                      width: 150,
+                      height: 100,
                     ),
                   ),
                 ],
@@ -184,6 +183,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       ),
     );
   }
+
+
+
 
   //콘테스트 영역 내용
   Widget _contestContentUI() {
@@ -241,12 +243,12 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //전체 후기 내용 영역
   Widget _allReviewContentUI() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: GridView.builder(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount = (constraints.maxWidth / 150).floor();
+        return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+            crossAxisCount: crossAxisCount,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
           ),
@@ -278,8 +280,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               ),
             );
           },
-        ),
-      ),
+        );
+      },
     );
   }
 
