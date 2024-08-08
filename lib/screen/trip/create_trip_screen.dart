@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screen/loading/creating_screen.dart';
 import 'package:front/screen/trip/result_screen.dart';
 
 import '../../component/header/header.dart';
@@ -104,7 +105,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ResultScreen()),
+                              MaterialPageRoute(builder: (context) => CreatingScreen()),
                             );
                           },
                           child: Text('더보기'),

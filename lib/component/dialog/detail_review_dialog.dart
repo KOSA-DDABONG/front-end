@@ -37,7 +37,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                       Column(
                         children: [
                           Expanded(
-                            flex: 6,
+                            flex: 5,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Stack(
@@ -74,7 +74,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                             ),
                           ),
                           Expanded(
-                            flex: 5,
+                            flex: 4,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
@@ -105,21 +105,30 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                 ),
                                 const Text('116'),
                                 const SizedBox(width: 16),
-                                IconButton(
-                                  icon: Icon(Icons.comment),
-                                  onPressed: () {
-                                    setState(() {
-                                      showComments = !showComments;
-                                    });
-                                  },
-                                ),
+                                (!showComments)
+                                ? IconButton(
+                                    icon: Icon(Icons.comment_outlined),
+                                    onPressed: () {
+                                      setState(() {
+                                        showComments = !showComments;
+                                      });
+                                    },
+                                  )
+                                : IconButton(
+                                    icon: Icon(Icons.comment),
+                                    onPressed: () {
+                                      setState(() {
+                                        showComments = !showComments;
+                                      });
+                                    },
+                                  ),
                                 const SizedBox(width: 8),
                                 const Text('99'),
                               ],
                             ),
                           ),
                           Expanded(
-                            flex: 9,
+                            flex: 7,
                             child: SingleChildScrollView(
                               padding: const EdgeInsets.only(bottom: 70.0),
                               child: Column(
