@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 
-import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/dialog/detail_review_dialog.dart';
+import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../key/key.dart';
@@ -193,16 +193,27 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       ),
       child: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.black,
-            tabs: const [
-              Tab(text: '후기 콘테스트'),
-              Tab(text: '주간 콘테스트'),
-              Tab(text: '월간 콘테스트'),
-              Tab(text: '시즌 콘테스트'),
-            ],
-          ),
+          Responsive.isNarrowWidth(context)
+          ? TabBar(
+              controller: _tabController,
+              labelColor: Colors.black,
+              tabs: const [
+                Tab(text: '전체'),
+                Tab(text: '주간'),
+                Tab(text: '월간'),
+                Tab(text: '시즌'),
+              ],
+            )
+          : TabBar(
+              controller: _tabController,
+              labelColor: Colors.black,
+              tabs: const [
+                Tab(text: '전체 콘테스트'),
+                Tab(text: '주간 콘테스트'),
+                Tab(text: '월간 콘테스트'),
+                Tab(text: '시즌 콘테스트'),
+              ],
+            ),
           Container(
             height: 200,
             child: TabBarView(
