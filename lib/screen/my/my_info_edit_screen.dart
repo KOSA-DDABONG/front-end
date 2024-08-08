@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:front/component/dialog/delete_account_dialog.dart';
+import 'package:front/responsive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
@@ -24,7 +25,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   bool hidePassword = true;
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   String? _imageUrl; //웹 플랫폼용 이미지 URL
-  File? _image; //모바일or데스크톱 플랫폼용 이미지 파일
+  File? _image; //모바일 or 데스크톱 플랫폼용 이미지 파일
   String? password;
   String? checkpassword;
 
@@ -64,15 +65,17 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           key: UniqueKey(),
           child: Form(
             key: globalFormKey,
-            child: profileEditUI(context),
+            child: Responsive.isNarrowWidth(context)
+              ? profileEditNarrowUI(context)
+              : profileEditWideUI(context),
           ),
         ),
       ),
     );
   }
 
-  //프로필 수정 페이지 UI
-  Widget profileEditUI(BuildContext context) {
+  //프로필 수정 페이지 UI(좁은 화면)
+  Widget profileEditNarrowUI(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(25),
       child: Column(
@@ -97,14 +100,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           Row(
             children: [
               Expanded(
-                child: ProfileFormField(
+                child: ProfileFormNarrowField(
                   label: '이름',
                   value: '{이름}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
-                child: ProfileFormField(
+                child: ProfileFormNarrowField(
                   label: '이메일',
                   value: '{이메일}',
                 ),
@@ -115,7 +118,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           Row(
             children: [
               Expanded(
-                child: ProfileFormField(
+                child: ProfileFormNarrowField(
                   label: '전화번호',
                   value: '{전화번호}',
                   withEditButton: true,
@@ -124,7 +127,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               ),
               const SizedBox(width: 50),
               Expanded(
-                child: ProfileFormField(
+                child: ProfileFormNarrowField(
                   label: '생년월일',
                   value: '{생년월일}',
                 ),
@@ -135,14 +138,106 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           Row(
             children: [
               Expanded(
-                child: ProfileFormField(
+                child: ProfileFormNarrowField(
                   label: '닉네임',
                   value: '{닉네임}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
-                child: ProfileFormField(
+                child: ProfileFormNarrowField(
+                  label: '아이디',
+                  value: '{아이디}',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          _changePasswordField(),
+          const SizedBox(height: 20),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          _deleteInfo(),
+          const SizedBox(height: 50),
+        ],
+      ),
+    );
+  }
+
+  //프로필 수정 페이지 UI(넓은 화면)
+  Widget profileEditWideUI(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 정보 수정'),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              _profileImgUI(),
+              const SizedBox(width: 20),
+              _profileImgField(),
+            ],
+          ),
+          const SizedBox(height: 40),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          _subTitleTextUI('회원 정보'),
+          const SizedBox(height: 20),
+          Divider(color: Colors.grey[300],),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ProfileFormWideField(
+                  label: '이름',
+                  value: '{이름}',
+                ),
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: ProfileFormWideField(
+                  label: '이메일',
+                  value: '{이메일}',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ProfileFormWideField(
+                  label: '전화번호',
+                  value: '{전화번호}',
+                  withEditButton: true,
+                  onEdit: () => showEditNumberDialog(context),
+                ),
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: ProfileFormWideField(
+                  label: '생년월일',
+                  value: '{생년월일}',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ProfileFormWideField(
+                  label: '닉네임',
+                  value: '{닉네임}',
+                ),
+              ),
+              const SizedBox(width: 50),
+              Expanded(
+                child: ProfileFormWideField(
                   label: '아이디',
                   value: '{아이디}',
                 ),
