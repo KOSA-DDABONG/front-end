@@ -100,7 +100,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           child: Text('추천 결과입니다.'),
                         ),
                         SizedBox(height: 5),
-                        Image.network('assets/images/noImg.jpg'),
+                        Image.asset('assets/images/noImg.jpg'),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
