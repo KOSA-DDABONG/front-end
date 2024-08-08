@@ -42,14 +42,14 @@ class SideMenu extends StatelessWidget {
             children: showSubMenu
                 ? [
                     DrawerSubListTile(
-                      title: "내 프로필",
+                      title: "프로필",
                       selected: selectedScreen == 'myInfo',
                       press: () {
                         context.read<MyMenuController>().setSelectedScreen('myInfo');
                       },
                     ),
                     DrawerSubListTile(
-                      title: "내 정보 수정",
+                      title: "정보 수정",
                       selected: selectedScreen == 'myEdit',
                       press: () {
                         context.read<MyMenuController>().setSelectedScreen('myEdit');

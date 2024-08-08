@@ -306,7 +306,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   //변경 이미지 조건 텍스트
   Widget _imgConditionText() {
     return const Text(
-      '* 프로필 이미지 참고사항\n최소한 400 x 400px 이상 / 파일 크기 2MB 미만',
+      '* 프로필 이미지 참고사항\n파일 크기 2MB 미만',
       textAlign: TextAlign.left,
       style: TextStyle(color: Colors.grey),
     );
