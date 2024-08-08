@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/start/landing_screen.dart';
@@ -95,10 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Form(
               key: globalFormKey,
               child: SingleChildScrollView(
-                // child: _loginUI(context),
                 child: Responsive.isNarrowWidth(context)
-                  ? _loginNarrowUI(context)
-                  : _loginWideUI(context)
+                  ? _loginNarrowUI()
+                  : _loginWideUI()
               )
             )
           )
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   
   //로그인 페이지 UI(화면 좁을 때)
-  Widget _loginNarrowUI(BuildContext context) {
+  Widget _loginNarrowUI() {
     return Row(
       children: [
         Expanded(
@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   //로그인 페이지 UI(화면 넓을 때)
-  Widget _loginWideUI(BuildContext context) {
+  Widget _loginWideUI() {
     return Row(
       children: [
         Expanded(
