@@ -58,67 +58,106 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         : null,
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.white,
-      body: _addReviewPageUI(),
+      body: Responsive.isNarrowWidth(context)
+        ? _addReviewNarrowUI()
+        : _addReviewWideUI()
+    );
+  }
+
+  //후기 작성 페이지 UI(화면 좁을 때)
+  Widget _addReviewNarrowUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 7,
+          child: _addReviewPageUI(),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ],
+    );
+  }
+
+  //후기 작성 페이지 UI(화면 넓을 때)
+  Widget _addReviewWideUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 6,
+          child: _addReviewPageUI(),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ],
     );
   }
 
   //후기 작성 페이지 UI
   Widget _addReviewPageUI() {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 200.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _titleText(),
-            const SizedBox(height: 20),
-            _subtitleText('일정 지도'),
-            const SizedBox(height: 10,),
-            _mapUI(),
-            const SizedBox(height: 20),
-            _subtitleText('사진 업로드'),
-            const SizedBox(height: 10,),
-            _imageSelectUI(),
-            const SizedBox(height: 20),
-            _subtitleText('후기 작성'),
-            const SizedBox(height: 10,),
-            _buildReviewContentField(maxLength: 100),
-            const SizedBox(height: 20),
-            _subtitleText('해시태그 입력'),
-            const SizedBox(height: 10),
-            _hashtagField(),
-            const SizedBox(height: 10),
-            if (_showNoHashtagError)
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '입력된 해시태그가 없습니다.',
-                  style: TextStyle(color: Colors.red),
-                ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _titleText(),
+          const SizedBox(height: 20),
+          _subtitleText('일정 지도'),
+          const SizedBox(height: 10,),
+          _mapUI(),
+          const SizedBox(height: 20),
+          _subtitleText('사진 업로드'),
+          const SizedBox(height: 10,),
+          _imageSelectUI(),
+          const SizedBox(height: 20),
+          _subtitleText('후기 작성'),
+          const SizedBox(height: 10,),
+          _buildReviewContentField(maxLength: 100),
+          const SizedBox(height: 20),
+          _subtitleText('해시태그 입력'),
+          const SizedBox(height: 10),
+          _hashtagField(),
+          const SizedBox(height: 10),
+          if (_showNoHashtagError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '입력된 해시태그가 없습니다.',
+                style: TextStyle(color: Colors.red),
               ),
-            if (_showHashtagLimitError)
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
-                  style: TextStyle(color: Colors.red),
-                ),
+            ),
+          if (_showHashtagLimitError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
+                style: TextStyle(color: Colors.red),
               ),
-            if (_showDuplicateHashtagError)
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '이미 존재하는 해시태그입니다.',
-                  style: TextStyle(color: Colors.red),
-                ),
+            ),
+          if (_showDuplicateHashtagError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '이미 존재하는 해시태그입니다.',
+                style: TextStyle(color: Colors.red),
               ),
-            const SizedBox(height: 20),
-            _hashtagBtnUI(),
-            const SizedBox(height: 30),
-            _buttonField(),
-            const SizedBox(height: 50),
-          ],
-        ),
+            ),
+          const SizedBox(height: 20),
+          _hashtagBtnUI(),
+          const SizedBox(height: 30),
+          _buttonField(),
+          const SizedBox(height: 50),
+        ],
       ),
     );
   }
@@ -127,7 +166,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   Widget _titleText() {
     return const Text(
       '여행 후기 작성',
-      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
     );
   }
 
@@ -350,6 +389,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
             borderRadius: BorderRadius.circular(10.0),
             side: const BorderSide(color: Colors.blue, width: 1.0),
           ),
+          elevation: 0,
         ),
         child: const Text(
           '취소',
@@ -370,6 +410,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
             borderRadius: BorderRadius.circular(10.0),
             side: const BorderSide(color: Colors.blue, width: 1.0),
           ),
+          elevation: 0,
         ),
         child: const Text(
           '등록',

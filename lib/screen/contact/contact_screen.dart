@@ -48,15 +48,15 @@ class _ContactScreenState extends State<ContactScreen> {
     return Row(
       children: [
         Expanded(
-          flex: 4,
+          flex: 1,
           child: Container(),
         ),
         Expanded(
-          flex: 13,
+          flex: 7,
           child: _contactPageUI(3),
         ),
         Expanded(
-          flex: 4,
+          flex: 1,
           child: Container(),
         ),
       ],
@@ -72,7 +72,7 @@ class _ContactScreenState extends State<ContactScreen> {
           child: Container(),
         ),
         Expanded(
-          flex: 3,
+          flex: 6,
           child: _contactPageUI(5),
         ),
         Expanded(
@@ -82,7 +82,6 @@ class _ContactScreenState extends State<ContactScreen> {
       ],
     );
   }
-
 
   //컨택트 페이지 UI
   Widget _contactPageUI(int maxLine) {
@@ -221,7 +220,12 @@ class _ContactScreenState extends State<ContactScreen> {
             _launchURL(url);
           },
         ),
-        Text('instagram'),
+        Text(
+          'instagram',
+          style: TextStyle(
+            fontSize: 11,
+          ),
+        ),
       ],
     );
   }
@@ -237,7 +241,12 @@ class _ContactScreenState extends State<ContactScreen> {
             _launchURL(url);
           },
         ),
-        Text('facebook'),
+        Text(
+          'facebook',
+          style: TextStyle(
+            fontSize: 11,
+          ),
+        ),
       ],
     );
   }
@@ -253,7 +262,12 @@ class _ContactScreenState extends State<ContactScreen> {
             _launchURL(url);
           },
         ),
-        Text('twitter'),
+        Text(
+          'twitter',
+          style: TextStyle(
+            fontSize: 11,
+          ),
+        ),
       ],
     );
   }
