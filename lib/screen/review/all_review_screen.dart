@@ -168,7 +168,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                   const SizedBox(height: 5),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
+                    child: Image.asset(
                       ranking['image'],
                       fit: BoxFit.cover,
                       width: 150,
@@ -183,9 +183,6 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       ),
     );
   }
-
-
-
 
   //콘테스트 영역 내용
   Widget _contestContentUI() {
@@ -265,7 +262,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       builder: (context, constraints) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
+                          child: Image.asset(
                             allReviews[index],
                             fit: BoxFit.cover,
                             width: constraints.maxWidth,

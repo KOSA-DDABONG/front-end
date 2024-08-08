@@ -75,12 +75,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: Responsive.isNarrowWidth(context)
           ? ShortHeader(
-          automaticallyImplyLeading: false
-      )
+              automaticallyImplyLeading: false
+          )
           : NotLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
-      ),
+              automaticallyImplyLeading: false,
+              context: context,
+            ),
       drawer: Responsive.isNarrowWidth(context)
           ? NotLoginHeaderDrawer()
           : null,
