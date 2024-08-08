@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 import 'package:front/responsive.dart';
@@ -36,16 +35,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   //프로필 정보 페이지 UI(좁은 화면)
   Widget _profileNarrowUI(BuildContext context) {
-    return _myInfoUI(context);
-  }
-
-  //프로필 정보 페이지 UI(넓은 화면)
-  Widget _profileWideUI(BuildContext context) {
-    return _myInfoUI(context);
-  }
-
-  //프로필 UI
-  Widget _myInfoUI(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(25),
       child: Column(
@@ -59,17 +48,73 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[200],
-                      child: const Icon(Icons.person, size: 50)
+                        radius: 50,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.person, size: 50)
                     ),
                     const SizedBox(width: 20),
                     const Text(
-                      '{nickname}',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
-                      )
+                        '{nickname}',
+                        style: TextStyle(
+                            color: pointColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                    const SizedBox(width: 10),
+                    _editBtnUI(),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                _myScheduleField(),
+                const SizedBox(height: 30),
+                _myReviewField(),
+                const SizedBox(height: 30),
+                _myLikesField(),
+                const SizedBox(height: 100),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  //프로필 정보 페이지 UI(넓은 화면)
+  Widget _profileWideUI(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 프로필'),
+          const SizedBox(height: 20),
+          Center(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: [
+                    CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.person, size: 50)
+                    ),
+                    const SizedBox(width: 20),
+                    const Text(
+                        '{nickname}',
+                        style: TextStyle(
+                            color: pointColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                    const Text(
+                        ' 님 환영합니다!',
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold
+                        )
                     ),
                     const SizedBox(width: 10),
                     _editBtnUI(),
@@ -107,7 +152,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _myScheduleField() {
     return Column(
       children: [
-        Align(
+        const Align(
           alignment: Alignment.centerLeft,
           child: Text(
             '가까운 일정',
@@ -117,7 +162,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ),
           ),
         ),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         _myScheduleCard()
       ],
     );
@@ -182,31 +227,38 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ],
           ),
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('mySchedule');
-              },
-              child: Text(
-                '3건',
-                style: TextStyle(
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            GestureDetector(
+        trailing: Responsive.isNarrowWidth(context)
+          ? GestureDetector(
               onTap: () {
                 context.read<MyMenuController>().setSelectedScreen('mySchedule');
               },
               child: const Icon(Icons.arrow_forward),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                  },
+                  child: Text(
+                    '3건',
+                    style: TextStyle(
+                      fontSize: 15,
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                  },
+                  child: const Icon(Icons.arrow_forward),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
     );
   }
@@ -215,7 +267,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _myReviewField() {
     return Column(
       children: [
-        Align(
+        const Align(
           alignment: Alignment.centerLeft,
           child: Text(
             '최근 작성한 후기',
@@ -225,7 +277,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ),
           ),
         ),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         _myReviewCard()
       ],
     );
@@ -290,31 +342,38 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ],
           ),
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('mySchedule');
-              },
-              child: Text(
-                '3건',
-                style: TextStyle(
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            GestureDetector(
+        trailing: Responsive.isNarrowWidth(context)
+          ? GestureDetector(
               onTap: () {
                 context.read<MyMenuController>().setSelectedScreen('mySchedule');
               },
               child: const Icon(Icons.arrow_forward),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                  },
+                  child: Text(
+                    '3건',
+                    style: TextStyle(
+                      fontSize: 15,
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                  },
+                  child: const Icon(Icons.arrow_forward),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
     );
   }
@@ -323,7 +382,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   Widget _myLikesField() {
     return Column(
       children: [
-        Align(
+        const Align(
           alignment: Alignment.centerLeft,
           child: Text(
             '나의 좋아요',
@@ -333,7 +392,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ),
           ),
         ),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         _myLikesCard()
       ],
     );
@@ -349,7 +408,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       ),
       child: ListTile(
         subtitle: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: LayoutBuilder(
@@ -378,31 +437,38 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ),
           ),
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('myLikes');
-              },
-              child: Text(
-                '8건',
-                style: TextStyle(
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            GestureDetector(
+        trailing: Responsive.isNarrowWidth(context)
+          ? GestureDetector(
               onTap: () {
                 context.read<MyMenuController>().setSelectedScreen('myLikes');
               },
               child: const Icon(Icons.arrow_forward),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('myLikes');
+                  },
+                  child: Text(
+                    '8건',
+                    style: TextStyle(
+                      fontSize: 15,
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('myLikes');
+                  },
+                  child: const Icon(Icons.arrow_forward),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
     );
   }
