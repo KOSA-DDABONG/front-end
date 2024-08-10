@@ -49,7 +49,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   //리뷰 조회 페이지 UI
   Widget _allReviewPageUI() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: Responsive.isNarrowWidth(context)
+        ? const EdgeInsets.symmetric(horizontal: 20)
+        : const EdgeInsets.symmetric(horizontal: 60),
       child: Column(
         children: [
           _searchBarUI(),
@@ -104,13 +106,46 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //검색창 UI
   Widget _searchBarUI() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          const Spacer(),
-          Expanded(
-            child: Container(
+    if (Responsive.isNarrowWidth(context)) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            const Expanded(
+              flex: 2,
+              child: SizedBox()
+            ),
+            Expanded(
+              flex: 7,
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: '검색 키워드 입력',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: _onSearch,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    else {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            const Expanded(
+              flex: 2,
+              child: SizedBox()
+            ),
+            Expanded(
+              flex: 3,
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -124,11 +159,11 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+            )
+          ],
+        ),
+      );
+    }
   }
 
   //검색 기능
