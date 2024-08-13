@@ -2,9 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:front/service/result.dart';
 
 import '../config.dart';
-import '../dto/signup/signup_request_model.dart';
-import '../dto/signup/signup_response_model.dart';
-import '../dto/user_model.dart';
+import '../dto/user/signup/signup_request_model.dart';
+import '../dto/user/user_model.dart';
 import '../key/key.dart';
 import 'dio_client.dart';
 import 'session_service.dart';

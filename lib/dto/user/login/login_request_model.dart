@@ -7,7 +7,7 @@ class LoginRequestModel {
   });
 
   late final String? userId;
-  late final String? password;
+  late final String? password;ㄷㅡ 
 
   LoginRequestModel.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];

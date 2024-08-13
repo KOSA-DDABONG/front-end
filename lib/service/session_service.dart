@@ -4,9 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:front/service/result.dart';
 
 import '../config.dart';
-import '../dto/login/login_request_model.dart';
-import '../dto/login/login_response_model.dart';
-import '../dto/user_model.dart';
+import '../dto/user/login/login_request_model.dart';
+import '../dto/user/login/login_response_model.dart';
+import '../dto/user/user_model.dart';
 import '../key/key.dart';
 import 'dio_client.dart';
 
