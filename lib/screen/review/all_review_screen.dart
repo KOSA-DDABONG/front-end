@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
+import 'package:front/screen/start/login_screen.dart';
+import 'package:front/service/board_service.dart';
+import 'package:front/service/session_service.dart';
 
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
+import '../../dto/board/board_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
 
@@ -22,10 +26,38 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   late TabController _tabController;
   bool _isContestExpanded = false;
 
+  bool _isLoading = true;
+  List<Board> _allReviews = [];
+  List<Board> _rankReviews = [];
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _loadReviewLists();
+  }
+
+  Future<void> _loadReviewLists() async {
+    final result = await BoardService.getReviewList();
+    print("@@@!!" + result.value!.boardList.toString());
+    if (result.isSuccess) {
+      setState(() {
+        _allReviews = result.value?.boardList ?? [];
+        _rankReviews = result.value?.topList ?? [];
+        _isLoading = false;
+      });
+    }
+    else {
+      print("@@@@@ 3 : ");
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.error ?? 'Failed to load reviews'),
+        ),
+      );
+    }
   }
 
   @override
@@ -49,7 +81,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   //리뷰 조회 페이지 UI
   Widget _allReviewPageUI() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: Responsive.isNarrowWidth(context)
+        ? const EdgeInsets.symmetric(horizontal: 20)
+        : const EdgeInsets.symmetric(horizontal: 60),
       child: Column(
         children: [
           _searchBarUI(),
@@ -104,13 +138,46 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //검색창 UI
   Widget _searchBarUI() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          const Spacer(),
-          Expanded(
-            child: Container(
+    if (Responsive.isNarrowWidth(context)) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            const Expanded(
+              flex: 2,
+              child: SizedBox()
+            ),
+            Expanded(
+              flex: 7,
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: '검색 키워드 입력',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: _onSearch,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    else {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            const Expanded(
+              flex: 2,
+              child: SizedBox()
+            ),
+            Expanded(
+              flex: 3,
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -124,11 +191,11 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+            )
+          ],
+        ),
+      );
+    }
   }
 
   //검색 기능
@@ -145,31 +212,43 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //탭 선택에 따른 순위 내용
   Widget _buildContestTab() {
-    List<Map<String, dynamic>> rankings = [
-      {'icon': Icons.looks_one, 'image': 'assets/images/noImg.jpg'}, //1st
-      {'icon': Icons.looks_two, 'image': 'assets/images/noImg.jpg'}, //2nd
-      {'icon': Icons.looks_3, 'image': 'assets/images/noImg.jpg'}, //3rd
-    ];
-
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: rankings.map((ranking) {
+        children: (_rankReviews.isEmpty)
+            ? [Text('No data available')] // 데이터가 없는 경우의 처리
+            : _rankReviews.map((review) {
+          int index = _rankReviews.indexOf(review) + 1;
+          IconData icon;
+          switch (index) {
+            case 1:
+              icon = Icons.looks_one;
+              break;
+            case 2:
+              icon = Icons.looks_two;
+              break;
+            case 3:
+              icon = Icons.looks_3;
+              break;
+            default:
+              icon = Icons.star_border;
+          }
+
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                showDetailReviewDialog(context, ranking['image'], GOOGLE_MAP_KEY);
+                showDetailReviewDialog(context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY);
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(ranking['icon'], size: 40),
+                  Icon(icon, size: 40),
                   const SizedBox(height: 5),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      ranking['image'],
+                      'assets/images/noImg.jpg',
                       fit: BoxFit.cover,
                       width: 150,
                       height: 100,
@@ -251,7 +330,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //전체 후기 내용 영역
   Widget _allReviewContentUI() {
-    return LayoutBuilder(
+    return _isLoading
+        ? Center(child: CircularProgressIndicator())
+        : LayoutBuilder(
       builder: (context, constraints) {
         int crossAxisCount = (constraints.maxWidth / 150).floor();
         return GridView.builder(
@@ -260,11 +341,63 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
           ),
-          itemCount: allReviews.length,
+          itemCount: _allReviews.length,
           itemBuilder: (context, index) {
+            final review = _allReviews[index];
             return GestureDetector(
-              onTap: () {
-                showDetailReviewDialog(context, allReviews[index], GOOGLE_MAP_KEY);
+              onTap: () async {
+                try {
+                  print("hellohello : : " );
+                  final result = await BoardService.getReviewInfo("1");
+                  print(result.value);
+                  final accessToken = await SessionService.getAccessToken();
+                  print("hellohello : : " + accessToken.toString());
+                  if (result.value != null) {
+                    showDetailReviewDialog(context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY);
+                  } else {
+                    if (accessToken == null) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('메세지'),
+                            content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('취소'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                                  );
+                                },
+                                child: Text('로그인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.'),
+                        ),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('에러가 발생했습니다. 잠시 후 다시 시도해주세요.'),
+                    ),
+                  );
+                }
               },
               child: Column(
                 children: [
@@ -274,7 +407,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
-                            allReviews[index],
+                            'assets/images/noImg.jpg',
                             fit: BoxFit.cover,
                             width: constraints.maxWidth,
                             height: constraints.maxWidth * 3 / 4,
@@ -283,7 +416,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       },
                     ),
                   ),
-                  _reviewInfoUI(),
+                  _reviewInfoUI(review),
                 ],
               ),
             );
@@ -294,7 +427,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   //게시물 정보(좋아요수, 댓글수)
-  Widget _reviewInfoUI() {
+  Widget _reviewInfoUI(Board review) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -304,18 +437,19 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
             children: [
               Icon(Icons.favorite, color: Colors.grey),
               SizedBox(width: 4),
-              Text('45'),
+              Text(review.likecount.toString()),
             ],
           ),
           Row(
             children: [
               Icon(Icons.comment, color: Colors.grey),
               SizedBox(width: 4),
-              Text('13'),
+              Text(review.comcontentcount?.toString() ?? '0'),
             ],
           ),
         ],
       ),
     );
   }
+
 }

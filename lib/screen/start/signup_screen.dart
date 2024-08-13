@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:front/dto/signup/signup_request_model.dart';
 import 'package:front/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
@@ -17,6 +16,7 @@ import '../../component/validate/check_name_validate.dart';
 import '../../component/validate/check_nickname_validate.dart';
 import '../../component/validate/check_number_validate.dart';
 import '../../constants.dart';
+import '../../dto/user/signup/signup_request_model.dart';
 import '../../responsive.dart';
 import 'login_screen.dart';
 

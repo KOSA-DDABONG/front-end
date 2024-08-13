@@ -4,7 +4,7 @@ Widget showTitle(String titleText) {
   return Text(
     titleText,
     style: const TextStyle(
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: FontWeight.bold
     ),
   );

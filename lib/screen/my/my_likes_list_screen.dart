@@ -14,7 +14,8 @@ class MyLikesListScreen extends StatefulWidget {
 }
 
 class _MyLikesListScreenState extends State<MyLikesListScreen> {
-  // String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
+  // 상태를 저장하기 위한 변수
+  final Set<int> _likedItems = Set<int>();
 
   @override
   void initState() {
@@ -42,18 +43,22 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showTitle('나의 좋아요'),
-          const SizedBox(height: 50),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-              crossAxisSpacing: 30.0,
-              mainAxisSpacing: 30.0,
-            ),
-            itemCount: 15,
-            itemBuilder: (context, index) {
-              return _buildImageCard(context);
+          const SizedBox(height: 30),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = (constraints.maxWidth / 180).floor();
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 30.0,
+                ),
+                itemCount: 15,
+                itemBuilder: (context, index) {
+                  return _buildImageCard(context, index);
+                },
+              );
             },
           ),
         ],
@@ -62,15 +67,38 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   }
 
   //좋아요 누른 후기 이미지 카드
-  Widget _buildImageCard(BuildContext context) {
+  Widget _buildImageCard(BuildContext context, int index) {
+    final isLiked = _likedItems.contains(index);
+
     return GestureDetector(
       onTap: () {
         showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY);
       },
       child: Stack(
         children: [
-          _cardImgUI(),
-          _heartBtn()
+          AspectRatio(
+            aspectRatio: 4 / 3, // 가로 4, 세로 3 비율
+            child: _cardImgUI(),
+          ),
+          Positioned(
+            top: 1,
+            right: 1,
+            child: IconButton(
+              icon: Icon(
+                isLiked ? Icons.favorite : Icons.favorite_border,
+                color: isLiked ? Colors.red : Colors.black,
+              ),
+              onPressed: () {
+                setState(() {
+                  if (isLiked) {
+                    _likedItems.remove(index);
+                  } else {
+                    _likedItems.add(index);
+                  }
+                });
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -92,18 +120,6 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
           width: double.infinity,
           height: double.infinity,
         ),
-      ),
-    );
-  }
-
-  //좋아요 버튼
-  Widget _heartBtn() {
-    return Positioned(
-      top: 10,
-      right: 10,
-      child: IconButton(
-        icon: const Icon(Icons.favorite_border, color: Colors.black),
-        onPressed: () {},
       ),
     );
   }

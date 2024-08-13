@@ -70,20 +70,22 @@ class ProfileFormNarrowField extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
-        const SizedBox(height: 5),
+        if (!withEditButton)
+          const SizedBox(height: 8),
         Row(
           children: [
             Text(
               value,
               style: const TextStyle(fontSize: 16),
             ),
-            Spacer(),
+            const Spacer(),
             if (withEditButton)
               IconButton(
                 onPressed: onEdit,
                 icon: const Icon(
                   Icons.edit,
                   color: Colors.grey,
+                  size: 20,
                 ),
               ),
           ],

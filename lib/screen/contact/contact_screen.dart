@@ -45,74 +45,76 @@ class _ContactScreenState extends State<ContactScreen> {
 
   //컨택트 페이지 UI(화면 좁을 때)
   Widget _contactNarrowUI() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-        Expanded(
-          flex: 7,
-          child: _contactPageUI(3),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+          Expanded(
+            flex: 7,
+            child: _contactPageUI(3),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+        ],
+      )
     );
   }
 
   //컨택트 페이지 UI(화면 넓을 때)
   Widget _contactWideUI() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-        Expanded(
-          flex: 6,
-          child: _contactPageUI(5),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(),
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+          Expanded(
+            flex: 6,
+            child: _contactPageUI(5),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+        ],
+      ),
     );
   }
 
   //컨택트 페이지 UI
   Widget _contactPageUI(int maxLine) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _contactSubtitleTextUI('문의하기'),
-          const SizedBox(height: 10),
-          _buildContactFormField(1, '사용자 이름'),
-          _buildContactFormField(1, '사용자 이메일'),
-          _buildContactFormField(1, '제목'),
-          _buildContactFormField(maxLine, '문의 내용', maxLength: 100),
-          const SizedBox(height: 10),
-          _sendBtnUI(),
-          const SizedBox(height: 20),
-          _contactSubtitleTextUI('찾아오시는 길'),
-          const SizedBox(height: 10),
-          const Text(
-            '서울특별시 종로구 창경궁로 254',
-            style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 5,),
-          _mapUI(),
-          const SizedBox(height: 40),
-          _contactSubtitleTextUI('SNS'),
-          SizedBox(height: 10),
-          _snsRow(),
-          SizedBox(height: 100),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _contactSubtitleTextUI('문의하기'),
+        const SizedBox(height: 10),
+        _buildContactFormField(1, '사용자 이름'),
+        _buildContactFormField(1, '사용자 이메일'),
+        _buildContactFormField(1, '제목'),
+        _buildContactFormField(maxLine, '문의 내용', maxLength: 100),
+        const SizedBox(height: 10),
+        _sendBtnUI(),
+        const SizedBox(height: 20),
+        _contactSubtitleTextUI('찾아오시는 길'),
+        const SizedBox(height: 10),
+        const Text(
+          '서울특별시 종로구 창경궁로 254',
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 5,),
+        _mapUI(),
+        const SizedBox(height: 40),
+        _contactSubtitleTextUI('SNS'),
+        SizedBox(height: 10),
+        _snsRow(),
+        SizedBox(height: 100),
+      ],
     );
   }
 
@@ -120,7 +122,7 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget _contactSubtitleTextUI(String subtitle) {
     return Text(
       subtitle,
-      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
 
