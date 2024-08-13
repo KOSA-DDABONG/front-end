@@ -344,7 +344,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         trailing: Responsive.isNarrowWidth(context)
           ? GestureDetector(
               onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                context.read<MyMenuController>().setSelectedScreen('myReview');
               },
               child: const Icon(Icons.arrow_forward),
             )
@@ -353,7 +353,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                    context.read<MyMenuController>().setSelectedScreen('myReview');
                   },
                   child: Text(
                     '3건',
@@ -367,7 +367,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 const SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                    context.read<MyMenuController>().setSelectedScreen('myReview');
                   },
                   child: const Icon(Icons.arrow_forward),
                 ),
