@@ -369,7 +369,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: icon1,햐
+            icon: icon1,
             iconSize: 16,
             onPressed: () {
               if (icon1.icon == Icons.chat_bubble_outline) {
