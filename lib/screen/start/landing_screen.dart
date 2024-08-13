@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:front/responsive.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
@@ -24,9 +23,9 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         opacityLevel = 1.0;
       });
@@ -56,24 +55,30 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
           : null,
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
-      body: Stack(
-        children: [
-          _backgroundImgUI(),
-          _contentUI(),
-        ],
-      ),
+      body: Responsive.isNarrowWidth(context)
+        ? Stack(
+            children: [
+              _backgroundImgNarrowUI(),
+              _contentNarrowUI()
+            ],
+          )
+        : Stack(
+            children: [
+              _backgroundImgWideUI(),
+              _contentWideUI()
+            ],
+          ),
     );
   }
 
-  //배경이미지
-  Widget _backgroundImgUI() {
+  //배경이미지(좁은 화면)
+  Widget _backgroundImgNarrowUI() {
     return Positioned.fill(
       child: ClipPath(
-        clipper: VerticalWaveClipper(),
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
           child: AnimatedOpacity(
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             opacity: opacityLevel,
             child: ShaderMask(
               shaderCallback: (rect) {
@@ -103,8 +108,77 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
     );
   }
 
+  //배경이미지(넓은 화면)
+  Widget _backgroundImgWideUI() {
+    return Positioned.fill(
+      child: ClipPath(
+        clipper: VerticalWaveClipper(),
+        // clipper: HorizontalWaveClipper(),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: AnimatedOpacity(
+            duration: const Duration(seconds: 1),
+            opacity: opacityLevel,
+            child: ShaderMask(
+              shaderCallback: (rect) {
+                return LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.white,
+                    Colors.transparent,
+                  ],
+                  stops: [0.3, 1.5],
+                ).createShader(rect);
+              },
+              blendMode: BlendMode.dstOut,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/landing_background.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //내용(좁은 화면)
+  Widget _contentNarrowUI() {
+    return AnimatedOpacity(
+      duration: const Duration(seconds: 1),
+      opacity: opacityLevel,
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _animationEffect(_titleNarrowUI()),
+                      const SizedBox(height: 18),
+                      _animationEffect(_createTripBtnNarrowUI()),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   //내용
-  Widget _contentUI() {
+  Widget _contentWideUI() {
     return AnimatedOpacity(
       duration: const Duration(seconds: 1),
       opacity: opacityLevel,
@@ -115,24 +189,23 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 1,
                     child: SizedBox(),
                   ),
                   Expanded(
-                    flex: 12,
+                    flex: 13,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _animationEffect(_titleUI()),
-                        _animationEffect(_explainTextUI()),
-                        SizedBox(height: 30),
-                        _animationEffect(_createTripBtnUI()),
+                        _animationEffect(_titleWideUI()),
+                        const SizedBox(height: 30),
+                        _animationEffect(_createTripBtnWideUI()),
                       ],
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 1,
                     child: SizedBox(),
                   ),
@@ -145,34 +218,59 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
     );
   }
 
-  //타이틀
-  Widget _titleUI() {
-    return AutoSizeText(
+  //타이틀(좁은 화면)
+  Widget _titleNarrowUI() {
+    return Text(
       'TripFlow',
-      maxFontSize: 120,
-      minFontSize: 80,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: GoogleFonts.indieFlower(
+        fontSize: 75,
         fontWeight: FontWeight.bold,
         color: pointColor,
       )
     );
   }
 
-  //설명
-  Widget _explainTextUI() {
+  //타이틀(넓은 화면)
+  Widget _titleWideUI() {
     return Text(
-      '설명을 추가하세요.',
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.black,
+      'TripFlow',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: GoogleFonts.indieFlower(
+        fontSize: 120,
+        fontWeight: FontWeight.bold,
+        color: pointColor,
+      )
+    );
+  }
+
+  //여행 일정 생성하기 버튼(좁은 화면)
+  Widget _createTripBtnNarrowUI() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CreateTripScreen()),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        backgroundColor: Colors.blue,
+      ),
+      child: const Text(
+        '여행 일정 생성하기',
+        style: TextStyle(
+          fontSize: 13,
+          color: Colors.white,
+        ),
       ),
     );
   }
 
-  //여행 일정 생성하기 버튼
-  Widget _createTripBtnUI() {
+  //여행 일정 생성하기 버튼(넓은 화면)
+  Widget _createTripBtnWideUI() {
    return ElevatedButton(
      onPressed: () {
        Navigator.push(
@@ -181,10 +279,10 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
        );
      },
      style: ElevatedButton.styleFrom(
-       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
        backgroundColor: Colors.blue,
      ),
-     child: Text(
+     child: const Text(
        '여행 일정 생성하기',
        style: TextStyle(
          fontSize: 18,
@@ -198,7 +296,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
   Widget _animationEffect(Widget widget) {
     return SlideTransition(
       position: Tween<Offset>(
-        begin: Offset(-1.0, 0.0),
+        begin: const Offset(-1.0, 0.0),
         end: Offset.zero,
       ).animate(
         CurvedAnimation(

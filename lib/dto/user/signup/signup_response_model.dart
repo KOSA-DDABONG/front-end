@@ -1,3 +1,4 @@
+
 import '../user_model.dart';
 
 SignupResponseModel signupResponseJson(Map<String, dynamic> json) =>

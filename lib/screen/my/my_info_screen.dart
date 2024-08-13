@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
+import 'package:front/responsive.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/mypage/my_title.dart';
@@ -26,13 +27,14 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _myInfoUI(context),
+        child: Responsive.isNarrowWidth(context)
+          ? _profileNarrowUI(context) : _profileWideUI(context)
       ),
     );
   }
 
-  //마이페이지 내 프로필 UI
-  Widget _myInfoUI(BuildContext context) {
+  //프로필 정보 페이지 UI(좁은 화면)
+  Widget _profileNarrowUI(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(25),
       child: Column(
@@ -46,28 +48,84 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[200],
-                      child: const Icon(Icons.person, size: 50)
+                        radius: 50,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.person, size: 50)
                     ),
                     const SizedBox(width: 20),
                     const Text(
-                      '{nickname}',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
-                      )
+                        '{nickname}',
+                        style: TextStyle(
+                            color: pointColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                        )
                     ),
                     const SizedBox(width: 10),
                     _editBtnUI(),
                   ],
                 ),
                 const SizedBox(height: 40),
-                _myScheduleCard(),
-                const SizedBox(height: 20),
-                _myReviewCard(),
-                const SizedBox(height: 20),
-                _myLikesCard(),
+                _myScheduleField(),
+                const SizedBox(height: 30),
+                _myReviewField(),
+                const SizedBox(height: 30),
+                _myLikesField(),
+                const SizedBox(height: 100),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  //프로필 정보 페이지 UI(넓은 화면)
+  Widget _profileWideUI(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 프로필'),
+          const SizedBox(height: 20),
+          Center(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: [
+                    CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.person, size: 50)
+                    ),
+                    const SizedBox(width: 20),
+                    const Text(
+                        '{nickname}',
+                        style: TextStyle(
+                            color: pointColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                    const Text(
+                        ' 님 환영합니다!',
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                    const SizedBox(width: 10),
+                    _editBtnUI(),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                _myScheduleField(),
+                const SizedBox(height: 30),
+                _myReviewField(),
+                const SizedBox(height: 30),
+                _myLikesField(),
                 const SizedBox(height: 100),
               ],
             ),
@@ -90,7 +148,27 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     );
   }
 
-  //다가오는 일정 카드
+  //가까운 일정 필드
+  Widget _myScheduleField() {
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '가까운 일정',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+        const SizedBox(height: 10,),
+        _myScheduleCard()
+      ],
+    );
+  }
+
+  //일정 카드
   Widget _myScheduleCard() {
     return Container(
       decoration: BoxDecoration(
@@ -99,20 +177,14 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         color: Colors.transparent,
       ),
       child: ListTile(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('다가오는 일정'),
-            SizedBox(height: 20),
-          ],
-        ),
+        contentPadding: const EdgeInsets.all(10),
         subtitle: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: 10),
             Container(
-              width: 80,
-              height: 80,
+              width: 100,
+              height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: const DecorationImage(
@@ -122,48 +194,91 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               ),
             ),
             const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Row(
+            Responsive.isNarrowWidth(context)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 10),
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(width: 10),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
                     Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
                   ],
                 ),
-                SizedBox(height: 50),
-              ],
-            ),
           ],
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('mySchedule');
-              },
-              child: Text(
-                '3건',
-                style: TextStyle(
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            GestureDetector(
+        trailing: Responsive.isNarrowWidth(context)
+          ? GestureDetector(
               onTap: () {
                 context.read<MyMenuController>().setSelectedScreen('mySchedule');
               },
               child: const Icon(Icons.arrow_forward),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                  },
+                  child: Text(
+                    '3건',
+                    style: TextStyle(
+                      fontSize: 15,
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                  },
+                  child: const Icon(Icons.arrow_forward),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
+    );
+  }
+
+  //작성 후기 필드
+  Widget _myReviewField() {
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '최근 작성한 후기',
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+        const SizedBox(height: 10,),
+        _myReviewCard()
+      ],
     );
   }
 
@@ -176,71 +291,109 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         color: Colors.transparent,
       ),
       child: ListTile(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('최근 작성한 후기'),
-            SizedBox(height: 20),
-          ],
-        ),
-        subtitle: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 10),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/noImg.jpg'),
-                  fit: BoxFit.cover,
+        subtitle: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/noImg.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Row(
-                  children: [
-                    Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 10),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                ),
-                SizedBox(height: 50),
-              ],
-            ),
-          ],
+              const SizedBox(width: 15),
+              Responsive.isNarrowWidth(context)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 5),
+                        Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 5),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 5),
+                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                            const SizedBox(width: 10),
+                            Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                      ],
+                    ),
+            ],
+          ),
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('myReview');
-              },
-              child: Text(
-                '3건',
-                style: TextStyle(
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),  // 텍스트와 아이콘 사이 간격
-            GestureDetector(
+        trailing: Responsive.isNarrowWidth(context)
+          ? GestureDetector(
               onTap: () {
                 context.read<MyMenuController>().setSelectedScreen('myReview');
               },
               child: const Icon(Icons.arrow_forward),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('myReview');
+                  },
+                  child: Text(
+                    '3건',
+                    style: TextStyle(
+                      fontSize: 15,
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('myReview');
+                  },
+                  child: const Icon(Icons.arrow_forward),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
+    );
+  }
+
+  //좋아요 필
+  Widget _myLikesField() {
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '나의 좋아요',
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+        const SizedBox(height: 10,),
+        _myLikesCard()
+      ],
     );
   }
 
@@ -253,91 +406,68 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         color: Colors.transparent,
       ),
       child: ListTile(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('최근 좋아요 누른 후기'),
-            SizedBox(height: 20),
-          ],
-        ),
-        subtitle: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 10),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/noImg.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/noImg.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/noImg.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/noImg.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('myLikes');
+        subtitle: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                double containerWidth = 100;
+                double spacing = 15;
+
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(8, (index) {
+                    return Container(
+                      margin: EdgeInsets.only(right: spacing),
+                      width: containerWidth,
+                      height: containerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/noImg.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }),
+                );
               },
-              child: Text(
-                '3건',
-                style: TextStyle(
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                  color: Colors.black,
-                ),
-              ),
             ),
-            const SizedBox(width: 10),
-            GestureDetector(
+          ),
+        ),
+        trailing: Responsive.isNarrowWidth(context)
+          ? GestureDetector(
               onTap: () {
                 context.read<MyMenuController>().setSelectedScreen('myLikes');
               },
               child: const Icon(Icons.arrow_forward),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('myLikes');
+                  },
+                  child: Text(
+                    '8건',
+                    style: TextStyle(
+                      fontSize: 15,
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.read<MyMenuController>().setSelectedScreen('myLikes');
+                  },
+                  child: const Icon(Icons.arrow_forward),
+                ),
+              ],
             ),
-          ],
-        ),
       ),
     );
   }

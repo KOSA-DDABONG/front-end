@@ -11,7 +11,7 @@ import '../../component/backgroundImg/login_signup_background.dart';
 import '../../component/header/header_drawer.dart';
 import '../../component/validate/check_input_validate.dart';
 import '../../constants.dart';
-import '../../dto/login/login_request_model.dart';
+import '../../dto/user/login/login_request_model.dart';
 import '../../responsive.dart';
 import '../../service/user_service.dart';
 import '../../component/header/header.dart';
@@ -342,7 +342,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               if (result.value != null) {
                 savePreferences();
-                final userProfileResult = await UserService.getUserProfile();
+                // final userProfileResult = await UserService.getUserProfile();
 
                 setState(() {
                   isApiCallProcess = false;

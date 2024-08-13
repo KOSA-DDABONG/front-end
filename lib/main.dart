@@ -1,6 +1,7 @@
 import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:front/component/mypage/my_menu.dart';
+import 'package:front/config.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/contact/contact_screen.dart';
 import 'package:front/screen/loading/creating_screen.dart';
@@ -26,9 +27,9 @@ void main() async {
     ),
   );
 
-  // 비동기적으로 JavaScript와 상호작용
+  //비동기적으로 JavaScript와 상호작용
   await Future.delayed(Duration.zero, () {
-    // JavaScript의 loadGoogleMaps 함수 호출
+    //JavaScript의 loadGoogleMaps 함수 호출
     js.context.callMethod('loadGoogleMaps', [GOOGLE_MAP_KEY]);
   });
 }
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'TripFlow',
+      title: Config.appName,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
