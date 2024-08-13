@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/responsive.dart';
 
 import '../../constants.dart';
 import '../map/get_map.dart';
@@ -31,147 +32,292 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
+          if(Responsive.isNarrowWidth(context)) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      margin: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: GetMap(
-                          apiKey: apiKey,
-                          origin: '37.819929,-122.478255',
-                          destination: '37.787994,-122.407437',
-                          waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        margin: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: GetMap(
+                            apiKey: apiKey,
+                            origin: '37.819929,-122.478255',
+                            destination: '37.787994,-122.407437',
+                            waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: List.generate(3, (index) {
-                              return Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        selectedDay = index + 1;
-                                        selectedIndex = null;
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
-                                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                    child: Text(
-                                      '${index + 1}일차',
-                                      style: const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: itinerary[selectedDay - 1].length,
-                              itemBuilder: (context, index) {
-                                var place = itinerary[selectedDay - 1][index];
-                                return Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      left: 12,
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: DashedLine(
-                                          height: double.infinity,
-                                          color: Colors.grey,
-                                          strokeWidth: 2,
-                                        ),
+                    Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: List.generate(3, (index) {
+                                return Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedDay = index + 1;
+                                          selectedIndex = null;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      ),
+                                      child: Text(
+                                        '${index + 1}일차',
+                                        style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundColor: Colors.blue,
-                                            radius: 12,
-                                            child: Text(
-                                              '${index + 1}',
-                                              style: const TextStyle(color: Colors.white, fontSize: 12),
-                                            ),
+                                  ),
+                                );
+                              }),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: itinerary[selectedDay - 1].length,
+                                itemBuilder: (context, index) {
+                                  var place = itinerary[selectedDay - 1][index];
+                                  return Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        left: 12,
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: DashedLine(
+                                            height: double.infinity,
+                                            color: Colors.grey,
+                                            strokeWidth: 2,
                                           ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedIndex = index;
-                                                });
-                                              },
-                                              child: Card(
-                                                color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
-                                                child: ListTile(
-                                                  leading: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    child: Image.asset(place['image']!,
-                                                        width: 60, height: 60, fit: BoxFit.cover
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.blue,
+                                              radius: 12,
+                                              child: Text(
+                                                '${index + 1}',
+                                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedIndex = index;
+                                                  });
+                                                },
+                                                child: Card(
+                                                  color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+                                                  child: ListTile(
+                                                    leading: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      child: Image.asset(place['image']!,
+                                                          width: 60, height: 60, fit: BoxFit.cover
+                                                      ),
                                                     ),
-                                                  ),
-                                                  title: Text(
-                                                    place['title']!,
-                                                    style: const TextStyle(
-                                                        fontWeight: FontWeight.bold, fontSize: 16
+                                                    title: Text(
+                                                      place['title']!,
+                                                      style: const TextStyle(
+                                                          fontWeight: FontWeight.bold, fontSize: 16
+                                                      ),
                                                     ),
-                                                  ),
-                                                  subtitle: Text(place['time']!,
-                                                      style: const TextStyle(fontSize: 14)
+                                                    subtitle: Text(place['time']!,
+                                                        style: const TextStyle(fontSize: 14)
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }
+          else {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        margin: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: GetMap(
+                            apiKey: apiKey,
+                            origin: '37.819929,-122.478255',
+                            destination: '37.787994,-122.407437',
+                            waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: List.generate(3, (index) {
+                                return Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedDay = index + 1;
+                                          selectedIndex = null;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      ),
+                                      child: Text(
+                                        '${index + 1}일차',
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: itinerary[selectedDay - 1].length,
+                                itemBuilder: (context, index) {
+                                  var place = itinerary[selectedDay - 1][index];
+                                  return Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        left: 12,
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: DashedLine(
+                                            height: double.infinity,
+                                            color: Colors.grey,
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.blue,
+                                              radius: 12,
+                                              child: Text(
+                                                '${index + 1}',
+                                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedIndex = index;
+                                                  });
+                                                },
+                                                child: Card(
+                                                  color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+                                                  child: ListTile(
+                                                    leading: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      child: Image.asset(place['image']!,
+                                                          width: 60, height: 60, fit: BoxFit.cover
+                                                      ),
+                                                    ),
+                                                    title: Text(
+                                                      place['title']!,
+                                                      style: const TextStyle(
+                                                          fontWeight: FontWeight.bold, fontSize: 16
+                                                      ),
+                                                    ),
+                                                    subtitle: Text(place['time']!,
+                                                        style: const TextStyle(fontSize: 14)
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         },
       );
     },
