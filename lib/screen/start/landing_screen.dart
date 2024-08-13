@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/component/clipper/horizontal_wave_clipper.dart';
 import 'package:front/responsive.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;
@@ -55,26 +56,69 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
           : null,
       extendBodyBehindAppBar: true,
       backgroundColor: subBackgroundColor,
-      body: Stack(
-        children: [
-          _backgroundImgUI(),
-          Responsive.isNarrowWidth(context)
-          ? _contentNarrowUI()
-          : _contentWideUI()
-        ],
+      body: Responsive.isNarrowWidth(context)
+        ? Stack(
+            children: [
+              _backgroundImgNarrowUI(),
+              _contentNarrowUI()
+            ],
+          )
+        : Stack(
+            children: [
+              _backgroundImgWideUI(),
+              _contentWideUI()
+            ],
+          ),
+    );
+  }
+
+  //배경이미지(좁은 화면)
+  Widget _backgroundImgNarrowUI() {
+    return Positioned.fill(
+      child: ClipPath(
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: AnimatedOpacity(
+            duration: const Duration(seconds: 1),
+            opacity: opacityLevel,
+            child: ShaderMask(
+              shaderCallback: (rect) {
+                return LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.white,
+                    Colors.transparent,
+                  ],
+                  stops: [0.3, 1.5],
+                ).createShader(rect);
+              },
+              blendMode: BlendMode.dstOut,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/landing_background.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  //배경이미지
-  Widget _backgroundImgUI() {
+  //배경이미지(넓은 화면)
+  Widget _backgroundImgWideUI() {
     return Positioned.fill(
       child: ClipPath(
         clipper: VerticalWaveClipper(),
+        // clipper: HorizontalWaveClipper(),
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
           child: AnimatedOpacity(
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             opacity: opacityLevel,
             child: ShaderMask(
               shaderCallback: (rect) {
