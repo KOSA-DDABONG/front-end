@@ -58,7 +58,9 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
       body: Stack(
         children: [
           _backgroundImgUI(),
-          _contentUI(),
+          Responsive.isNarrowWidth(context)
+          ? _contentNarrowUI()
+          : _contentWideUI()
         ],
       ),
     );
@@ -102,8 +104,38 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
     );
   }
 
+  //내용(좁은 화면)
+  Widget _contentNarrowUI() {
+    return AnimatedOpacity(
+      duration: const Duration(seconds: 1),
+      opacity: opacityLevel,
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _animationEffect(_titleNarrowUI()),
+                      const SizedBox(height: 18),
+                      _animationEffect(_createTripBtnNarrowUI()),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   //내용
-  Widget _contentUI() {
+  Widget _contentWideUI() {
     return AnimatedOpacity(
       duration: const Duration(seconds: 1),
       opacity: opacityLevel,
@@ -119,29 +151,19 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
                     child: SizedBox(),
                   ),
                   Expanded(
-                    flex: 12,
-                    child: Responsive.isNarrowWidth(context)
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _animationEffect(_titleNarrowUI()),
-                            const SizedBox(height: 18),
-                            _animationEffect(_createTripBtnNarrowUI()),
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _animationEffect(_titleWideUI()),
-                            const SizedBox(height: 30),
-                            _animationEffect(_createTripBtnWideUI()),
-                          ],
-                        ),
+                    flex: 13,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _animationEffect(_titleWideUI()),
+                        const SizedBox(height: 30),
+                        _animationEffect(_createTripBtnWideUI()),
+                      ],
+                    ),
                   ),
                   const Expanded(
-                    flex: 3,
+                    flex: 1,
                     child: SizedBox(),
                   ),
                 ],
@@ -191,7 +213,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
         );
       },
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         backgroundColor: Colors.blue,
       ),
       child: const Text(
