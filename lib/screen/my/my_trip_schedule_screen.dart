@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:front/constants.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
@@ -10,6 +9,7 @@ import '../../component/dialog/detail_trip_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../key/key.dart';
+import '../../responsive.dart';
 
 class MyTripScheduleScreen extends StatefulWidget {
   const MyTripScheduleScreen({Key? key}) : super(key: key);
@@ -31,13 +31,34 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _myTripListPageUI();
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Responsive.isNarrowWidth(context)
+            ? _myTripListPageNarrowUI() : _myTripListPageWideUI()
+      ),
+    );
   }
 
   //저장된 여행 일정 페이지 UI
-  Widget _myTripListPageUI() {
+  Widget _myTripListPageNarrowUI() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(41, 41, 41, 10),
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('나의 일정'),
+          const SizedBox(height: 20),
+          _tapControllerUI(),
+        ],
+      ),
+    );
+  }
+
+  //저장된 여행 일정 페이지 UI
+  Widget _myTripListPageWideUI() {
+    return Padding(
+      padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -85,7 +106,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   //진행중인 일정 탭 구성
   Widget _presentScheduleTab(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -99,7 +120,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   //다가오는 일정 탭 구성
   Widget _upcomingScheduleTab(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,7 +134,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   //지나간 일정 탭 구성
   Widget _pastScheduleTab(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -135,15 +156,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Stack(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-            title: _cardTitleTextUI('진행중인 일정'),
+            contentPadding: const EdgeInsets.all(10),
             subtitle: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(width: 10),
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
@@ -153,18 +173,34 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Column(
+                Responsive.isNarrowWidth(context)
+                    ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                )
+                    : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
                         const SizedBox(width: 10),
-                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 10),
                       ],
                     ),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 10),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
                   ],
                 ),
               ],
@@ -190,15 +226,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Stack(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-            title: _cardTitleTextUI('다가오는 일정'),
+            contentPadding: const EdgeInsets.all(10),
             subtitle: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(width: 10),
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
@@ -208,18 +243,34 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Column(
+                Responsive.isNarrowWidth(context)
+                    ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                )
+                    : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
                         const SizedBox(width: 10),
-                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 10),
                       ],
                     ),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 10),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
                   ],
                 ),
               ],
@@ -245,15 +296,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       child: Stack(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-            title: _cardTitleTextUI('지나간 일정'),
+            contentPadding: const EdgeInsets.all(10),
             subtitle: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(width: 10),
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
@@ -263,18 +313,34 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Column(
+                Responsive.isNarrowWidth(context)
+                    ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                )
+                    : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        Text('{일정 날짜: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
                         const SizedBox(width: 10),
-                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 10),
                       ],
                     ),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 10),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
                   ],
                 ),
               ],
@@ -286,17 +352,6 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
           _cardIconBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline)),
         ],
       ),
-    );
-  }
-
-  //카드 타이틀 텍스트
-  Widget _cardTitleTextUI(String titleText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(titleText),
-        const SizedBox(height: 20),
-      ],
     );
   }
 

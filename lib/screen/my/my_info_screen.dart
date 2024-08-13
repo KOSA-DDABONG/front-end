@@ -177,55 +177,54 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         color: Colors.transparent,
       ),
       child: ListTile(
-        subtitle: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/images/noImg.jpg'),
-                    fit: BoxFit.cover,
-                  ),
+        contentPadding: const EdgeInsets.all(10),
+        subtitle: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 10),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/noImg.jpg'),
+                  fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 15),
-              Responsive.isNarrowWidth(context)
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 5),
-                      Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                      const SizedBox(height: 5),
-                      Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                      const SizedBox(height: 5),
-                      Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                          const SizedBox(width: 10),
-                          Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                    ],
-                  ),
-            ],
-          ),
+            ),
+            const SizedBox(width: 10),
+            Responsive.isNarrowWidth(context)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 5),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(width: 10),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  ],
+                ),
+          ],
         ),
         trailing: Responsive.isNarrowWidth(context)
           ? GestureDetector(
