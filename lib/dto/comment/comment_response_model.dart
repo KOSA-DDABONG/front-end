@@ -1,4 +1,4 @@
-import 'board_model.dart';
+import 'comment_model.dart';
 
 BoardResponseModel boardResponseJson(Map<String, dynamic> json) =>
     BoardResponseModel.fromJson(json);
@@ -10,11 +10,11 @@ class BoardResponseModel {
   });
 
   late final String accessToken;
-  late final Board board;
+  late final Comment board;
 
   BoardResponseModel.fromJson(Map<String, dynamic> json) {
     accessToken = json['jwtToken'];
-    board = Board.fromJson(json['user'] ?? {});
+    board = Comment.fromJson(json['user'] ?? {});
   }
 
   Map<String, dynamic> toJson() {

@@ -17,7 +17,6 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
-  // String mapApiKey = dotenv.get("GOOGLE_MAP_KEY");
 
   @override
   void initState() {

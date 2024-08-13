@@ -48,7 +48,7 @@ class TokenInterceptor extends Interceptor {
           err.response?.requestOptions ?? RequestOptions(path: "");
       options.headers['Authorization'] =
       'Bearer ${await SessionService.getAccessToken()}';
-      await SessionService.refreshToken();
+      // await SessionService.refreshToken();
 
       try {
         Response response = await authClient.fetch(options);
@@ -56,17 +56,17 @@ class TokenInterceptor extends Interceptor {
         // Update tokens based on the new response headers and cookies
         String? newAccessToken =
         response.headers.value('Authorization')?.split(' ')[1];
-        String? newRefreshToken = response.headers['set-cookie']
-            ?.firstWhere((str) => str.startsWith('XRT='), orElse: () => '')
-            ?.split(';')[0]
-            ?.substring(4); // Skip 'XRT='
+        // String? newRefreshToken = response.headers['set-cookie']
+        //     ?.firstWhere((str) => str.startsWith('XRT='), orElse: () => '')
+        //     ?.split(';')[0]
+        //     ?.substring(4); // Skip 'XRT='
 
         if (newAccessToken != null) {
           await SessionService.setAccessToken(newAccessToken);
         }
-        if (newRefreshToken != null) {
-          await SessionService.setRefreshToken(newRefreshToken);
-        }
+        // if (newRefreshToken != null) {
+        //   await SessionService.setRefreshToken(newRefreshToken);
+        // }
 
         retryCount = 0; // Reset the retry count if successful
         return handler.resolve(response);

@@ -20,12 +20,22 @@ class SessionService {
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-    final url = Uri.http(API_URL, Config.loginAPI).toString();
+    // final url = Uri.http(API_URL, Config.loginAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-      return Result.success(
-          loginResponseJson(response.data['data'] as Map<String, dynamic>));
+
+      if (response.statusCode == 200) {
+        // 로그인 응답 데이터 처리
+        final loginResponse = loginResponseJson(response.data['data'] as Map<String, dynamic>);
+        // accessToken 저장
+        await SessionService.setLoginDetails(loginResponse);
+
+        return Result.success(loginResponse);
+      } else {
+        return Result.failure("[Login] Error: ${response.statusCode}");
+      }
     } catch (e) {
       return Result.failure("[Login] An Error Occurred: $e");
     }
@@ -62,13 +72,13 @@ class SessionService {
   //로그아웃
   static Future<Result<bool>> logout() async {
     final accessToken = await SessionService.getAccessToken();
-    final refreshToken = await SessionService.getRefreshToken();
+    // final refreshToken = await SessionService.getRefreshToken();
 
     final url = Uri.http(API_URL, Config.sampleAPI).toString();
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -88,15 +98,15 @@ class SessionService {
   }
 
   // refreshToken 가져오기. 값이 없을 경우 null 반환
-  static Future<String?> getRefreshToken() async {
-    final details = await loginDetails();
-    // return details?.refreshToken;
-  }
+  // static Future<String?> getRefreshToken() async {
+  //   final details = await loginDetails();
+  //   // return details?.refreshToken;
+  // }
 
   // refreshToken 설정하기
-  static Future<void> setRefreshToken(String refreshToken) async {
-    await storage.write(key: 'refreshToken', value: refreshToken);
-  }
+  // static Future<void> setRefreshToken(String refreshToken) async {
+  //   await storage.write(key: 'refreshToken', value: refreshToken);
+  // }
 
   // accessToken 가져오기. 값이 없을 경우 null 반환
   static Future<String?> getAccessToken() async {
@@ -115,10 +125,10 @@ class SessionService {
     return details?.user;
   }
 
-  static Future<void> refreshToken() async {
-    final refreshedTokens = await SessionService.getRefreshToken();
-    await SessionService.setRefreshToken(refreshedTokens ?? '');
-  }
+  // static Future<void> refreshToken() async {
+  //   final refreshedTokens = await SessionService.getRefreshToken();
+  //   await SessionService.setRefreshToken(refreshedTokens ?? '');
+  // }
 
   static Future<bool> getBool(String key) async {
     final result = await storage.read(key: key);

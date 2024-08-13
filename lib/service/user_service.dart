@@ -38,7 +38,8 @@ class UserService {
   // }
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
-    final url = Uri.http(API_URL, Config.signupAPI).toString();
+    // final url = Uri.http(API_URL, Config.signupAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
 
     try {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
@@ -51,11 +52,11 @@ class UserService {
   //사용자 프로필 조회
   static Future<Result<User>> getUserProfile() async {
     final accessToken = await SessionService.getAccessToken();
-    final refreshToken = await SessionService.getRefreshToken();
+    // final refreshToken = await SessionService.getRefreshToken();
     final url = Uri.http(API_URL, Config.sampleAPI).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
-      'Cookie': 'XRT=$refreshToken',
+      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {

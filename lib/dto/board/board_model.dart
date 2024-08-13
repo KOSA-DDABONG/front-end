@@ -1,76 +1,83 @@
 class Board {
   Board({
-    required this.username,
-    required this.nickname,
-    required this.userId,
-    this.password,
-    required this.email,
-    required this.phoneNumber,
-    required this.birth,
-    this.profileimage,
-    this.createdTime,
-    this.recessAccess,
+    required this.likecount,
+    required this.comcontentcount,
+    required this.postid,
+    this.memberid,
+    this.travelid,
+    this.content,
+    this.createdtime,
   });
 
-  late final String username;
-  late final String nickname;
-  late final String userId;
-  late final String? password;
-  late final String email;
-  late final String phoneNumber;
-  late final String birth;
-  late final String? profileimage;
-  late final DateTime? createdTime;
-  late final DateTime? recessAccess;
+  late final int likecount;
+  late final int comcontentcount;
+  late final int postid;
+  late final int? memberid;
+  late final int? travelid;
+  late final String? content;
+  late final DateTime? createdtime;
 
   @override
   String toString() {
     return '''
-      User {
-        username: $username,
-        nickname: $nickname,
-        userId: $userId,
-        password: $password,
-        email: $email,
-        phoneNumber: $phoneNumber,
-        birth: $birth,
-        profileimage: $profileimage,
-        createdTime: $createdTime,
-        recessAccess: $recessAccess
+      Board {
+        likecount: $likecount,
+        comcontentcount: $comcontentcount,
+        postid: $postid,
+        memberid: $memberid,
+        travelid: $travelid,
+        content: $content,
+        createdtime: $createdtime,
       }''';
   }
 
+  // factory Board.fromJson(Map<String, dynamic> json) {
+  //   return Board(
+  //     likecount: json['likecount'] ?? '0',
+  //     comcontentcount: json['comcontentcount'] ?? '0',
+  //     postid: json['postid'] ?? '',
+  //     memberid: json['memberid'] ?? '',
+  //     travelid: json['travelid'] ?? '',
+  //     content: json['content'] ?? '',
+  //     createdtime: json['createdtime'] != null && json['createdtime'].isNotEmpty
+  //         ? DateTime.parse(json['createdtime'])
+  //         : null,
+  //   );
+  // }
   factory Board.fromJson(Map<String, dynamic> json) {
     return Board(
-      username: json['username'] ?? '',
-      nickname: json['nickname'] ?? '',
-      userId: json['userId'] ?? '',
-      password: json['password'] ?? '',
-      email: json['email'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
-      birth: json['birth'] ?? '',
-      profileimage: json['profileimage'] ?? '',
-      createdTime: json['createdTime'] != null && json['createdTime'].isNotEmpty
-          ? DateTime.parse(json['createdTime'])
+      likecount: json['likecount'] != null
+          ? int.tryParse(json['likecount'].toString()) ?? 0
+          : 0,
+      comcontentcount: json['comcontentcount'] != null
+          ? int.tryParse(json['comcontentcount'].toString()) ?? 0
+          : 0,
+      postid: json['postid'] != null
+          ? int.tryParse(json['postid'].toString()) ?? 0
+          : 0,
+      memberid: json['memberid'] != null
+          ? int.tryParse(json['memberid'].toString())
           : null,
-      recessAccess: json['recessAccess'] != null && json['recessAccess'].isNotEmpty
-          ? DateTime.parse(json['recessAccess'])
+      travelid: json['travelid'] != null
+          ? int.tryParse(json['travelid'].toString())
+          : null,
+      content: json['content'] as String?,
+      createdtime: json['createdtime'] != null && json['createdtime'].isNotEmpty
+          ? DateTime.parse(json['createdtime'])
           : null,
     );
   }
 
+
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
-      'nickname': nickname,
-      'userId': userId,
-      'password': password,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'birth': birth,
-      'profileimage': profileimage,
-      'createdTime': createdTime?.toIso8601String(),
-      'recessAccess': recessAccess?.toIso8601String(),
+      'likecount': likecount,
+      'comcontentcount': comcontentcount,
+      'postid': postid,
+      'memberid': memberid,
+      'travelid': travelid,
+      'content': content,
+      'createdtime': createdtime?.toIso8601String(),
     };
   }
 

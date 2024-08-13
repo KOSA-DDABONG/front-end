@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 
-import '../config.dart';
-
 class DioClient {
   static final Dio client = Dio(
     BaseOptions(

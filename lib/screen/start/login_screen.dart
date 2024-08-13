@@ -342,7 +342,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               if (result.value != null) {
                 savePreferences();
-                final userProfileResult = await UserService.getUserProfile();
+                // final userProfileResult = await UserService.getUserProfile();
 
                 setState(() {
                   isApiCallProcess = false;
