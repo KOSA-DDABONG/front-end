@@ -209,7 +209,9 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
-          _cardIconBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline)),
+          Responsive.isNarrowWidth(context)
+          ? _cardIconNarrowBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
+          : _cardIconWideBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
         ],
       ),
     );
@@ -279,7 +281,9 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
-          _cardIconBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline)),
+          Responsive.isNarrowWidth(context)
+          ? _cardIconNarrowBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
+          : _cardIconWideBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
         ],
       ),
     );
@@ -349,21 +353,24 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
-          _cardIconBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline)),
+          Responsive.isNarrowWidth(context)
+          ? _cardIconNarrowBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline))
+          : _cardIconWideBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline))
         ],
       ),
     );
   }
 
-  //카드 내 아이콘 버튼
-  Widget _cardIconBtn(Icon icon1, Icon icon2) {
+  //카드 내 아이콘 버튼(좁은 화면)
+  Widget _cardIconNarrowBtn(Icon icon1, Icon icon2) {
     return Positioned(
-      right: 10,
-      top: 10,
+      right: 1,
+      bottom: 1,
       child: Row(
         children: [
           IconButton(
-            icon: icon1,
+            icon: icon1,햐
+            iconSize: 16,
             onPressed: () {
               if (icon1.icon == Icons.chat_bubble_outline) {
                 Navigator.push(
@@ -385,6 +392,48 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
           ),
           IconButton(
             icon: icon2,
+            iconSize: 16,
+            onPressed: () {
+              showDeleteTripScheduleDialog(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  //카드 내 아이콘 버튼(넓은 화면)
+  Widget _cardIconWideBtn(Icon icon1, Icon icon2) {
+    return Positioned(
+      right: 8,
+      top: 8,
+      child: Row(
+        children: [
+          IconButton(
+            icon: icon1,
+            iconSize: 22,
+            onPressed: () {
+              if (icon1.icon == Icons.chat_bubble_outline) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ChatbotScreen()
+                  ),
+                );
+              }
+              else if (icon1.icon == Icons.note_add_outlined) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddReviewScreen()
+                  ),
+                );
+              }
+            },
+          ),
+          IconButton(
+            icon: icon2,
+            iconSize: 22,
             onPressed: () {
               showDeleteTripScheduleDialog(context);
             },
