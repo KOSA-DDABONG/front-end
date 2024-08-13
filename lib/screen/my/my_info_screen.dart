@@ -310,34 +310,34 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               const SizedBox(width: 15),
               Responsive.isNarrowWidth(context)
                   ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 5),
-                  Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                  const SizedBox(height: 5),
-                  Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                  const SizedBox(height: 5),
-                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                ],
-              )
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 5),
+                        Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 5),
+                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                        const SizedBox(height: 5),
+                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                      ],
+                    )
                   : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                      const SizedBox(width: 10),
-                      Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                ],
-              ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                            const SizedBox(width: 10),
+                            Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                      ],
+                    ),
             ],
           ),
         ),
