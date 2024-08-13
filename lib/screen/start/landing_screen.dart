@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/component/clipper/horizontal_wave_clipper.dart';
 import 'package:front/responsive.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;

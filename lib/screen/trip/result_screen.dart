@@ -65,12 +65,16 @@ class _ResultScreenState extends State<ResultScreen> {
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _titleText(),
-                    const Spacer(),
-                    Expanded(child: _saveBtn()),
-                    const SizedBox(width: 5),
-                    Expanded(child: _recreateBtn())
+                    Row(
+                      children: [
+                        _saveBtn(),
+                        const SizedBox(width: 5),
+                        _recreateBtn()
+                      ],
+                    )
                   ],
                 ),
                 Expanded(
@@ -108,13 +112,9 @@ class _ResultScreenState extends State<ResultScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: _saveBtn(),
-                    ),
+                    Expanded(child: _saveBtn()),
                     const SizedBox(width: 10),
-                    Expanded(
-                      child: _recreateBtn(),
-                    ),
+                    Expanded(child: _recreateBtn()),
                   ],
                 )
               ],
@@ -176,10 +176,10 @@ class _ResultScreenState extends State<ResultScreen> {
       onPressed: () {},
       style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: pointColor, width: 1),
+            side: const BorderSide(color: pointColor, width: 1),
           ),
           elevation: 0
       ),
@@ -196,10 +196,10 @@ class _ResultScreenState extends State<ResultScreen> {
       onPressed: () {},
       style: ElevatedButton.styleFrom(
           backgroundColor: pointColor,
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: pointColor, width: 1),
+            side: const BorderSide(color: pointColor, width: 1),
           ),
           elevation: 0
       ),
