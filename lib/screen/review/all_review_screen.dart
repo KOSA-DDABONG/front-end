@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 import 'package:front/screen/start/login_screen.dart';
@@ -27,6 +29,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   bool _isContestExpanded = false;
 
   bool _isLoading = true;
+  bool _isLoadFailed = false;
   List<Board> _allReviews = [];
   List<Board> _rankReviews = [];
 
@@ -38,25 +41,49 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   Future<void> _loadReviewLists() async {
-    final result = await BoardService.getReviewList();
-    print("@@@!!" + result.value!.boardList.toString());
-    if (result.isSuccess) {
-      setState(() {
-        _allReviews = result.value?.boardList ?? [];
-        _rankReviews = result.value?.topList ?? [];
-        _isLoading = false;
-      });
+    // 로딩 실패를 감지할 타이머
+    final timer = Timer(Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() {
+          _isLoadFailed = _isLoading;
+        });
+      }
+    });
+
+    try {
+      final result = await BoardService.getReviewList();
+      print("@@@!!" + result.value!.boardList.toString());
+      if (result.isSuccess) {
+        setState(() {
+          _allReviews = result.value?.boardList ?? [];
+          _rankReviews = result.value?.topList ?? [];
+          _isLoading = false;
+        });
+      }
+      else {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.error ?? 'Failed to load reviews'),
+          ),
+        );
+      }
     }
-    else {
-      print("@@@@@ 3 : ");
+    catch (e) {
       setState(() {
         _isLoading = false;
+        _isLoadFailed = true; // 실패 상태로 설정
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.error ?? 'Failed to load reviews'),
+          content: Text('An error occurred. Please try again later.'),
         ),
       );
+    }
+    finally {
+      timer.cancel();
     }
   }
 
@@ -215,9 +242,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: (_rankReviews.isEmpty)
-            ? [Text('No data available')] // 데이터가 없는 경우의 처리
+            ? [const Text('데이터가 존재하지 않습니다.')]
             : _rankReviews.map((review) {
           int index = _rankReviews.indexOf(review) + 1;
           IconData icon;
@@ -234,11 +261,10 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
             default:
               icon = Icons.star_border;
           }
-
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                showDetailReviewDialog(context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY);
+                showDetailReviewDialog(context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY, review.likecount, review.comcontentcount);
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -330,100 +356,115 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //전체 후기 내용 영역
   Widget _allReviewContentUI() {
-    return _isLoading
-        ? Center(child: CircularProgressIndicator())
-        : LayoutBuilder(
-      builder: (context, constraints) {
-        int crossAxisCount = (constraints.maxWidth / 150).floor();
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-          ),
-          itemCount: _allReviews.length,
-          itemBuilder: (context, index) {
-            final review = _allReviews[index];
-            return GestureDetector(
-              onTap: () async {
-                try {
-                  print("hellohello : : " );
-                  final result = await BoardService.getReviewInfo("1");
-                  print(result.value);
-                  final accessToken = await SessionService.getAccessToken();
-                  print("hellohello : : " + accessToken.toString());
-                  if (result.value != null) {
-                    showDetailReviewDialog(context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY);
-                  } else {
-                    if (accessToken == null) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('메세지'),
-                            content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('취소'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                                  );
-                                },
-                                child: Text('로그인'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.blue),
+      );
+    }
+    else if (_isLoadFailed) {
+      return const Center(
+        child: Text(
+          '정보를 불러올 수 없습니다.\n',
+        ),
+      );
+    }
+    else {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          int crossAxisCount = (constraints.maxWidth / 150).floor();
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+            ),
+            itemCount: _allReviews.length,
+            itemBuilder: (context, index) {
+              final review = _allReviews[index];
+              return GestureDetector(
+                onTap: () async {
+                  try {
+                    final result = await BoardService.getReviewInfo(review
+                        .postid.toString());
+                    final accessToken = await SessionService.getAccessToken();
+                    print("hellohello : : " + accessToken.toString());
+                    if (result.value != null) {
+                      showDetailReviewDialog(
+                          context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY,
+                          review.likecount, review.comcontentcount);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.'),
-                        ),
-                      );
-                    }
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('에러가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-                    ),
-                  );
-                }
-              },
-              child: Column(
-                children: [
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/images/noImg.jpg',
-                            fit: BoxFit.cover,
-                            width: constraints.maxWidth,
-                            height: constraints.maxWidth * 3 / 4,
+                      if (accessToken == null) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('메세지'),
+                              content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('취소'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginScreen()),
+                                    );
+                                  },
+                                  child: Text('로그인'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.'),
                           ),
                         );
-                      },
+                      }
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('에러가 발생했습니다. 잠시 후 다시 시도해주세요.'),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              'assets/images/noImg.jpg',
+                              fit: BoxFit.cover,
+                              width: constraints.maxWidth,
+                              height: constraints.maxWidth * 3 / 4,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  _reviewInfoUI(review),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
+                    _reviewInfoUI(review),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
   }
 
   //게시물 정보(좋아요수, 댓글수)

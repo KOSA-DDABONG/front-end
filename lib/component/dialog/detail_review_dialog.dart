@@ -4,7 +4,13 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../map/get_map.dart';
 
-void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey) {
+void showDetailReviewDialog(
+    BuildContext context,
+    String imageUrl,
+    String apiKey,
+    int likes,
+    int comments
+    ) {
   final PageController pageController = PageController();
 
   List<String> images = [
@@ -103,7 +109,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                     });
                                   },
                                 ),
-                                const Text('116'),
+                                Text('$likes'),
                                 const SizedBox(width: 16),
                                 (!showComments)
                                 ? IconButton(
@@ -123,7 +129,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                     },
                                   ),
                                 const SizedBox(width: 8),
-                                const Text('99'),
+                                Text('$comments'),
                               ],
                             ),
                           ),
@@ -373,14 +379,14 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                       });
                                     },
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    child: Text('116'),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                    child: Text('$likes'),
                                   ),
                                   const Icon(Icons.comment),
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    child: Text('99'),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    child: Text('$comments'),
                                   ),
                                 ],
                               ),
