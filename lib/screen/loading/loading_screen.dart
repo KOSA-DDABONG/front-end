@@ -3,6 +3,7 @@ import 'package:front/constants.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
+import '../../controller/check_login_state.dart';
 import '../../responsive.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -46,17 +47,35 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Responsive.isNarrowWidth(context)
-          ? ShortHeader(automaticallyImplyLeading: false)
-          : AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
-      ),
-      drawer: Responsive.isNarrowWidth(context) ? AfterLoginHeaderDrawer() : null,
-      extendBodyBehindAppBar: true,
-      backgroundColor: subBackgroundColor,
-      body: _loadingScreenUI(),
+    return CheckLoginStateWidget(
+        builder: (context, isLoggedIn) {
+          PreferredSizeWidget currentAppBar;
+          Widget? currentDrawer;
+          if (isLoggedIn) {
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? AfterLoginHeaderDrawer()
+                : null;
+          }
+          else {
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? NotLoginHeaderDrawer()
+                : null;
+          }
+
+          return Scaffold(
+            appBar: currentAppBar,
+            drawer: currentDrawer,
+            extendBodyBehindAppBar: true,
+            backgroundColor: subBackgroundColor,
+            body: _loadingScreenUI(),
+          );
+        }
     );
   }
 

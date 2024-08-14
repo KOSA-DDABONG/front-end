@@ -10,6 +10,7 @@ import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
+import '../../controller/check_login_state.dart';
 import '../../dto/board/board_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
@@ -89,19 +90,33 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: Responsive.isNarrowWidth(context)
-            ? ShortHeader(
-          automaticallyImplyLeading: false,
-        )
-            : AfterLoginHeader(
-          automaticallyImplyLeading: false,
-          context: context,
-        ),
-        drawer: Responsive.isNarrowWidth(context)
-            ? AfterLoginHeaderDrawer()
-            : null,
-        body: _allReviewPageUI()
+    return CheckLoginStateWidget(
+      builder: (context, isLoggedIn) {
+        PreferredSizeWidget currentAppBar;
+        Widget? currentDrawer;
+        if (isLoggedIn) {
+          currentAppBar = Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+              ? AfterLoginHeaderDrawer()
+              : null;
+        }
+        else {
+          currentAppBar = Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+              ? NotLoginHeaderDrawer()
+              : null;
+        }
+
+        return Scaffold(
+            appBar: currentAppBar,
+            drawer: currentDrawer,
+            body: _allReviewPageUI()
+        );
+      }
     );
   }
 

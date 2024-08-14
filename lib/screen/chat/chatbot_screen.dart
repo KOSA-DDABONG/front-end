@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
+import '../../controller/check_login_state.dart';
 import '../../responsive.dart';
 
 class ChatbotScreen extends StatefulWidget {
@@ -42,225 +43,258 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Responsive.isNarrowWidth(context)
-          ? ShortHeader(
-          automaticallyImplyLeading: false
-      )
-          : AfterLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
-      ),
-      drawer: Responsive.isNarrowWidth(context)
-          ? AfterLoginHeaderDrawer()
-          : null,
-      body: Row(
-        children: [
-          // Itinerary Section
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(3, (index) {
-                      return Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(5, 40, 5, 20),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedDay = index + 1;
-                                  selectedIndex = null;
-                                });
-                              },
-                              child: Text(
-                                '${index + 1}일차',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: selectedDay == index + 1 ? Color(0xFF005AA7) : Colors.grey,
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          )
-                      );
-                    }),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: itinerary[selectedDay - 1].length,
-                      itemBuilder: (context, index) {
-                        var place = itinerary[selectedDay - 1][index];
-                        return Stack(
-                          children: [
-                            Positioned.fill(
-                              left: 12,
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: DashedLine(
-                                  height: double.infinity,
-                                  color: Colors.grey,
-                                  strokeWidth: 2,
+    return CheckLoginStateWidget(
+      builder: (context, isLoggedIn) {
+        PreferredSizeWidget currentAppBar;
+        Widget? currentDrawer;
+        if (isLoggedIn) {
+          currentAppBar = Responsive.isNarrowWidth(context)
+            ? ShortHeader(automaticallyImplyLeading: false)
+            : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+            ? AfterLoginHeaderDrawer()
+            : null;
+        }
+        else {
+          currentAppBar = Responsive.isNarrowWidth(context)
+            ? ShortHeader(automaticallyImplyLeading: false)
+            : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+            ? NotLoginHeaderDrawer()
+            : null;
+        }
+
+        return Scaffold(
+          appBar: currentAppBar,
+          drawer: currentDrawer,
+          body: Row(
+            children: [
+              // Itinerary Section
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(3, (index) {
+                          return Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(5, 40, 5, 20),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedDay = index + 1;
+                                      selectedIndex = null;
+                                    });
+                                  },
+                                  child: Text(
+                                    '${index + 1}일차',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: selectedDay == index + 1
+                                        ? Color(0xFF005AA7)
+                                        : Colors.grey,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    textStyle: TextStyle(fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Row(
-                                children: [
-                                  // Display the number outside the tile
-                                  CircleAvatar(
-                                    backgroundColor: Colors.blue,
-                                    radius: 12,
-                                    child: Text(
-                                      '${index + 1}',
-                                      style: TextStyle(color: Colors.white, fontSize: 12),
+                              )
+                          );
+                        }),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: itinerary[selectedDay - 1].length,
+                          itemBuilder: (context, index) {
+                            var place = itinerary[selectedDay - 1][index];
+                            return Stack(
+                              children: [
+                                Positioned.fill(
+                                  left: 12,
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: DashedLine(
+                                      height: double.infinity,
+                                      color: Colors.grey,
+                                      strokeWidth: 2,
                                     ),
                                   ),
-                                  SizedBox(width: 8),
-                                  // Wrap the ListTile with a Card
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedIndex = index;
-                                        });
-                                        // Add your onTap functionality here
-                                      },
-                                      child: Card(
-                                        color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
-                                        child: ListTile(
-                                          leading: Image.asset(place['image']!,
-                                              width: 60, height: 60, fit: BoxFit.cover),
-                                          title: Text(
-                                            place['title']!,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: 16),
-                                          ),
-                                          subtitle: Text(place['time']!,
-                                              style: TextStyle(fontSize: 14)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  child: Row(
+                                    children: [
+                                      // Display the number outside the tile
+                                      CircleAvatar(
+                                        backgroundColor: Colors.blue,
+                                        radius: 12,
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12),
                                         ),
                                       ),
-                                    ),
+                                      SizedBox(width: 8),
+                                      // Wrap the ListTile with a Card
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedIndex = index;
+                                            });
+                                            // Add your onTap functionality here
+                                          },
+                                          child: Card(
+                                            color: selectedIndex == index
+                                                ? Colors
+                                                .lightBlueAccent
+                                                : Colors.white,
+                                            child: ListTile(
+                                              leading: Image.asset(
+                                                  place['image']!,
+                                                  width: 60,
+                                                  height: 60,
+                                                  fit: BoxFit.cover),
+                                              title: Text(
+                                                place['title']!,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight
+                                                        .bold,
+                                                    fontSize: 16),
+                                              ),
+                                              subtitle: Text(place['time']!,
+                                                  style: TextStyle(
+                                                      fontSize: 14)),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        ListTile(
-                          title: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text('부산 여행으로 2박 3일 추천해줘'),
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text('어떤 여행지를 추천해 드릴까요?'),
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text('액티비티 위주였으면 좋겠어'),
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text('추천 결과입니다.'),
-                                ),
-                                SizedBox(height: 5),
-                                Image.network('assets/images/noImg.jpg'),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: Text('더보기'),
                                 ),
                               ],
-                            ),
-                          ),
+                            );
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+                ),
+              ),
+              Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    child: Column(
                       children: [
                         Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: '메세지를 입력하세요.',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                          child: ListView(
+                            children: [
+                              ListTile(
+                                title: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[100],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text('부산 여행으로 2박 3일 추천해줘'),
+                                  ),
+                                ),
                               ),
-                            ),
+                              ListTile(
+                                title: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text('어떤 여행지를 추천해 드릴까요?'),
+                                  ),
+                                ),
+                              ),
+                              ListTile(
+                                title: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[100],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text('액티비티 위주였으면 좋겠어'),
+                                  ),
+                                ),
+                              ),
+                              ListTile(
+                                title: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius: BorderRadius.circular(
+                                              10),
+                                        ),
+                                        child: Text('추천 결과입니다.'),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Image.network(
+                                          'assets/images/noImg.jpg'),
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: Text('더보기'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.send),
-                          onPressed: () {},
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    hintText: '메세지를 입력하세요.',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.send),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  )
               ),
-            )
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 }
