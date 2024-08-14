@@ -54,10 +54,13 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
     try {
       final result = await BoardService.getReviewList();
       print("@@@!!" + result.value!.boardList.toString());
+
       if (result.isSuccess) {
         setState(() {
           _allReviews = result.value?.boardList ?? [];
+          print("@@@!!1" + _allReviews.toString());
           _rankReviews = result.value?.topList ?? [];
+          print("@@@!!2" + _rankReviews.toString());
           _isLoading = false;
         });
       }
@@ -67,7 +70,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result.error ?? 'Failed to load reviews'),
+            content: Text('데이터를 불러오는 데 실패하였습니다.'),
           ),
         );
       }
@@ -79,7 +82,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('An error occurred. Please try again later.'),
+          content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
         ),
       );
     }
@@ -278,8 +281,67 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           }
           return Expanded(
             child: GestureDetector(
-              onTap: () {
-                showDetailReviewDialog(context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY, review.likecount, review.comcontentcount);
+              onTap: () async {
+
+                try {
+                  final result = await BoardService.getReviewInfo(review.postid.toString());
+                  final accessToken = await SessionService.getAccessToken();
+                  if (result.value?.status == 200 /*result.value != null*/) {
+                    showDetailReviewDialog(
+                      context,
+                      'assets/images/noImg.jpg',
+                      GOOGLE_MAP_KEY,
+                      result.value!.board.likecount,
+                      result.value!.board.comcontentcount,
+                      result.value?.board.content,
+                      result.value?.commentList,
+                    );
+                  } else {
+                    if (accessToken == null) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('메세지'),
+                            content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('취소'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()),
+                                  );
+                                },
+                                child: Text('로그인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              '정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.'),
+                        ),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('에러가 발생했습니다. 잠시 후 다시 시도해주세요.'),
+                    ),
+                  );
+                }
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -399,14 +461,18 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               return GestureDetector(
                 onTap: () async {
                   try {
-                    final result = await BoardService.getReviewInfo(review
-                        .postid.toString());
+                    final result = await BoardService.getReviewInfo(review.postid.toString());
                     final accessToken = await SessionService.getAccessToken();
-                    print("hellohello : : " + accessToken.toString());
-                    if (result.value != null) {
+                    if (result.value?.status == 200 /*result.value != null*/) {
                       showDetailReviewDialog(
-                          context, 'assets/images/noImg.jpg', GOOGLE_MAP_KEY,
-                          review.likecount, review.comcontentcount);
+                        context,
+                        'assets/images/noImg.jpg',
+                        GOOGLE_MAP_KEY,
+                        result.value!.board.likecount,
+                        result.value!.board.comcontentcount,
+                        result.value?.board.content,
+                        result.value?.commentList,
+                      );
                     } else {
                       if (accessToken == null) {
                         showDialog(

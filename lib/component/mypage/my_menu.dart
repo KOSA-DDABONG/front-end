@@ -70,7 +70,6 @@ class MyMenuScreen extends StatelessWidget {
                             child: SideMenu(),
                           ),
                         Expanded(
-                          // It takes 5/6 part of the screen
                           flex: 5,
                           //MenuAppController에서 시작페이지 변경 가능
                           child: _screens[

@@ -72,7 +72,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
 
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, 116, 13);
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, 116, 13, 'hello', null);
       },
       child: Stack(
         children: [

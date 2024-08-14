@@ -26,11 +26,10 @@ class BoardService {
           url,
           headers: headers
       );
-      print("@@@ getReviewList 3: " + response.toString());
       if (response.statusCode == 200) {
-        print("@@@ getReviewList 4: " + response.statusCode.toString());
         dynamic jsonData = response.data;
-        print("@@@ getReviewList 5: " + jsonData.toString());
+        print("@@@ getReviewList 2: " + jsonData.toString());
+        print("@@@ getReviewList 3: " + boardListResponseJson(response.data as Map<String, dynamic>).toString());
         return Result.success(
             boardListResponseJson(response.data as Map<String, dynamic>)
         );
@@ -59,11 +58,10 @@ class BoardService {
           url,
           headers: headers
       );
-      print("*** getReviewInfo 3: " + response.toString());
       if (response.statusCode == 200) {
-        print("*** getReviewInfo 4: " + response.statusCode.toString());
         dynamic jsonData = response.data;
         print("*** getReviewInfo 5: " + jsonData.toString());
+        print("*** getReviewInfo 6: " + boardDetailResponseJson(response.data as Map<String, dynamic>).toString());
         return Result.success(
             boardDetailResponseJson(response.data as Map<String, dynamic>)
         );
