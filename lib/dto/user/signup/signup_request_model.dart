@@ -2,22 +2,22 @@ import 'package:dio/dio.dart';
 
 class SignupRequestModel {
   SignupRequestModel({
-    this.username,
-    this.nickname,
-    this.userId,
-    this.password,
-    this.email,
-    this.phoneNumber,
-    this.birth,
+    required this.username,
+    required this.nickname,
+    required this.userId,
+    required this.password,
+    required this.email,
+    required this.phoneNumber,
+    required this.birth,
   });
 
-  late final String? username;
-  late final String? nickname;
-  late final String? userId;
-  late final String? password;
-  late final String? email;
-  late final String? phoneNumber;
-  late final String? birth;
+  late final String username;
+  late final String nickname;
+  late final String userId;
+  late final String password;
+  late final String email;
+  late final String phoneNumber;
+  late final String birth;
 
   SignupRequestModel.fromJson(Map<String, dynamic> json) {
     username = json['username'];

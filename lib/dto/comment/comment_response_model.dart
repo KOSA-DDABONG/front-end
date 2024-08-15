@@ -1,26 +1,31 @@
-import 'comment_model.dart';
+import '../comment/comment_model.dart';
 
-BoardResponseModel boardResponseJson(Map<String, dynamic> json) =>
-    BoardResponseModel.fromJson(json);
+CommentResponseModel commentResponseJson(Map<String, dynamic> json) =>
+    CommentResponseModel.fromJson(json);
 
-class BoardResponseModel {
-  BoardResponseModel({
-    required this.accessToken,
-    required this.board,
+class CommentResponseModel {
+  CommentResponseModel({
+    required this.message,
+    required this.status,
+    required this.commentinfo,
   });
 
-  late final String accessToken;
-  late final Comment board;
+  late final String message;
+  late final int status;
+  late final Comment commentinfo;
 
-  BoardResponseModel.fromJson(Map<String, dynamic> json) {
-    accessToken = json['jwtToken'];
-    board = Comment.fromJson(json['user'] ?? {});
+  CommentResponseModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    status = json['status'];
+    commentinfo = Comment.fromJson(json['data']);
   }
 
+  //CommentResponseModel을 JSON으로 변환
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['jwtToken'] = accessToken;
-    _data['user'] = board.toJson();
+    _data['message'] = message;
+    _data['status'] = status;
+    _data['data'] = [commentinfo.toJson()]; // Board 정보는 data의 리스트에 포함
     return _data;
   }
 }

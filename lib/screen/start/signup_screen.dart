@@ -44,7 +44,8 @@ class _SignupScreenState extends State<SignupScreen> {
   String? password;
   String? checkpassword;
   String? nickname;
-  String? birthDate;
+  String? birth;
+  String? birthDateText;
   String? phoneNumber;
 
   @override
@@ -549,7 +550,15 @@ class _SignupScreenState extends State<SignupScreen> {
             );
             if (pickedDate != null) {
               setState(() {
-                birthDate = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
+                birthDateText = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
+                //두자리수 월
+                if (pickedDate.month == 10 || pickedDate.month == 11 || pickedDate.month == 12) {
+                  birth = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+                }
+                //한자리수 월
+                else {
+                  birth = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+                }
                 isBirthSelected = true;
               });
             }
@@ -563,7 +572,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 return null;
               },
               decoration: InputDecoration(
-                hintText: birthDate ?? "생년월일을 선택하세요.",
+                hintText: birthDateText ?? "생년월일을 선택하세요.",
                 hintStyle: TextStyle(
                   color: isBirthSelected ? Colors.black : Colors.grey.withOpacity(0.7),  // 텍스트 색상 설정
                 ),
@@ -754,13 +763,13 @@ class _SignupScreenState extends State<SignupScreen> {
             });
 
             SignupRequestModel model = SignupRequestModel(
-              username: username,
-              nickname: nickname,
-              userId: userId,
-              password: password,
-              email: email,
-              phoneNumber: phoneNumber,
-              birth: birthDate
+              username: username ?? '',
+              nickname: nickname ?? '',
+              userId: userId ?? '',
+              password: password ?? '',
+              email: email ?? '',
+              phoneNumber: phoneNumber ?? '',
+              birth: birth ?? ''
             );
 
             UserService.register(model).then(

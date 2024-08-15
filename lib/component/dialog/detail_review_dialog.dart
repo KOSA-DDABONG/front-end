@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:front/responsive.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../dto/comment/comment_model.dart';
 import '../map/get_map.dart';
 
-void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey) {
+void showDetailReviewDialog(
+    BuildContext context,
+    String imageUrl,
+    String apiKey,
+    int likesNum,
+    int commentsNum,
+    String? commentContent,
+    List<Comment>? commentList,
+  ) {
   final PageController pageController = PageController();
 
   List<String> images = [
@@ -103,7 +112,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                     });
                                   },
                                 ),
-                                const Text('116'),
+                                Text('$likesNum'),
                                 const SizedBox(width: 16),
                                 (!showComments)
                                 ? IconButton(
@@ -123,7 +132,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                     },
                                   ),
                                 const SizedBox(width: 8),
-                                const Text('99'),
+                                Text('$commentsNum'),
                               ],
                             ),
                           ),
@@ -145,7 +154,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 8),
                                               child: Text(
-                                                "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n",
+                                                "$commentContent",
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                             )
@@ -333,7 +342,7 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                       child: Padding(
                                         padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
-                                          "여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n여름 휴가로 부산에 놀러 왔습니다. 재미지네요.\n",
+                                          "$commentContent",
                                           style: TextStyle(fontSize: 18),
                                           textAlign: TextAlign.left,
                                         ),
@@ -373,14 +382,14 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                       });
                                     },
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    child: Text('116'),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                    child: Text('$likesNum'),
                                   ),
                                   const Icon(Icons.comment),
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    child: Text('99'),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    child: Text('$commentsNum'),
                                   ),
                                 ],
                               ),
@@ -388,8 +397,11 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                             Expanded(
                               flex: 6,
                               child: ListView.builder(
-                                itemCount: 100,
+                                // shrinkWrap: true,
+                                // physics: NeverScrollableScrollPhysics(),
+                                itemCount: commentList?.length ?? 0,
                                 itemBuilder: (context, index) {
+                                  final comment = commentList![index];
                                   return Column(
                                     children: [
                                       ListTile(
@@ -400,13 +412,13 @@ void showDetailReviewDialog(BuildContext context, String imageUrl, String apiKey
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'Nickname $index',
+                                              '사용자 아이디 ${comment.memberid}',
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             const SizedBox(height: 4),
-                                            Text('Comment $index'),
+                                            Text(comment.comcontent),
                                           ],
                                         ),
                                       ),

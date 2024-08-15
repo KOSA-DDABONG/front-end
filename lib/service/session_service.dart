@@ -15,7 +15,8 @@ class SessionService {
   //안전한 저장소 설정
   static const storage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock)
+      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+      webOptions: WebOptions()
   );
 
   //로그인
@@ -62,7 +63,6 @@ class SessionService {
     );
 
     await storage.write(key: 'accessToken', value: loginResponse.accessToken);
-    // await storage.write(key: 'refreshToken', value: loginResponse.refreshToken);
   }
 
   // // 로그아웃
@@ -78,7 +78,6 @@ class SessionService {
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
     };
 
     try {
@@ -97,17 +96,6 @@ class SessionService {
     }
   }
 
-  // refreshToken 가져오기. 값이 없을 경우 null 반환
-  // static Future<String?> getRefreshToken() async {
-  //   final details = await loginDetails();
-  //   // return details?.refreshToken;
-  // }
-
-  // refreshToken 설정하기
-  // static Future<void> setRefreshToken(String refreshToken) async {
-  //   await storage.write(key: 'refreshToken', value: refreshToken);
-  // }
-
   // accessToken 가져오기. 값이 없을 경우 null 반환
   static Future<String?> getAccessToken() async {
     final details = await loginDetails();
@@ -124,11 +112,6 @@ class SessionService {
     final details = await loginDetails();
     return details?.user;
   }
-
-  // static Future<void> refreshToken() async {
-  //   final refreshedTokens = await SessionService.getRefreshToken();
-  //   await SessionService.setRefreshToken(refreshedTokens ?? '');
-  // }
 
   static Future<bool> getBool(String key) async {
     final result = await storage.read(key: key);
