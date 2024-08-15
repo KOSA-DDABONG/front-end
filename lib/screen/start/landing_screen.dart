@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/controller/check_login_state.dart';
 import 'package:front/responsive.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;
@@ -8,6 +9,7 @@ import '../../component/clipper/vertical_wave_clipper.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../constants.dart';
+import '../../service/session_service.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -41,33 +43,47 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Responsive.isNarrowWidth(context)
-          ? ShortHeader(
-          automaticallyImplyLeading: false
-      )
-          : NotLoginHeader(
-        automaticallyImplyLeading: false,
-        context: context,
-      ),
-      drawer: Responsive.isNarrowWidth(context)
-          ? NotLoginHeaderDrawer()
-          : null,
-      extendBodyBehindAppBar: true,
-      backgroundColor: subBackgroundColor,
-      body: Responsive.isNarrowWidth(context)
-        ? Stack(
+    return CheckLoginStateWidget(
+      builder: (context, isLoggedIn) {
+        PreferredSizeWidget currentAppBar;
+        Widget? currentDrawer;
+        if(isLoggedIn) {
+          currentAppBar = Responsive.isNarrowWidth(context)
+            ? ShortHeader(automaticallyImplyLeading: false)
+            : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+            ? AfterLoginHeaderDrawer()
+            : null;
+        }
+        else {
+          currentAppBar = Responsive.isNarrowWidth(context)
+            ? ShortHeader(automaticallyImplyLeading: false)
+            : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+            ? NotLoginHeaderDrawer()
+            : null;
+        }
+
+        return Scaffold(
+          appBar: currentAppBar,
+          drawer: currentDrawer,
+          extendBodyBehindAppBar: true,
+          backgroundColor: subBackgroundColor,
+          body: Responsive.isNarrowWidth(context)
+              ? Stack(
             children: [
               _backgroundImgNarrowUI(),
               _contentNarrowUI()
             ],
           )
-        : Stack(
+              : Stack(
             children: [
               _backgroundImgWideUI(),
               _contentWideUI()
             ],
           ),
+        );
+      }
     );
   }
 

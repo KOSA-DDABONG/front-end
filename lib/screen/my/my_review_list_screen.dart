@@ -17,7 +17,6 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -55,7 +54,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY);
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, 15, 1, 'hi', null);
       },
       child: Container(
         decoration: BoxDecoration(

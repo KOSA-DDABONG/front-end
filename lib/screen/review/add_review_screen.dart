@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../component/header/header_drawer.dart';
+import '../../controller/check_login_state.dart';
 import '../../key/key.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,23 +45,37 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Responsive.isNarrowWidth(context)
-        ? ShortHeader(
-            automaticallyImplyLeading: false
-          )
-        : AfterLoginHeader(
-            automaticallyImplyLeading: false,
-            context: context,
-        ),
-      drawer: Responsive.isNarrowWidth(context)
-        ? AfterLoginHeaderDrawer()
-        : null,
-      extendBodyBehindAppBar: false,
-      backgroundColor: Colors.white,
-      body: Responsive.isNarrowWidth(context)
-        ? _addReviewNarrowUI()
-        : _addReviewWideUI()
+    return CheckLoginStateWidget(
+      builder: (context, isLoggedIn) {
+        PreferredSizeWidget currentAppBar;
+        Widget? currentDrawer;
+        if (isLoggedIn) {
+          currentAppBar = Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+              ? AfterLoginHeaderDrawer()
+              : null;
+        }
+        else {
+          currentAppBar = Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+              ? NotLoginHeaderDrawer()
+              : null;
+        }
+
+        return Scaffold(
+            appBar: currentAppBar,
+            drawer: currentDrawer,
+            extendBodyBehindAppBar: false,
+            backgroundColor: Colors.white,
+            body: Responsive.isNarrowWidth(context)
+                ? _addReviewNarrowUI()
+                : _addReviewWideUI()
+        );
+      }
     );
   }
 

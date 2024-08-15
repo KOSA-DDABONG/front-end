@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:front/service/result.dart';
+import 'package:intl/intl.dart';
 
 import '../config.dart';
 import '../dto/user/signup/signup_request_model.dart';
@@ -40,11 +41,15 @@ class UserService {
   static Future<Result<String>> register(SignupRequestModel model) async {
     // final url = Uri.http(API_URL, Config.signupAPI).toString();
     final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
+    print("&&& 1 halo: " + model.birth.toString());
+    print(model.toJson().toString());
 
     try {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
+      print("&&& 2 : " + response.toString());
       return Result.success("Success");
     } catch (e) {
+      print("&&& 3 : " + e.toString());
       return Result.failure("[Signup] An Error Occurred: ${e}");
     }
   }

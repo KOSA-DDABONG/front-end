@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-class BoardRequestModel {
-  BoardRequestModel({
+class CommentRequestModel {
+  CommentRequestModel({
     this.userId,
     this.password,
   });
@@ -9,7 +9,7 @@ class BoardRequestModel {
   late final String? userId;
   late final String? password;
 
-  BoardRequestModel.fromJson(Map<String, dynamic> json) {
+  CommentRequestModel.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     password = json['password'];
   }
