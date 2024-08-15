@@ -16,6 +16,8 @@ class BoardService {
     // final url = Uri.http(API_URL, Config.getBoardInfoAPI+boardId).toString();
     final url = Uri.http(Config.apiUrl, Config.getBoardListAPI).toString();
     final accessToken = await SessionService.getAccessToken();
+    print("accessToken000 : " + accessToken.toString());
+
     final headers = {
       'Authorization': 'Bearer $accessToken'
     };
@@ -29,7 +31,6 @@ class BoardService {
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
         print("@@@ getReviewList 2: " + jsonData.toString());
-        print("@@@ getReviewList 3: " + boardListResponseJson(response.data as Map<String, dynamic>).toString());
         return Result.success(
             boardListResponseJson(response.data as Map<String, dynamic>)
         );
@@ -65,7 +66,8 @@ class BoardService {
         return Result.success(
             boardDetailResponseJson(response.data as Map<String, dynamic>)
         );
-      } else {
+      }
+      else {
         print("*** getReviewInfo 6: ");
         throw Exception("Failed to get Board Information");
       }
