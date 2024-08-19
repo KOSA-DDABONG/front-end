@@ -12,7 +12,7 @@ class CommentRequestModel {
   late final int postid;
   late final int travelid;
   late final int commentid2;
-  late final int memberid;
+  late final String memberid;
   late final String comcontent;
 
   CommentRequestModel.fromJson(Map<String, dynamic> json) {

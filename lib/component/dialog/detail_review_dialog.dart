@@ -5,6 +5,7 @@ import 'package:front/dto/comment/comment_request_model.dart';
 import 'package:front/dto/hashtag/hashtag_model.dart';
 import 'package:front/responsive.dart';
 import 'package:front/service/result.dart';
+import 'package:front/service/session_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../dto/comment/comment_model.dart';
@@ -257,13 +258,11 @@ void showDetailReviewDialog(
                               ),
                               IconButton(
                                 icon: const Icon(Icons.send),
-                                onPressed: isButtonEnabled ? () {
+                                onPressed: isButtonEnabled ? () async {
                                   try {
-                                  //   result.value?.commentList,
-                                  // result.value?.hashtagList,
-                                  //   final model = CommentRequestModel(postid: postid, travelid: travelid, commentid2: commentid2, memberid: memberid, comcontent: comcontent);
-                                    // final result = await UserService.login(model);
-                                    //
+                                    final usermodel = await SessionService.getUser();
+                                    final commentmodel = await CommentRequestModel(postid: review.postid, travelid: result.value!.board.travelid!, commentid2: 0, memberid: usermodel!.userId, comcontent: commentController.text.trim());
+                                    // /
                                     // if (result.value != null) {
                                     //   savePreferences();
                                     //

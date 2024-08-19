@@ -1,6 +1,5 @@
 class Comment {
   Comment({
-    required this.commentid,
     required this.postid,
     required this.travelid,
     required this.memberid,
@@ -8,10 +7,9 @@ class Comment {
     required this.comcontent,
   });
 
-  late final int commentid;
   late final int postid;
   late final int travelid;
-  late final int memberid;
+  late final String memberid;
   late final int commentid2;
   late final String comcontent;
 
@@ -19,7 +17,6 @@ class Comment {
   String toString() {
     return '''
       Comment {
-        commentid: $commentid,
         postid: $postid,
         travelid: $travelid,
         memberid: $memberid,
@@ -30,7 +27,6 @@ class Comment {
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      commentid: json['commentid'] ?? '',
       postid: json['postid'] ?? '',
       travelid: json['travelid'] ?? '',
       memberid: json['memberid'] ?? '',
@@ -41,7 +37,6 @@ class Comment {
 
   Map<String, dynamic> toJson() {
     return {
-      'commentid': commentid,
       'postid': postid,
       'travelid': travelid,
       'memberid': memberid,
