@@ -56,10 +56,6 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   http: ^1.2.2
   intl: ^0.19.0
-  amplify_flutter: ^2.3.0
-  amplify_core: ^2.3.0
-  amplify_analytics_pinpoint: ^2.3.0
-  amplify_auth_cognito: ^2.3.0
 
 
 dev_dependencies:

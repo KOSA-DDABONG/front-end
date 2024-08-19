@@ -3,6 +3,8 @@ import 'package:front/service/result.dart';
 import 'package:intl/intl.dart';
 
 import '../config.dart';
+import '../dto/user/login/login_request_model.dart';
+import '../dto/user/login/login_response_model.dart';
 import '../dto/user/signup/signup_request_model.dart';
 import '../dto/user/user_model.dart';
 import '../key/key.dart';
@@ -51,6 +53,56 @@ class UserService {
     } catch (e) {
       print("&&& 3 : " + e.toString());
       return Result.failure("[Signup] An Error Occurred: ${e}");
+    }
+  }
+
+  //로그인
+  static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
+    // final url = Uri.http(API_URL, Config.loginAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
+
+    try{
+      final response = await DioClient.sendRequest('POST', url, body: model.toJson());
+
+      if (response.statusCode == 200) {
+        // 로그인 응답 데이터 처리
+        final loginResponse = loginResponseJson(response.data['data'] as Map<String, dynamic>);
+        // accessToken 저장
+        await SessionService.setLoginDetails(loginResponse);
+
+        return Result.success(loginResponse);
+      } else {
+        return Result.failure("[Login] Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      return Result.failure("[Login] An Error Occurred: $e");
+    }
+  }
+
+  //로그아웃
+  static Future<Result<bool>> logout() async {
+    final accessToken = await SessionService.getAccessToken();
+    // final refreshToken = await SessionService.getRefreshToken();
+
+    final url = Uri.http(API_URL, Config.sampleAPI).toString();
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+        'GET',
+        url,
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        await SessionService.logout();
+        return Result.success(true);
+      }
+      return Result.failure("Logout failed");
+    } catch (e) {
+      return Result.failure("An error occurred: $e");
     }
   }
 
