@@ -4,7 +4,10 @@ import 'package:front/responsive.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/mypage/my_title.dart';
+import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../dto/user/login/login_response_model.dart';
+import '../../service/session_service.dart';
 
 class MyInfoScreen extends StatefulWidget {
   const MyInfoScreen({Key? key}) : super(key: key);
@@ -14,21 +17,97 @@ class MyInfoScreen extends StatefulWidget {
 }
 
 class _MyInfoScreenState extends State<MyInfoScreen> {
+
   @override
   void initState() {
     super.initState();
+    _checkLogin();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('myInfo');
     });
   }
 
+  bool _isLoading = true;
+  bool _isLoadFailed = false;
+  bool _loginState = false;
+  LoginResponseModel? _userinfo = null;
+
+  Future<void> _checkLogin() async {
+    bool isLoggedIn = await checkLoginState(context);
+
+    if (isLoggedIn) {
+      setState(() {
+        _loginState = isLoggedIn;
+      });
+
+      try {
+        final usermodel = await SessionService.loginDetails();
+        print("!@!@!@!@ 1: " + usermodel.toString());
+        if (usermodel!=null) { //유저정보 로드 성공
+          setState(() {
+            _userinfo = usermodel;
+            _isLoading = false;
+          });
+          print("!@!@!@!@ 2: " + _userinfo.toString());
+        }
+        else {
+          setState(() {
+            _isLoading = false;
+            _isLoadFailed = true;
+          });
+        }
+      }
+      catch (e) {
+        setState(() {
+          _isLoading = false;
+          _isLoadFailed = true; // 실패 상태로 설정
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Responsive.isNarrowWidth(context)
-          ? _profileNarrowUI(context) : _profileWideUI(context)
+    if(_loginState) {
+      return Scaffold(
+        body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Responsive.isNarrowWidth(context)
+                ? _profileNarrowUI(context) : _profileWideUI(context)
+        ),
+      );
+    }
+    else {
+      return Scaffold(
+        body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _notLoginProfileUI()
+        ),
+      );
+    }
+  }
+
+  //로그인X
+  Widget _notLoginProfileUI() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 프로필'),
+          const SizedBox(height: 200),
+          const Center(
+            child: Text(
+              '데이터를 불러올 수 없습니다.',
+            ),
+          ),
+          const SizedBox(height: 200),
+        ],
       ),
     );
   }
@@ -53,13 +132,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                         child: const Icon(Icons.person, size: 50)
                     ),
                     const SizedBox(width: 20),
-                    const Text(
-                        '{nickname}',
-                        style: TextStyle(
-                            color: pointColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                        )
+                    Text(
+                      '${_userinfo?.nickname}',
+                      style: const TextStyle(
+                        color: pointColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      )
                     ),
                     const SizedBox(width: 10),
                     _editBtnUI(),
@@ -100,9 +179,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                         child: const Icon(Icons.person, size: 50)
                     ),
                     const SizedBox(width: 20),
-                    const Text(
-                        '{nickname}',
-                        style: TextStyle(
+                    Text(
+                        '${_userinfo?.nickname}',
+                        style: const TextStyle(
                             color: pointColor,
                             fontSize: 20,
                             fontWeight: FontWeight.bold

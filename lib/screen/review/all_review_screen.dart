@@ -10,7 +10,7 @@ import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
-import '../../controller/check_login_state.dart';
+import '../../controller/login_state.dart';
 import '../../dto/board/board_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
@@ -53,23 +53,21 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
     try {
       final result = await BoardService.getReviewList();
-      print("@@@!!" + result.value!.boardList.toString());
 
       if (result.isSuccess) {
         setState(() {
           _allReviews = result.value?.boardList ?? [];
-          print("@@@!!1" + _allReviews.toString());
           _rankReviews = result.value?.topList ?? [];
-          print("@@@!!2" + _rankReviews.toString());
           _isLoading = false;
         });
       }
       else {
         setState(() {
           _isLoading = false;
+          _isLoadFailed = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('데이터를 불러오는 데 실패하였습니다.'),
           ),
         );
@@ -81,7 +79,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
         _isLoadFailed = true; // 실패 상태로 설정
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
         ),
       );
@@ -291,10 +289,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       context,
                       'assets/images/noImg.jpg',
                       GOOGLE_MAP_KEY,
-                      result.value!.board.likecount,
-                      result.value!.board.comcontentcount,
-                      result.value?.board.content,
-                      result.value?.commentList,
+                      review,
+                      result,
                     );
                   } else {
                     if (accessToken == null) {
@@ -468,10 +464,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                         context,
                         'assets/images/noImg.jpg',
                         GOOGLE_MAP_KEY,
-                        result.value!.board.likecount,
-                        result.value!.board.comcontentcount,
-                        result.value?.board.content,
-                        result.value?.commentList,
+                        review,
+                        result
                       );
                     } else {
                       if (accessToken == null) {

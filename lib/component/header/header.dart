@@ -6,6 +6,7 @@ import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
+import 'package:front/service/session_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../screen/start/login_screen.dart';
@@ -303,6 +304,7 @@ class AfterLoginHeader extends AppBar {
           children: [
             ElevatedButton(
               onPressed: () {
+                SessionService.logout();
                 Navigator.push(
                   context!,
                   MaterialPageRoute(builder: (context) => LoginScreen()),
