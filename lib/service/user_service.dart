@@ -59,13 +59,15 @@ class UserService {
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-
+      print(response);
       if (response.statusCode == 200) {
         // 로그인 응답 데이터 처리
         final loginResponse = loginResponseJson(response.data['data'] as Map<String, dynamic>);
+        print(response.data['data']);
         // accessToken 저장
         await SessionService.setLoginDetails(loginResponse);
-
+        // print("heyheyhey1 " + loginResponse);
+        print("heyheyhey2 " + loginResponse.accessToken);
         return Result.success(loginResponse);
       } else {
         return Result.failure("[Login] Error: ${response.statusCode}");

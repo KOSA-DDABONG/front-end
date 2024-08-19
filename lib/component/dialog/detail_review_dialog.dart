@@ -260,8 +260,9 @@ void showDetailReviewDialog(
                                 icon: const Icon(Icons.send),
                                 onPressed: isButtonEnabled ? () async {
                                   try {
-                                    final usermodel = await SessionService.getUser();
-                                    final commentmodel = await CommentRequestModel(postid: review.postid, travelid: result.value!.board.travelid!, commentid2: 0, memberid: usermodel!.userId, comcontent: commentController.text.trim());
+                                    final usermodel = await SessionService.loginDetails();
+                                    print("hhhhee " + usermodel.toString());
+                                    // final commentmodel = await CommentRequestModel(postid: review.postid, travelid: result.value!.board.travelid!, commentid2: 0, memberid: usermodel!.memberid, comcontent: commentController.text.trim());
                                     // /
                                     // if (result.value != null) {
                                     //   savePreferences();
@@ -516,8 +517,9 @@ void showDetailReviewDialog(
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.send),
-                                      onPressed: isButtonEnabled ? () {
-                                        //
+                                      onPressed: isButtonEnabled ? () async {
+                                        final usermodel = await SessionService.loginDetails();
+                                        print("hhhhee2 " + usermodel.toString());
                                       } : null,
                                     ),
                                   ],

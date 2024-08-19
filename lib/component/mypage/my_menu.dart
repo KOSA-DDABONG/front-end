@@ -6,7 +6,7 @@ import 'package:front/screen/my/my_review_list_screen.dart';
 import 'package:front/screen/my/my_trip_schedule_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/check_login_state.dart';
+import '../../controller/login_state.dart';
 import '../header/header.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../responsive.dart';
@@ -14,6 +14,7 @@ import '../header/header_drawer.dart';
 import 'my_side_menu.dart';
 
 class MyMenuScreen extends StatelessWidget {
+
   final Map<String, Widget> _screens = {
     'myEdit': MyInfoEditScreen(),
     'myInfo': MyInfoScreen(),

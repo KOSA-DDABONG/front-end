@@ -53,11 +53,11 @@ class SessionService {
     await storage.write(key: 'accessToken', value: accessToken);
   }
 
-  // User 가져오기. 값이 없을 경우 null 반환
-  static Future<User?> getUser() async {
-    final details = await loginDetails();
-    return details?.user;
-  }
+  // // User 가져오기. 값이 없을 경우 null 반환
+  // static Future<User?> getUser() async {
+  //   final details = await loginDetails();
+  //   return details;
+  // }
 
   static Future<bool> getBool(String key) async {
     final result = await storage.read(key: key);

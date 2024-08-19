@@ -9,7 +9,7 @@ class Comment {
 
   late final int postid;
   late final int travelid;
-  late final String memberid;
+  late final int memberid;
   late final int commentid2;
   late final String comcontent;
 
