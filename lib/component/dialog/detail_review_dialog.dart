@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/dto/hashtag/hashtag_model.dart';
 import 'package:front/responsive.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -13,6 +14,7 @@ void showDetailReviewDialog(
     int commentsNum,
     String? commentContent,
     List<Comment>? commentList,
+    List<Hashtag>? hashtagList
   ) {
   final PageController pageController = PageController();
 
@@ -353,7 +355,9 @@ void showDetailReviewDialog(
                                       child: Padding(
                                         padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
-                                          "#힐링 #호캉스 #해운대",
+                                          hashtagList != null
+                                              ? hashtagList.map((hashtag) => '#${hashtag.hashname}').toSet().join(' ')
+                                              : '',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.blueGrey,

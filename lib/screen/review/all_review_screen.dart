@@ -295,6 +295,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       result.value!.board.comcontentcount,
                       result.value?.board.content,
                       result.value?.commentList,
+                      result.value?.hashtagList
                     );
                   } else {
                     if (accessToken == null) {
@@ -472,6 +473,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                         result.value!.board.comcontentcount,
                         result.value?.board.content,
                         result.value?.commentList,
+                        result.value?.hashtagList
                       );
                     } else {
                       if (accessToken == null) {

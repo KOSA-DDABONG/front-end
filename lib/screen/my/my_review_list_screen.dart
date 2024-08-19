@@ -54,7 +54,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, 15, 1, 'hi', null);
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, 15, 1, 'hi', null, null);
       },
       child: Container(
         decoration: BoxDecoration(
