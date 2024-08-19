@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/controller/check_login_state.dart';
+import 'package:front/controller/login_state.dart';
 import 'package:front/responsive.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;

@@ -6,6 +6,7 @@ import '../../screen/contact/contact_screen.dart';
 import '../../screen/review/all_review_screen.dart';
 import '../../screen/start/landing_screen.dart';
 import '../../screen/trip/create_trip_screen.dart';
+import '../../service/session_service.dart';
 import '../mypage/my_menu.dart';
 
 class NotLoginHeaderDrawer extends StatelessWidget {
@@ -191,6 +192,7 @@ class AfterLoginHeaderDrawer extends StatelessWidget {
             alignment: Alignment.center,
             child: TextButton(
               onPressed: () {
+                SessionService.logout();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LandingScreen()),

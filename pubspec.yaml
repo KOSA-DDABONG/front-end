@@ -56,10 +56,6 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   http: ^1.2.2
   intl: ^0.19.0
-  amplify_flutter: ^2.3.0
-  amplify_core: ^2.3.0
-  amplify_analytics_pinpoint: ^2.3.0
-  amplify_auth_cognito: ^2.3.0
 
 
 dev_dependencies:
@@ -94,7 +90,30 @@ flutter:
     - assets/images/profile_pic.png
     - assets/images/tripflow_logo.png
     - assets/images/yellow_car.png
-
+    - assets/icons/doc_file.svg
+    - assets/icons/Documents.svg
+    - assets/icons/drop_box.svg
+    - assets/icons/excel_file.svg
+    - assets/icons/Figma_file.svg
+    - assets/icons/folder.svg
+    - assets/icons/google_drive.svg
+    - assets/icons/logo.svg
+    - assets/icons/media.svg
+    - assets/icons/media_file.svg
+    - assets/icons/menu_dashboard.svg
+    - assets/icons/menu_doc.svg
+    - assets/icons/menu_notification.svg
+    - assets/icons/menu_profile.svg
+    - assets/icons/menu_setting.svg
+    - assets/icons/menu_store.svg
+    - assets/icons/menu_task.svg
+    - assets/icons/menu_tran.svg
+    - assets/icons/one_drive.svg
+    - assets/icons/pdf_file.svg
+    - assets/icons/Search.svg
+    - assets/icons/sound_file.svg
+    - assets/icons/unknown.svg
+    - assets/icons/xd_file.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:front/dto/board/board_detail_response_model.dart';
+import 'package:front/dto/board/board_model.dart';
+import 'package:front/dto/comment/comment_request_model.dart';
+import 'package:front/dto/hashtag/hashtag_model.dart';
 import 'package:front/responsive.dart';
+import 'package:front/service/result.dart';
+import 'package:front/service/session_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../dto/comment/comment_model.dart';
@@ -9,12 +15,13 @@ void showDetailReviewDialog(
     BuildContext context,
     String imageUrl,
     String apiKey,
-    int likesNum,
-    int commentsNum,
-    String? commentContent,
-    List<Comment>? commentList,
+    Board review,
+    Result<BoardDetailResponseModel> result
   ) {
   final PageController pageController = PageController();
+  final TextEditingController commentController = TextEditingController();
+  List<Comment>? commentList = result.value?.commentList;
+  List<Hashtag>? hashtagList = result.value?.hashtagList;
 
   List<String> images = [
     imageUrl,
@@ -28,6 +35,15 @@ void showDetailReviewDialog(
     builder: (BuildContext context) {
       bool isLiked = false;
       bool showComments = false;
+      bool isButtonEnabled = false;
+
+      void updateButtonState(String text, StateSetter setState) {
+        final RegExp regex = RegExp(r'^\s*$'); // 공백만으로 이루어졌는지 검사
+        setState(() {
+          isButtonEnabled = !regex.hasMatch(text) && text.trim().isNotEmpty;
+        });
+      }
+
       if(Responsive.isNarrowWidth(context)) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -112,7 +128,8 @@ void showDetailReviewDialog(
                                     });
                                   },
                                 ),
-                                Text('$likesNum'),
+                                // Text('$likesNum'),
+                                Text('${result.value!.board.likecount}'),
                                 const SizedBox(width: 16),
                                 (!showComments)
                                 ? IconButton(
@@ -132,7 +149,8 @@ void showDetailReviewDialog(
                                     },
                                   ),
                                 const SizedBox(width: 8),
-                                Text('$commentsNum'),
+                                // Text('$commentsNum'),
+                                Text('${result.value!.board.comcontentcount}'),
                               ],
                             ),
                           ),
@@ -154,7 +172,8 @@ void showDetailReviewDialog(
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 8),
                                               child: Text(
-                                                "$commentContent",
+                                                // "$commentContent",
+                                                "${result.value?.board.content}",
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                             )
@@ -179,10 +198,9 @@ void showDetailReviewDialog(
                                     ),
                                   ],
                                   if (showComments) ...[
-                                    // 댓글 리스트
                                     ListView.builder(
                                       shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       itemCount: 100,
                                       itemBuilder: (context, index) {
                                         return Column(
@@ -228,6 +246,10 @@ void showDetailReviewDialog(
                             children: [
                               Expanded(
                                 child: TextField(
+                                  controller: commentController,
+                                  onChanged: (text) {
+                                    updateButtonState(text, setState);
+                                  },
                                   decoration: InputDecoration(
                                     hintText: '댓글을 입력하세요...',
                                     border: OutlineInputBorder(),
@@ -236,7 +258,47 @@ void showDetailReviewDialog(
                               ),
                               IconButton(
                                 icon: const Icon(Icons.send),
-                                onPressed: () {},
+                                onPressed: isButtonEnabled ? () async {
+                                  try {
+                                    final usermodel = await SessionService.loginDetails();
+                                    print("hhhhee " + usermodel.toString());
+                                    // final commentmodel = await CommentRequestModel(postid: review.postid, travelid: result.value!.board.travelid!, commentid2: 0, memberid: usermodel!.memberid, comcontent: commentController.text.trim());
+                                    // /
+                                    // if (result.value != null) {
+                                    //   savePreferences();
+                                    //
+                                    //   setState(() {
+                                    //     isApiCallProcess = false;
+                                    //   });
+                                    //
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(builder: (context) => LandingScreen()),
+                                    //   );
+                                    //
+                                    // }
+                                    // else {
+                                    //   setState(() {
+                                    //     isApiCallProcess = false;
+                                    //   });
+                                    //
+                                    //   ScaffoldMessenger.of(context).showSnackBar(
+                                    //     const SnackBar(
+                                    //       content: Text('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 확인해주세요.'),
+                                    //     ),
+                                    //   );
+                                    // }
+                                  } catch (e) {
+                                    // setState(() {
+                                    //   isApiCallProcess = false;
+                                    // });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('에러가 발생했습니다: $e'),
+                                      ),
+                                    );
+                                  }
+                                } : null
                               ),
                             ],
                           ),
@@ -342,8 +404,9 @@ void showDetailReviewDialog(
                                       child: Padding(
                                         padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
-                                          "$commentContent",
-                                          style: TextStyle(fontSize: 18),
+                                          // "$commentContent",
+                                          "${result.value?.board.content}",
+                                          style: const TextStyle(fontSize: 18),
                                           textAlign: TextAlign.left,
                                         ),
                                       ),
@@ -353,8 +416,10 @@ void showDetailReviewDialog(
                                       child: Padding(
                                         padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
-                                          "#힐링 #호캉스 #해운대",
-                                          style: TextStyle(
+                                          hashtagList != null
+                                              ? hashtagList.map((hashtag) => '#${hashtag.hashname}').toSet().join(' ')
+                                              : '',
+                                          style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.blueGrey,
                                           ),
@@ -384,12 +449,16 @@ void showDetailReviewDialog(
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    child: Text('$likesNum'),
+                                    child:
+                                    // Text('$likesNum'),
+                                    Text('${result.value?.board.likecount}'),
                                   ),
                                   const Icon(Icons.comment),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    child: Text('$commentsNum'),
+                                    child:
+                                    // Text('$commentsNum'),
+                                    Text('${result.value?.board.comcontentcount}'),
                                   ),
                                 ],
                               ),
@@ -434,9 +503,13 @@ void showDetailReviewDialog(
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                                 child: Row(
                                   children: [
-                                    const Expanded(
+                                    Expanded(
                                       child: TextField(
-                                        decoration: InputDecoration(
+                                        controller: commentController,
+                                        onChanged: (text) {
+                                          updateButtonState(text, setState);
+                                        },
+                                        decoration: const InputDecoration(
                                           hintText: '댓글을 입력하세요...',
                                           border: OutlineInputBorder(),
                                         ),
@@ -444,7 +517,10 @@ void showDetailReviewDialog(
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.send),
-                                      onPressed: () {},
+                                      onPressed: isButtonEnabled ? () async {
+                                        final usermodel = await SessionService.loginDetails();
+                                        print("hhhhee2 " + usermodel.toString());
+                                      } : null,
                                     ),
                                   ],
                                 ),

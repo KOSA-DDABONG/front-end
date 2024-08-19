@@ -3,7 +3,7 @@ import 'package:front/constants.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
-import '../../controller/check_login_state.dart';
+import '../../controller/login_state.dart';
 import '../../responsive.dart';
 
 class LoadingScreen extends StatefulWidget {

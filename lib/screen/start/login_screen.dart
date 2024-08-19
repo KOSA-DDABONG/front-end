@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/start/signup_screen.dart';
-import 'package:front/service/session_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
@@ -338,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
             });
             try {
               final model = LoginRequestModel(userId: userId, password: password);
-              final result = await SessionService.login(model);
+              final result = await UserService.login(model);
 
               if (result.value != null) {
                 savePreferences();
