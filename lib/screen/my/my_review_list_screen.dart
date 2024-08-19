@@ -6,8 +6,11 @@ import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/edit_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../dto/board/board_detail_response_model.dart';
+import '../../dto/board/board_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
+import '../../service/result.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({Key? key}) : super(key: key);
@@ -17,6 +20,9 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
+  late Board review;
+  late Result<BoardDetailResponseModel> result;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +60,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   Widget _myReviewCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, 15, 1, 'hi', null, null);
+        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, review, result);
       },
       child: Container(
         decoration: BoxDecoration(

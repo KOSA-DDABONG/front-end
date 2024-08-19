@@ -291,11 +291,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       context,
                       'assets/images/noImg.jpg',
                       GOOGLE_MAP_KEY,
-                      result.value!.board.likecount,
-                      result.value!.board.comcontentcount,
-                      result.value?.board.content,
-                      result.value?.commentList,
-                      result.value?.hashtagList
+                      review,
+                      result,
                     );
                   } else {
                     if (accessToken == null) {
@@ -469,11 +466,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                         context,
                         'assets/images/noImg.jpg',
                         GOOGLE_MAP_KEY,
-                        result.value!.board.likecount,
-                        result.value!.board.comcontentcount,
-                        result.value?.board.content,
-                        result.value?.commentList,
-                        result.value?.hashtagList
+                        review,
+                        result
                       );
                     } else {
                       if (accessToken == null) {
