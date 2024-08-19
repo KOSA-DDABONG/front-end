@@ -41,25 +41,21 @@ class UserService {
   // }
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
-    // final url = Uri.http(API_URL, Config.signupAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
-    print("&&& 1 halo: " + model.birth.toString());
-    print(model.toJson().toString());
+    final url = Uri.https(API_URL, Config.signupAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
 
     try {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-      print("&&& 2 : " + response.toString());
       return Result.success("Success");
     } catch (e) {
-      print("&&& 3 : " + e.toString());
       return Result.failure("[Signup] An Error Occurred: ${e}");
     }
   }
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-    // final url = Uri.http(API_URL, Config.loginAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
+    final url = Uri.https(API_URL, Config.loginAPI).toString();
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
@@ -84,7 +80,7 @@ class UserService {
     final accessToken = await SessionService.getAccessToken();
     // final refreshToken = await SessionService.getRefreshToken();
 
-    final url = Uri.http(API_URL, Config.sampleAPI).toString();
+    final url = Uri.https(API_URL, Config.sampleAPI).toString();
 
     final headers = {
       'Authorization': 'Bearer $accessToken',
@@ -110,7 +106,7 @@ class UserService {
   static Future<Result<User>> getUserProfile() async {
     final accessToken = await SessionService.getAccessToken();
     // final refreshToken = await SessionService.getRefreshToken();
-    final url = Uri.http(API_URL, Config.sampleAPI).toString();
+    final url = Uri.https(API_URL, Config.sampleAPI).toString();
     final headers = {
       'Authorization': 'Bearer $accessToken',
       // 'Cookie': 'XRT=$refreshToken',
@@ -141,7 +137,7 @@ class UserService {
       'email': email,
     };
 
-    final url = Uri.http(API_URL, Config.sampleAPI, parameters).toString();
+    final url = Uri.https(API_URL, Config.sampleAPI, parameters).toString();
 
     try {
       final response = await DioClient.sendRequest('POST', url);
@@ -171,7 +167,7 @@ class UserService {
       'token': token,
     };
 
-    final url = Uri.http(API_URL, Config.sampleAPI, parameters).toString();
+    final url = Uri.https(API_URL, Config.sampleAPI, parameters).toString();
 
     try {
       final response = await DioClient.sendRequest('POST', url);
