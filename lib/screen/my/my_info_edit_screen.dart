@@ -8,9 +8,15 @@ import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import '../../component/dialog/edit_number_dialog.dart';
 import '../../component/dialog/edit_pwd_dialog.dart';
+import '../../component/mypage/birth_format.dart';
 import '../../component/mypage/my_title.dart';
+import '../../component/mypage/phone_number_format.dart';
 import '../../component/mypage/profile_form_field.dart';
+import '../../component/snack_bar.dart';
+import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../dto/user/login/login_response_model.dart';
+import '../../service/session_service.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
   const MyInfoEditScreen({Key? key}) : super(key: key);
@@ -29,12 +35,58 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   String? password;
   String? checkpassword;
 
+  bool _isLoading = true;
+  bool _loginState = false;
+  LoginResponseModel? _userinfo = null;
+
   @override
   void initState() {
     super.initState();
+    _checkLoginUserInfo();
+    _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('myEdit');
     });
+  }
+
+  void _startLoadingTimeout() {
+    Future.delayed(const Duration(seconds: 5), () {
+      if (_isLoading) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _checkLoginUserInfo() async {
+    bool isLoggedIn = await checkLoginState(context);
+    if (isLoggedIn) {
+      setState(() {
+        _loginState = isLoggedIn;
+      });
+
+      try {
+        final usermodel = await SessionService.loginDetails();
+        if (usermodel!=null) { //유저정보 로드 성공
+          setState(() {
+            _userinfo = usermodel;
+            _isLoading = false;
+          });
+        }
+        else {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+      catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      }
+    }
   }
 
   Future<void> _getImage() async {
@@ -56,20 +108,61 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ProgressHUD(
-          inAsyncCall: isApiCallProcess,
-          opacity: 0.3,
-          key: UniqueKey(),
-          child: Form(
-            key: globalFormKey,
-            child: Responsive.isNarrowWidth(context)
-              ? profileEditNarrowUI(context)
-              : profileEditWideUI(context),
+    if(_loginState) {
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ProgressHUD(
+            inAsyncCall: isApiCallProcess,
+            opacity: 0.3,
+            key: UniqueKey(),
+            child: Form(
+              key: globalFormKey,
+              child: Responsive.isNarrowWidth(context)
+                  ? profileEditNarrowUI(context)
+                  : profileEditWideUI(context),
+            ),
           ),
         ),
+      );
+    }
+    else {
+      if (_isLoading) {
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          ),
+        );
+      }
+      else{
+        return Scaffold(
+          body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _notLoginEditUI()
+          ),
+        );
+      }
+    }
+  }
+
+  //로그인X
+  Widget _notLoginEditUI() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 정보 수정'),
+          const SizedBox(height: 200),
+          const Center(
+            child: Text(
+              '데이터를 불러올 수 없습니다.',
+            ),
+          ),
+          const SizedBox(height: 200),
+        ],
       ),
     );
   }
@@ -102,14 +195,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '이름',
-                  value: '{이름}',
+                  value: '${_userinfo?.username}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '이메일',
-                  value: '{이메일}',
+                  value: '${_userinfo?.email}',
                 ),
               ),
             ],
@@ -120,16 +213,16 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '전화번호',
-                  value: '{전화번호}',
+                  value: formatPhoneNumber('${_userinfo?.phoneNumber}'),
                   withEditButton: true,
-                  onEdit: () => showEditNumberDialog(context),
+                  onEdit: () => showEditNumberDialog(context, formatPhoneNumber('${_userinfo?.phoneNumber}')),
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '생년월일',
-                  value: '{생년월일}',
+                  value: formatDateOfBirth('${_userinfo?.birth}'),
                 ),
               ),
             ],
@@ -140,14 +233,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '닉네임',
-                  value: '{닉네임}',
+                  value: '${_userinfo?.nickname}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '아이디',
-                  value: '{아이디}',
+                  value: '${_userinfo?.userId}',
                 ),
               ),
             ],
@@ -194,14 +287,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormWideField(
                   label: '이름',
-                  value: '{이름}',
+                  value: '${_userinfo?.username}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormWideField(
                   label: '이메일',
-                  value: '{이메일}',
+                  value: '${_userinfo?.email}',
                 ),
               ),
             ],
@@ -212,16 +305,16 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormWideField(
                   label: '전화번호',
-                  value: '{전화번호}',
+                  value: formatPhoneNumber('${_userinfo?.phoneNumber}'),
                   withEditButton: true,
-                  onEdit: () => showEditNumberDialog(context),
+                  onEdit: () => showEditNumberDialog(context, formatPhoneNumber('${_userinfo?.phoneNumber}')),
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormWideField(
                   label: '생년월일',
-                  value: '{생년월일}',
+                  value: formatDateOfBirth('${_userinfo?.birth}'),
                 ),
               ),
             ],
@@ -232,14 +325,14 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormWideField(
                   label: '닉네임',
-                  value: '{닉네임}',
+                  value: '${_userinfo?.nickname}',
                 ),
               ),
               const SizedBox(width: 50),
               Expanded(
                 child: ProfileFormWideField(
                   label: '아이디',
-                  value: '{아이디}',
+                  value: '${_userinfo?.userId}',
                 ),
               ),
             ],

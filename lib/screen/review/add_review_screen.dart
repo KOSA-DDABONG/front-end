@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:front/component/snack_bar.dart';
+import 'package:front/screen/my/my_review_list_screen.dart';
 import '../../component/header/header_drawer.dart';
-import '../../controller/login_state.dart';
+import '../../controller/login_state_for_header.dart';
+import '../../dto/board/board_register_request_model.dart';
 import '../../key/key.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../component/header/header.dart';
 import '../../component/map/get_map.dart';
 import '../../responsive.dart';
+import '../../service/board_service.dart';
 
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({Key? key}) : super(key: key);
@@ -25,57 +29,109 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   final List<XFile?> _images = List<XFile?>.filled(5, null, growable: false);
   final ImagePicker _picker = ImagePicker();
   final List<String> _hashtags = [];
-  final List<String?> _imageUrls = List<String?>.filled(5, null, growable: false);
-  final List<File?> _imageFiles = List<File?>.filled(5, null, growable: false);
   final int _maxHashtags = 5;
   bool _showHashtagLimitError = false;
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
 
+  bool isButtonEnabled = false;
+
   @override
   void initState() {
     super.initState();
+    _textController.addListener(_updateButtonState);
   }
 
   @override
   void dispose() {
     _textController.dispose();
+    _hashtagController.dispose();
     super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      isButtonEnabled = _textController.text.trim().isNotEmpty &&
+          _images.any((image) => image != null);
+    });
+  }
+
+  // 이미지 선택 기능
+  void _pickImage(int index) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _images[index] = image;
+      });
+      _updateButtonState();  // Update button state after image selection
+    } else {
+      print('이미지 선택이 취소되었습니다.');
+    }
+  }
+
+  // 등록 버튼 클릭 시 호출되는 함수
+  void _submitReview() async {
+    BoardRegisterRequestModel model = BoardRegisterRequestModel(
+      content: _textController.text.trim(),
+      hashtags: _hashtags,
+      images: _images.where((image) => image != null).toList(), // 이미지 목록에서 null 제거
+    );
+    print('------------');
+    print(_textController.text.trim());
+    print(_hashtags);
+    print(_images.first?.path);
+    print('------------');
+
+    try {
+      final result = await BoardService.registerReview(model);
+
+      if (result.isSuccess) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyReviewListScreen()),
+        );
+      } else {
+        showCustomSnackBar(context, '등록에 실패하였습니다.');
+      }
+    } catch (e) {
+      print('An unexpected error occurred: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CheckLoginStateWidget(
-      builder: (context, isLoggedIn) {
-        PreferredSizeWidget currentAppBar;
-        Widget? currentDrawer;
-        if (isLoggedIn) {
-          currentAppBar = Responsive.isNarrowWidth(context)
-              ? ShortHeader(automaticallyImplyLeading: false)
-              : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-          currentDrawer = Responsive.isNarrowWidth(context)
-              ? AfterLoginHeaderDrawer()
-              : null;
-        }
-        else {
-          currentAppBar = Responsive.isNarrowWidth(context)
-              ? ShortHeader(automaticallyImplyLeading: false)
-              : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-          currentDrawer = Responsive.isNarrowWidth(context)
-              ? NotLoginHeaderDrawer()
-              : null;
-        }
+        builder: (context, isLoggedIn) {
+          PreferredSizeWidget currentAppBar;
+          Widget? currentDrawer;
+          if (isLoggedIn) {
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? AfterLoginHeaderDrawer()
+                : null;
+          }
+          else {
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? NotLoginHeaderDrawer()
+                : null;
+          }
 
-        return Scaffold(
-            appBar: currentAppBar,
-            drawer: currentDrawer,
-            extendBodyBehindAppBar: false,
-            backgroundColor: Colors.white,
-            body: Responsive.isNarrowWidth(context)
-                ? _addReviewNarrowUI()
-                : _addReviewWideUI()
-        );
-      }
+          return Scaffold(
+              appBar: currentAppBar,
+              drawer: currentDrawer,
+              extendBodyBehindAppBar: false,
+              backgroundColor: Colors.white,
+              body: Responsive.isNarrowWidth(context)
+                  ? _addReviewNarrowUI()
+                  : _addReviewWideUI()
+          );
+        }
     );
   }
 
@@ -205,7 +261,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         ),
       ),
       child: GetMap(
-        // apiKey: dotenv.get('GOOGLE_MAP_KEY'),
         apiKey: GOOGLE_MAP_KEY,
         origin: '37.819929,-122.478255',
         destination: '37.787994,-122.407437',
@@ -227,15 +282,13 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: Container(
-                  child: Container(
-                    height: 120,
-                    color: Colors.grey[500],
-                    child: _images[index] == null
-                        ? const Icon(Icons.camera_alt, color: Colors.white70,)
-                        : kIsWeb
-                        ? Image.network(_images[index]!.path, fit: BoxFit.cover)
-                        : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
-                  ),
+                  height: 120,
+                  color: Colors.grey[500],
+                  child: _images[index] == null
+                      ? const Icon(Icons.camera_alt, color: Colors.white70,)
+                      : kIsWeb
+                      ? Image.network(_images[index]!.path, fit: BoxFit.cover)
+                      : Image.file(File(_images[index]!.path), fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -245,29 +298,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     );
   }
 
-  //이미지 선택 기능
-  void _pickImage(int index) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      setState(() {
-        _images[index] = image;
-        if (kIsWeb) {
-          _imageUrls[index] = image.path;
-        } else {
-          _imageFiles[index] = File(image.path);
-        }
-      });
-    } else {
-      print('이미지 선택이 취소되었습니다.');
-    }
-  }
-
   //후기 내용 입력란
   Widget _buildReviewContentField({int? maxLength}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
+        controller: _textController,
         maxLines: 5,
         maxLength: maxLength,
         decoration: InputDecoration(
@@ -296,10 +332,10 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
             decoration: InputDecoration(
               hintText: '띄어쓰기 없이 입력하세요. ex) 힐링',
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 2.0), // 선택된 상태에서의 테두리 색상
+                borderSide: BorderSide(color: Colors.blue, width: 2.0),
               ),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 1.0), // 기본 상태에서의 테두리 색상
+                borderSide: BorderSide(color: Colors.grey, width: 1.0),
               ),
             ),
           ),
@@ -418,12 +454,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   Widget _submitBtnUI() {
     return Expanded(
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: isButtonEnabled ? _submitReview : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: isButtonEnabled ? Colors.blue : Colors.grey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-            side: const BorderSide(color: Colors.blue, width: 1.0),
+            side: BorderSide(color: isButtonEnabled ? Colors.blue : Colors.grey, width: 1.0),
           ),
           elevation: 0,
         ),

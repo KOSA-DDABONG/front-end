@@ -3,6 +3,7 @@ import 'package:front/dto/board/board_detail_response_model.dart';
 import 'package:front/dto/board/board_model.dart';
 import 'package:front/dto/comment/comment_request_model.dart';
 import 'package:front/dto/hashtag/hashtag_model.dart';
+import 'package:front/dto/image/image_model.dart';
 import 'package:front/responsive.dart';
 import 'package:front/service/result.dart';
 import 'package:front/service/session_service.dart';
@@ -20,15 +21,9 @@ void showDetailReviewDialog(
   ) {
   final PageController pageController = PageController();
   final TextEditingController commentController = TextEditingController();
-  List<Comment>? commentList = result.value?.commentList;
-  List<Hashtag>? hashtagList = result.value?.hashtagList;
-
-  List<String> images = [
-    imageUrl,
-    'assets/images/noImg.jpg',
-    'assets/images/login_background.png',
-    'assets/images/noImg.jpg',
-  ];
+  List<CommentModel>? commentList = result.value?.commentList;
+  List<HashtagModel>? hashtagList = result.value?.hashtagList;
+  List<ImageModel>? imageList = result.value?.imageList;
 
   showDialog(
     context: context,
@@ -70,21 +65,34 @@ void showDetailReviewDialog(
                                 children: [
                                   PageView(
                                     controller: pageController,
-                                    children: images.map((image) {
-                                      return ClipRRect(
-                                        borderRadius: BorderRadius.circular(5.0),
-                                        child: Image.asset(
-                                          image,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      );
-                                    }).toList(),
+                                    children: imageList != null && imageList.isNotEmpty
+                                      ? imageList.map((imageModel) {
+                                          return ClipRRect(
+                                            borderRadius: BorderRadius.circular(5.0),
+                                            child: Image.network(
+                                              imageModel.url,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Image.asset('assets/images/noImg.jpg'); // 대체 이미지
+                                              },
+                                            ),
+                                          );
+                                        }).toList()
+                                      : [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(5.0),
+                                            child: Image.asset(
+                                              'assets/images/noImg.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ],
                                   ),
                                   Positioned(
                                     bottom: 8.0,
                                     child: SmoothPageIndicator(
                                       controller: pageController,
-                                      count: images.length,
+                                      count: imageList?.length ?? 1,
                                       effect: const WormEffect(
                                         dotHeight: 8.0,
                                         dotWidth: 8.0,
@@ -340,21 +348,34 @@ void showDetailReviewDialog(
                                   children: [
                                     PageView(
                                       controller: pageController,
-                                      children: images.map((image) {
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.circular(5.0),
-                                          child: Image.asset(
-                                            image,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        );
-                                      }).toList(),
+                                      children: imageList != null && imageList.isNotEmpty
+                                        ? imageList.map((imageModel) {
+                                            return ClipRRect(
+                                              borderRadius: BorderRadius.circular(5.0),
+                                              child: Image.network(
+                                                imageModel.url,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return Image.asset('assets/images/noImg.jpg'); // 대체 이미지
+                                                },
+                                                fit: BoxFit.cover,
+                                              ),
+                                            );
+                                          }).toList()
+                                        : [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(5.0),
+                                              child: Image.asset(
+                                                'assets/images/noImg.jpg',
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ],
                                     ),
                                     Positioned(
                                       bottom: 8.0,
                                       child: SmoothPageIndicator(
                                         controller: pageController,
-                                        count: images.length,
+                                        count: imageList?.length ?? 1,
                                         effect: const WormEffect(
                                           dotHeight: 8.0,
                                           dotWidth: 8.0,

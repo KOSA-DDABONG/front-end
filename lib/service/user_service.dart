@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:front/service/result.dart';
-import 'package:intl/intl.dart';
 
 import '../config.dart';
 import '../dto/user/login/login_request_model.dart';
@@ -54,8 +53,8 @@ class UserService {
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-    // final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
     final url = Uri.https(API_URL, Config.loginAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
@@ -99,33 +98,6 @@ class UserService {
         return Result.success(true);
       }
       return Result.failure("Logout failed");
-    } catch (e) {
-      return Result.failure("An error occurred: $e");
-    }
-  }
-
-  //사용자 프로필 조회
-  static Future<Result<User>> getUserProfile() async {
-    final accessToken = await SessionService.getAccessToken();
-    // final refreshToken = await SessionService.getRefreshToken();
-    final url = Uri.https(API_URL, Config.sampleAPI).toString();
-    final headers = {
-      'Authorization': 'Bearer $accessToken',
-      // 'Cookie': 'XRT=$refreshToken',
-    };
-
-    try {
-      final response = await DioClient.sendRequest(
-        'GET',
-        url,
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        final user = User.fromJson(response.data as Map<String, dynamic>);
-        return Result.success(user);
-      }
-      return Result.failure("Failed to get user profile");
     } catch (e) {
       return Result.failure("An error occurred: $e");
     }

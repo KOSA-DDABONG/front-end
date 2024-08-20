@@ -15,8 +15,6 @@ class LoginResponseModel {
     required this.createdTime,
     required this.recessAccess,
     required this.accessToken,
-    // required this.refreshToken,
-    // required this.user,
   });
 
   late final String username;
@@ -28,8 +26,6 @@ class LoginResponseModel {
   late final String createdTime;
   late final String recessAccess;
   late final String accessToken;
-  // late final String refreshToken;
-  // late final User user;
 
   LoginResponseModel.fromJson(Map<String, dynamic> json) {
     username = json['username'];
@@ -41,8 +37,6 @@ class LoginResponseModel {
     createdTime = json['createdTime'];
     recessAccess = json['recessAccess'];
     accessToken = json['jwtToken'];
-    // refreshToken = json['refreshToken'];
-    // user = User.fromJson(json['user']);
   }
 
   Map<String, dynamic> toJson() {
@@ -56,8 +50,6 @@ class LoginResponseModel {
     _data['createdTime'] = createdTime;
     _data['recessAccess'] = recessAccess;
     _data['jwtToken'] = accessToken;
-    // _data['refreshToken'] = refreshToken;
-    // _data['user'] = user.toJson();
     return _data;
   }
 }

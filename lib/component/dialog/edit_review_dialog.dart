@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front/component/map/get_map.dart';
+import 'package:front/responsive.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../key/key.dart';
@@ -47,77 +48,130 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-          child: _editReviewDialogUI(),
+    if(Responsive.isNarrowWidth(context)) {
+      return Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
         ),
-      ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+            child: _addReviewNarrowUI(),
+          ),
+        ),
+      );
+    }
+    else {
+      return Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+            child: _addReviewWideUI(),
+          ),
+        ),
+      );
+    }
+  }
+
+  //후기 작성 페이지 UI(화면 좁을 때)
+  Widget _addReviewNarrowUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        Expanded(
+          flex: 15,
+          child: _addReviewPageUI(),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ],
     );
   }
 
-  //후기 수정 Dialog UI
-  Widget _editReviewDialogUI() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 100.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _titleText(),
-            const SizedBox(height: 20),
-            _subtitleText('일정 지도'),
-            const SizedBox(height: 10,),
-            _mapUI(),
-            const SizedBox(height: 20),
-            _subtitleText('사진 업로드'),
-            const SizedBox(height: 10,),
-            _imageSelectUI(),
-            const SizedBox(height: 20),
-            _subtitleText('후기 작성'),
-            const SizedBox(height: 10,),
-            _buildReviewContentField(maxLength: 100),
-            const SizedBox(height: 20),
-            _subtitleText('해시태그 입력'),
-            const SizedBox(height: 10),
-            _hashtagField(),
-            const SizedBox(height: 10),
-            if (_showNoHashtagError)
-              const Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '입력된 해시태그가 없습니다.',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            if (_showHashtagLimitError)
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-            if (_showDuplicateHashtagError)
-              const Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '이미 존재하는 해시태그입니다.',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            const SizedBox(height: 20),
-            _hashtagBtnUI(),
-            const SizedBox(height: 30),
-            _buttonField(),
-            const SizedBox(height: 50),
-          ],
+  //후기 작성 페이지 UI(화면 넓을 때)
+  Widget _addReviewWideUI() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(),
         ),
+        Expanded(
+          flex: 6,
+          child: _addReviewPageUI(),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+      ],
+    );
+  }
+
+  //후기 작성 페이지 UI
+  Widget _addReviewPageUI() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _titleText(),
+          const SizedBox(height: 20),
+          _subtitleText('일정 지도'),
+          const SizedBox(height: 10,),
+          _mapUI(),
+          const SizedBox(height: 20),
+          _subtitleText('사진 업로드'),
+          const SizedBox(height: 10,),
+          _imageSelectUI(),
+          const SizedBox(height: 20),
+          _subtitleText('후기 작성'),
+          const SizedBox(height: 10,),
+          _buildReviewContentField(maxLength: 100),
+          const SizedBox(height: 20),
+          _subtitleText('해시태그 입력'),
+          const SizedBox(height: 10),
+          _hashtagField(),
+          const SizedBox(height: 10),
+          if (_showNoHashtagError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '입력된 해시태그가 없습니다.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          if (_showHashtagLimitError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '달 수 있는 해시태그의 개수는 최대 $_maxHashtags개 입니다.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          if (_showDuplicateHashtagError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '이미 존재하는 해시태그입니다.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          const SizedBox(height: 20),
+          _hashtagBtnUI(),
+          const SizedBox(height: 30),
+          _buttonField(),
+          const SizedBox(height: 50),
+        ],
       ),
     );
   }
