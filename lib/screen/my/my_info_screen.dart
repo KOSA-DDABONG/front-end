@@ -17,24 +17,32 @@ class MyInfoScreen extends StatefulWidget {
 }
 
 class _MyInfoScreenState extends State<MyInfoScreen> {
+  bool _isLoading = true;
+  bool _loginState = false;
+  LoginResponseModel? _userinfo = null;
 
   @override
   void initState() {
     super.initState();
-    _checkLogin();
+    _checkLoginUserInfo();
+    _startLoadingTimeout(); // 로딩 시간 제한을 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('myInfo');
     });
   }
 
-  bool _isLoading = true;
-  bool _isLoadFailed = false;
-  bool _loginState = false;
-  LoginResponseModel? _userinfo = null;
+  void _startLoadingTimeout() {
+    Future.delayed(const Duration(seconds: 5), () {
+      if (_isLoading) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
 
-  Future<void> _checkLogin() async {
+  Future<void> _checkLoginUserInfo() async {
     bool isLoggedIn = await checkLoginState(context);
-
     if (isLoggedIn) {
       setState(() {
         _loginState = isLoggedIn;
@@ -42,25 +50,19 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
       try {
         final usermodel = await SessionService.loginDetails();
-        print("!@!@!@!@ 1: " + usermodel.toString());
-        if (usermodel!=null) { //유저정보 로드 성공
+        if (usermodel != null) { // 유저정보 로드 성공
           setState(() {
             _userinfo = usermodel;
             _isLoading = false;
           });
-          print("!@!@!@!@ 2: " + _userinfo.toString());
-        }
-        else {
+        } else {
           setState(() {
             _isLoading = false;
-            _isLoadFailed = true;
           });
         }
-      }
-      catch (e) {
+      } catch (e) {
         setState(() {
           _isLoading = false;
-          _isLoadFailed = true; // 실패 상태로 설정
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -73,24 +75,115 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_loginState) {
+    if (_loginState) {
       return Scaffold(
         body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Responsive.isNarrowWidth(context)
-                ? _profileNarrowUI(context) : _profileWideUI(context)
+          padding: const EdgeInsets.all(16.0),
+          child: Responsive.isNarrowWidth(context)
+              ? _profileNarrowUI(context)
+              : _profileWideUI(context),
         ),
       );
-    }
-    else {
-      return Scaffold(
-        body: Padding(
+    } else {
+      if (_isLoading) {
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          ),
+        );
+      } else {
+        return Scaffold(
+          body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _notLoginProfileUI()
-        ),
-      );
+            child: _notLoginProfileUI(),
+          ),
+        );
+      }
     }
   }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _checkLoginUserInfo();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     context.read<MyMenuController>().setSelectedScreen('myInfo');
+  //   });
+  // }
+  //
+  // bool _isLoading = true;
+  // bool _isLoadFailed = false;
+  // bool _loginState = false;
+  // LoginResponseModel? _userinfo = null;
+  //
+  // Future<void> _checkLoginUserInfo() async {
+  //   bool isLoggedIn = await checkLoginState(context);
+  //   if (isLoggedIn) {
+  //     setState(() {
+  //       _loginState = isLoggedIn;
+  //     });
+  //
+  //     try {
+  //       final usermodel = await SessionService.loginDetails();
+  //       if (usermodel!=null) { //유저정보 로드 성공
+  //         setState(() {
+  //           _userinfo = usermodel;
+  //           _isLoading = false;
+  //         });
+  //       }
+  //       else {
+  //         setState(() {
+  //           _isLoading = false;
+  //           _isLoadFailed = true;
+  //         });
+  //       }
+  //     }
+  //     catch (e) {
+  //       setState(() {
+  //         _isLoading = false;
+  //         _isLoadFailed = true; // 실패 상태로 설정
+  //       });
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
+  //
+  // @override
+  // Widget build(BuildContext context) {
+  //   if(_loginState) {
+  //     return Scaffold(
+  //       body: Padding(
+  //           padding: const EdgeInsets.all(16.0),
+  //           child: Responsive.isNarrowWidth(context)
+  //               ? _profileNarrowUI(context) : _profileWideUI(context)
+  //       ),
+  //     );
+  //   }
+  //   else {
+  //     if(_isLoading) {
+  //       return Scaffold(
+  //         body: Center(
+  //           child: CircularProgressIndicator(
+  //             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //     else {
+  //       return Scaffold(
+  //         body: Padding(
+  //             padding: const EdgeInsets.all(16.0),
+  //             child: _notLoginProfileUI()
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   //로그인X
   Widget _notLoginProfileUI() {

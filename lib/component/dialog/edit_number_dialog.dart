@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../snack_bar.dart';
 
-void showEditNumberDialog(BuildContext context) {
+void showEditNumberDialog(BuildContext context, String phoneNumber) {
   final TextEditingController phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -32,9 +32,9 @@ void showEditNumberDialog(BuildContext context) {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 20),
-                    const Row(
+                    Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Text(
                             '현재 전화번호',
                             style: TextStyle(fontSize: 15),
@@ -44,8 +44,8 @@ void showEditNumberDialog(BuildContext context) {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              '01000000000',
-                              style: TextStyle(fontSize: 15),
+                              phoneNumber,
+                              style: const TextStyle(fontSize: 15),
                             ),
                           ),
                         ),
