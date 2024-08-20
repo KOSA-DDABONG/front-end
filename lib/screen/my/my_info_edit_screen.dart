@@ -12,6 +12,7 @@ import '../../component/mypage/birth_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/mypage/phone_number_format.dart';
 import '../../component/mypage/profile_form_field.dart';
+import '../../component/snack_bar.dart';
 import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/user/login/login_response_model.dart';
@@ -83,11 +84,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-          ),
-        );
+        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
     }
   }
@@ -131,7 +128,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
     }
     else {
       if (_isLoading) {
-        return Scaffold(
+        return const Scaffold(
           body: Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),

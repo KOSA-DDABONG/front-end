@@ -10,7 +10,9 @@ import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
-import '../../controller/login_state.dart';
+import '../../component/snack_bar.dart';
+import '../../controller/check_login_state.dart';
+import '../../controller/login_state_for_header.dart';
 import '../../dto/board/board_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
@@ -30,30 +32,38 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   bool _isContestExpanded = false;
 
   bool _isLoading = true;
-  bool _isLoadFailed = false;
+  bool _loginState = false;
   List<Board> _allReviews = [];
   List<Board> _rankReviews = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
     _loadReviewLists();
+    _startLoadingTimeout();
+    _tabController = TabController(length: 4, vsync: this);
   }
 
-  Future<void> _loadReviewLists() async {
-    // 로딩 실패를 감지할 타이머
-    final timer = Timer(Duration(seconds: 5), () {
-      if (mounted) {
+  void _startLoadingTimeout() {
+    Future.delayed(const Duration(seconds: 5), () {
+      if (_isLoading) {
         setState(() {
-          _isLoadFailed = _isLoading;
+          _isLoading = false;
         });
       }
     });
+  }
+
+  Future<void> _loadReviewLists() async {
+    bool isLoggedIn = await checkLoginState(context);
+    if(isLoggedIn) {
+      setState(() {
+        _loginState = isLoggedIn;
+      });
+    }
 
     try {
       final result = await BoardService.getReviewList();
-
       if (result.isSuccess) {
         setState(() {
           _allReviews = result.value?.boardList ?? [];
@@ -64,60 +74,135 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       else {
         setState(() {
           _isLoading = false;
-          _isLoadFailed = true;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('데이터를 불러오는 데 실패하였습니다.'),
-          ),
-        );
       }
     }
     catch (e) {
       setState(() {
         _isLoading = false;
-        _isLoadFailed = true; // 실패 상태로 설정
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-        ),
-      );
-    }
-    finally {
-      timer.cancel();
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return CheckLoginStateWidget(
-      builder: (context, isLoggedIn) {
-        PreferredSizeWidget currentAppBar;
-        Widget? currentDrawer;
-        if (isLoggedIn) {
-          currentAppBar = Responsive.isNarrowWidth(context)
-              ? ShortHeader(automaticallyImplyLeading: false)
-              : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-          currentDrawer = Responsive.isNarrowWidth(context)
-              ? AfterLoginHeaderDrawer()
-              : null;
-        }
-        else {
-          currentAppBar = Responsive.isNarrowWidth(context)
-              ? ShortHeader(automaticallyImplyLeading: false)
-              : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-          currentDrawer = Responsive.isNarrowWidth(context)
-              ? NotLoginHeaderDrawer()
-              : null;
-        }
+    if(_loginState) {
+      return CheckLoginStateWidget(
+          builder: (context, isLoggedIn) {
+            PreferredSizeWidget currentAppBar;
+            Widget? currentDrawer;
+            if (isLoggedIn) {
+              currentAppBar = Responsive.isNarrowWidth(context)
+                  ? ShortHeader(automaticallyImplyLeading: false)
+                  : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+              currentDrawer = Responsive.isNarrowWidth(context)
+                  ? AfterLoginHeaderDrawer()
+                  : null;
+            }
+            else {
+              currentAppBar = Responsive.isNarrowWidth(context)
+                  ? ShortHeader(automaticallyImplyLeading: false)
+                  : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+              currentDrawer = Responsive.isNarrowWidth(context)
+                  ? NotLoginHeaderDrawer()
+                  : null;
+            }
 
-        return Scaffold(
-            appBar: currentAppBar,
-            drawer: currentDrawer,
-            body: _allReviewPageUI()
+            return Scaffold(
+                appBar: currentAppBar,
+                drawer: currentDrawer,
+                body: _allReviewPageUI()
+            );
+          }
+      );
+    }
+    else {
+      if(_isLoading) {
+        return CheckLoginStateWidget(
+            builder: (context, isLoggedIn) {
+              PreferredSizeWidget currentAppBar;
+              Widget? currentDrawer;
+              if (isLoggedIn) {
+                currentAppBar = Responsive.isNarrowWidth(context)
+                    ? ShortHeader(automaticallyImplyLeading: false)
+                    : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+                currentDrawer = Responsive.isNarrowWidth(context)
+                    ? AfterLoginHeaderDrawer()
+                    : null;
+              }
+              else {
+                currentAppBar = Responsive.isNarrowWidth(context)
+                    ? ShortHeader(automaticallyImplyLeading: false)
+                    : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+                currentDrawer = Responsive.isNarrowWidth(context)
+                    ? NotLoginHeaderDrawer()
+                    : null;
+              }
+
+              return Scaffold(
+                appBar: currentAppBar,
+                drawer: currentDrawer,
+                body: Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  ),
+                ),
+              );
+            }
         );
       }
+      else {
+        return CheckLoginStateWidget(
+            builder: (context, isLoggedIn) {
+              PreferredSizeWidget currentAppBar;
+              Widget? currentDrawer;
+              if (isLoggedIn) {
+                currentAppBar = Responsive.isNarrowWidth(context)
+                    ? ShortHeader(automaticallyImplyLeading: false)
+                    : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+                currentDrawer = Responsive.isNarrowWidth(context)
+                    ? AfterLoginHeaderDrawer()
+                    : null;
+              }
+              else {
+                currentAppBar = Responsive.isNarrowWidth(context)
+                    ? ShortHeader(automaticallyImplyLeading: false)
+                    : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+                currentDrawer = Responsive.isNarrowWidth(context)
+                    ? NotLoginHeaderDrawer()
+                    : null;
+              }
+
+              return Scaffold(
+                  appBar: currentAppBar,
+                  drawer: currentDrawer,
+                  body: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _notLoginAllReviewUI(),
+                  ),
+              );
+            }
+        );
+      }
+    }
+  }
+
+  Widget _notLoginAllReviewUI() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 200),
+          const Center(
+            child: Text(
+              '데이터를 불러올 수 없습니다.',
+            ),
+          ),
+          const SizedBox(height: 200),
+        ],
+      ),
     );
   }
 
@@ -323,20 +408,11 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                         },
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              '정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.'),
-                        ),
-                      );
+                      showCustomSnackBar(context, '정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
                     }
                   }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('에러가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-                    ),
-                  );
+                  showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
                 }
               },
               child: Column(
@@ -429,117 +505,94 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //전체 후기 내용 영역
   Widget _allReviewContentUI() {
-    if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: Colors.blue),
-      );
-    }
-    else if (_isLoadFailed) {
-      return const Center(
-        child: Text(
-          '정보를 불러올 수 없습니다.\n',
-        ),
-      );
-    }
-    else {
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          int crossAxisCount = (constraints.maxWidth / 150).floor();
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-            ),
-            itemCount: _allReviews.length,
-            itemBuilder: (context, index) {
-              final review = _allReviews[index];
-              return GestureDetector(
-                onTap: () async {
-                  try {
-                    final result = await BoardService.getReviewInfo(review.postid.toString());
-                    final accessToken = await SessionService.getAccessToken();
-                    if (result.value?.status == 200 /*result.value != null*/) {
-                      showDetailReviewDialog(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount = (constraints.maxWidth / 150).floor();
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+          ),
+          itemCount: _allReviews.length,
+          itemBuilder: (context, index) {
+            final review = _allReviews[index];
+            return GestureDetector(
+              onTap: () async {
+                try {
+                  final result = await BoardService.getReviewInfo(review.postid.toString());
+                  final accessToken = await SessionService.getAccessToken();
+                  if (result.value?.status == 200 /*result.value != null*/) {
+                    showDetailReviewDialog(
                         context,
                         'assets/images/noImg.jpg',
                         GOOGLE_MAP_KEY,
                         review,
                         result
-                      );
-                    } else {
-                      if (accessToken == null) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('메세지'),
-                              content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('취소'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginScreen()),
-                                    );
-                                  },
-                                  child: Text('로그인'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.'),
-                          ),
-                        );
-                      }
-                    }
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('에러가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-                      ),
                     );
-                  }
-                },
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              'assets/images/noImg.jpg',
-                              fit: BoxFit.cover,
-                              width: constraints.maxWidth,
-                              height: constraints.maxWidth * 3 / 4,
-                            ),
+                  } else {
+                    if (accessToken == null) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('메세지'),
+                            content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('취소'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()),
+                                  );
+                                },
+                                child: Text('로그인'),
+                              ),
+                            ],
                           );
                         },
-                      ),
+                      );
+                    } else {
+                      showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
+                    }
+                  }
+                } catch (e) {
+                  showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                }
+              },
+              child: Column(
+                children: [
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            'assets/images/noImg.jpg',
+                            fit: BoxFit.cover,
+                            width: constraints.maxWidth,
+                            height: constraints.maxWidth * 3 / 4,
+                          ),
+                        );
+                      },
                     ),
-                    _reviewInfoUI(review),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      );
-    }
+                  ),
+                  _reviewInfoUI(review),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   //게시물 정보(좋아요수, 댓글수)

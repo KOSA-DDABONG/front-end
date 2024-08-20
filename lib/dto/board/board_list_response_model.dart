@@ -19,8 +19,8 @@ class BoardListResponseModel {
   BoardListResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
-    topList = (json['data1'] as List<dynamic>?)?.map((item) => Board.fromJson(item)).toList(); // data2에서 리스트 추출
-    boardList = (json['data2'] as List<dynamic>?)?.map((item) => Board.fromJson(item)).toList(); // data2에서 리스트 추출
+    topList = (json['top3'] as List<dynamic>?)?.map((item) => Board.fromJson(item)).toList(); // top3에서 리스트 추출
+    boardList = (json['recentboard'] as List<dynamic>?)?.map((item) => Board.fromJson(item)).toList(); // recentboard에서 리스트 추출
   }
 
   //BoardResponseModel을 JSON으로 변환
@@ -28,8 +28,8 @@ class BoardListResponseModel {
     final _data = <String, dynamic>{};
     _data['message'] = message;
     _data['status'] = status;
-    _data['data2'] = boardList?.map((board) => board.toJson()).toList(); // 리스트를 data1에 포함
-    _data['data2'] = boardList?.map((board) => board.toJson()).toList(); // 리스트를 data2에 포함
+    _data['top3'] = boardList?.map((board) => board.toJson()).toList(); // 리스트를 data1에 포함
+    _data['recentboard'] = boardList?.map((board) => board.toJson()).toList(); // 리스트를 data2에 포함
     return _data;
   }
 }

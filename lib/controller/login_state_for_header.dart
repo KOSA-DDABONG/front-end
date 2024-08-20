@@ -1,4 +1,3 @@
-// login_state.dart
 import 'package:flutter/material.dart';
 import 'package:front/service/session_service.dart';
 

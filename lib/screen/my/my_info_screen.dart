@@ -3,7 +3,9 @@ import 'package:front/constants.dart';
 import 'package:front/responsive.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/dialog/request_login_dialog.dart';
 import '../../component/mypage/my_title.dart';
+import '../../component/snack_bar.dart';
 import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/user/login/login_response_model.dart';
@@ -19,7 +21,8 @@ class MyInfoScreen extends StatefulWidget {
 class _MyInfoScreenState extends State<MyInfoScreen> {
   bool _isLoading = true;
   bool _loginState = false;
-  LoginResponseModel? _userinfo = null;
+  LoginResponseModel? _userinfo;
+  bool _dialogShown  = false;
 
   @override
   void initState() {
@@ -64,12 +67,14 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-          ),
-        );
+        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
+    } else {
+        if (!_dialogShown) {
+          _dialogShown = true;
+          await showRequestLoginDialog(context);
+          _dialogShown = false;
+        }
     }
   }
 
@@ -86,7 +91,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       );
     } else {
       if (_isLoading) {
-        return Scaffold(
+        return const Scaffold(
           body: Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -103,87 +108,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       }
     }
   }
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _checkLoginUserInfo();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     context.read<MyMenuController>().setSelectedScreen('myInfo');
-  //   });
-  // }
-  //
-  // bool _isLoading = true;
-  // bool _isLoadFailed = false;
-  // bool _loginState = false;
-  // LoginResponseModel? _userinfo = null;
-  //
-  // Future<void> _checkLoginUserInfo() async {
-  //   bool isLoggedIn = await checkLoginState(context);
-  //   if (isLoggedIn) {
-  //     setState(() {
-  //       _loginState = isLoggedIn;
-  //     });
-  //
-  //     try {
-  //       final usermodel = await SessionService.loginDetails();
-  //       if (usermodel!=null) { //유저정보 로드 성공
-  //         setState(() {
-  //           _userinfo = usermodel;
-  //           _isLoading = false;
-  //         });
-  //       }
-  //       else {
-  //         setState(() {
-  //           _isLoading = false;
-  //           _isLoadFailed = true;
-  //         });
-  //       }
-  //     }
-  //     catch (e) {
-  //       setState(() {
-  //         _isLoading = false;
-  //         _isLoadFailed = true; // 실패 상태로 설정
-  //       });
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text('문제가 발생했습니다. 잠시 후 다시 시도해주세요.'),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-  //
-  // @override
-  // Widget build(BuildContext context) {
-  //   if(_loginState) {
-  //     return Scaffold(
-  //       body: Padding(
-  //           padding: const EdgeInsets.all(16.0),
-  //           child: Responsive.isNarrowWidth(context)
-  //               ? _profileNarrowUI(context) : _profileWideUI(context)
-  //       ),
-  //     );
-  //   }
-  //   else {
-  //     if(_isLoading) {
-  //       return Scaffold(
-  //         body: Center(
-  //           child: CircularProgressIndicator(
-  //             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-  //           ),
-  //         ),
-  //       );
-  //     }
-  //     else {
-  //       return Scaffold(
-  //         body: Padding(
-  //             padding: const EdgeInsets.all(16.0),
-  //             child: _notLoginProfileUI()
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
 
   //로그인X
   Widget _notLoginProfileUI() {

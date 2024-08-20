@@ -12,12 +12,12 @@ class CommentResponseModel {
 
   late final String message;
   late final int status;
-  late final Comment commentinfo;
+  late final CommentModel commentinfo;
 
   CommentResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
-    commentinfo = Comment.fromJson(json['data']);
+    commentinfo = CommentModel.fromJson(json['data']);
   }
 
   //CommentResponseModel을 JSON으로 변환

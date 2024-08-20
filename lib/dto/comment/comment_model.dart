@@ -1,5 +1,5 @@
-class Comment {
-  Comment({
+class CommentModel {
+  CommentModel({
     required this.postid,
     required this.travelid,
     required this.memberid,
@@ -25,8 +25,8 @@ class Comment {
       }''';
   }
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment(
+  factory CommentModel.fromJson(Map<String, dynamic> json) {
+    return CommentModel(
       postid: json['postid'] ?? '',
       travelid: json['travelid'] ?? '',
       memberid: json['memberid'] ?? '',

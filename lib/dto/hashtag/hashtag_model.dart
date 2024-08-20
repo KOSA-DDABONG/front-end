@@ -1,5 +1,5 @@
-class Hashtag {
-  Hashtag({
+class HashtagModel {
+  HashtagModel({
     required this.hashname,
   });
 
@@ -13,8 +13,8 @@ class Hashtag {
       }''';
   }
 
-  factory Hashtag.fromJson(Map<String, dynamic> json) {
-    return Hashtag(
+  factory HashtagModel.fromJson(Map<String, dynamic> json) {
+    return HashtagModel(
       hashname: json['hashname'] ?? ''
     );
   }
