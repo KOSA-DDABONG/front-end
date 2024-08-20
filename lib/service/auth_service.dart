@@ -77,7 +77,7 @@ class TokenInterceptor extends Interceptor {
       // Check if the retry count has reached its limit
       retryCount = 0; // Reset the retry count
       // Do something to handle too many failed retries, for example:
-      return handler.next(DioError(
+      return handler.next(DioException(
           requestOptions: err.requestOptions,
           error: "Maximum retry limit reached."));
     }
