@@ -1,5 +1,3 @@
-import 'board_model.dart';
-
 BoardRegisterResponseModel boardRegisterResponseJson(Map<String, dynamic> json) =>
     BoardRegisterResponseModel.fromJson(json);
 

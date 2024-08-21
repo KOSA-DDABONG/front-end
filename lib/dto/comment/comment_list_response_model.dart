@@ -1,10 +1,10 @@
-import 'package:front/dto/comment/comment_info_model.dart';
+import '../comment/comment_list_model.dart';
 
-CommentResponseModel commentResponseJson(Map<String, dynamic> json) =>
-    CommentResponseModel.fromJson(json);
+CommentListResponseModel commentListResponseJson(Map<String, dynamic> json) =>
+    CommentListResponseModel.fromJson(json);
 
-class CommentResponseModel {
-  CommentResponseModel({
+class CommentListResponseModel {
+  CommentListResponseModel({
     required this.message,
     required this.status,
     required this.commentinfo,
@@ -12,12 +12,12 @@ class CommentResponseModel {
 
   late final String message;
   late final int status;
-  late final CommentInfoModel commentinfo;
+  late final CommentListModel commentinfo;
 
-  CommentResponseModel.fromJson(Map<String, dynamic> json) {
+  CommentListResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
-    commentinfo = CommentInfoModel.fromJson(json['data']);
+    commentinfo = CommentListModel.fromJson(json['data']);
   }
 
   //CommentResponseModel을 JSON으로 변환

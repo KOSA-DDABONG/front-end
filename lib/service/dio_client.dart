@@ -3,16 +3,16 @@ import 'package:dio/dio.dart';
 class DioClient {
   static final Dio client = Dio(
     BaseOptions(
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 50),
+      receiveTimeout: const Duration(seconds: 50),
     ),
   );
 
   //JSON 헤더 설정
-  static const Map<String, String> jsonHeaders = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-  };
+  // static const Map<String, String> jsonHeaders = {
+  //   'Content-Type': 'application/json',
+  //   'Access-Control-Allow-Origin': '*',
+  // };
 
   // 모든 http 요청
   static Future<Response> sendRequest(

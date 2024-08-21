@@ -367,7 +367,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               onTap: () async {
 
                 try {
-                  final result = await BoardService.getReviewInfo(review.postid.toString());
+                  // final result = await BoardService.getReviewInfo(review.postid.toString());
+                  final result = await BoardService.getReviewDetailInfo(review.postid.toString());
                   final accessToken = await SessionService.getAccessToken();
                   if (result.value?.status == 200 /*result.value != null*/) {
                     showDetailReviewDialog(
@@ -520,7 +521,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
             return GestureDetector(
               onTap: () async {
                 try {
-                  final result = await BoardService.getReviewInfo(review.postid.toString());
+                  // final result = await BoardService.getReviewInfo(review.postid.toString());
+                  final result = await BoardService.getReviewDetailInfo(review.postid.toString());
                   final accessToken = await SessionService.getAccessToken();
                   if (result.value?.status == 200 /*result.value != null*/) {
                     showDetailReviewDialog(
