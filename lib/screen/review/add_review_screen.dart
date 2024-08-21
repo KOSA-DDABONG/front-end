@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:html' as html;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,11 +73,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   // 등록 버튼 클릭 시 호출되는 함수
   void _submitReview() async {
-    BoardRegisterRequestModel model = BoardRegisterRequestModel(
-      content: _textController.text.trim(),
-      hashtags: _hashtags,
-      images: _images.where((image) => image != null).toList(), // 이미지 목록에서 null 제거
-    );
+    // final BoardRegisterRequestModel model = BoardRegisterRequestModel(
+    //   postDto: {
+    //   },
+    //   files: [],
+    //   // images: _images.where((image) => image != null).toList(),
+    // );
     print('------------');
     print(_textController.text.trim());
     print(_hashtags);
@@ -84,16 +86,16 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     print('------------');
 
     try {
-      final result = await BoardService.registerReview(model);
+      // final result = await BoardService.savePost(model);
 
-      if (result.isSuccess) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MyReviewListScreen()),
-        );
-      } else {
-        showCustomSnackBar(context, '등록에 실패하였습니다.');
-      }
+      // if (result.isSuccess) {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const MyReviewListScreen()),
+      //   );
+      // } else {
+      //   showCustomSnackBar(context, '등록에 실패하였습니다.');
+      // }
     } catch (e) {
       print('An unexpected error occurred: $e');
     }

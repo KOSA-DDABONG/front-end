@@ -1,157 +1,133 @@
 import 'package:flutter/material.dart';
-import 'package:front/screen/loading/creating_screen.dart';
-import 'package:front/screen/trip/result_screen.dart';
 
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../controller/login_state_for_header.dart';
 import '../../responsive.dart';
+import '../../service/chat_service.dart';
 
 class CreateTripScreen extends StatefulWidget {
-  const CreateTripScreen({Key? key}) : super(key: key);
-
   @override
   _CreateTripScreenState createState() => _CreateTripScreenState();
 }
 
 class _CreateTripScreenState extends State<CreateTripScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final List<Map<String, dynamic>> _messages = [];
 
-  @override
-  void initState() {
-    super.initState();
+  void _sendMessage() async {
+    final text = _controller.text.trim();
+    if (text.isNotEmpty) {
+      setState(() {
+        _messages.add({'text': text, 'isUser': true}); // 사용자 메시지 추가
+      });
+
+      //서버로부터 응답 대기
+      final response = await ChatService.getResponseForCreateSchedule(text);
+
+      setState(() {
+        _messages.add({'text': response, 'isUser': false}); // 서버 응답 추가
+      });
+
+      _controller.clear();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return CheckLoginStateWidget(
-      builder: (context, isLoggedIn) {
-        PreferredSizeWidget currentAppBar;
-        Widget? currentDrawer;
-        if (isLoggedIn) {
-          currentAppBar = Responsive.isNarrowWidth(context)
-              ? ShortHeader(automaticallyImplyLeading: false)
-              : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-          currentDrawer = Responsive.isNarrowWidth(context)
-              ? AfterLoginHeaderDrawer()
-              : null;
-        }
-        else {
-          currentAppBar = Responsive.isNarrowWidth(context)
-              ? ShortHeader(automaticallyImplyLeading: false)
-              : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-          currentDrawer = Responsive.isNarrowWidth(context)
-              ? NotLoginHeaderDrawer()
-              : null;
-        }
+        builder: (context, isLoggedIn) {
+          PreferredSizeWidget currentAppBar;
+          Widget? currentDrawer;
+          if (isLoggedIn) {
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? AfterLoginHeaderDrawer()
+                : null;
+          }
+          else {
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? NotLoginHeaderDrawer()
+                : null;
+          }
 
-        return Scaffold(
-          appBar: currentAppBar,
-          drawer: currentDrawer,
-          body: _createTripScreen(),
-        );
-      }
+          return Scaffold(
+              appBar: currentAppBar,
+              drawer: currentDrawer,
+              body: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(8.0),
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          final message = _messages[index];
+                          return _buildChatBubble(
+                            alignment: message['isUser']
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            color: message['isUser']
+                                ? Colors.blue[100]
+                                : Colors.grey[200],
+                            text: message['text'],
+                          );
+                        },
+                      ),
+                    ),
+                    _buildInputArea(),
+                  ],
+                ),
+              )
+          );
+        }
     );
   }
 
-  Widget _createTripScreen() {
+  Widget _buildChatBubble({
+    required Alignment alignment,
+    required Color? color,
+    required String text,
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Text(text),
+      ),
+    );
+  }
+
+  Widget _buildInputArea() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-      child: Column(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
         children: [
           Expanded(
-            child: ListView(
-              children: [
-                ListTile(
-                  title: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue[100],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text('부산 여행으로 2박 3일 추천해줘'),
-                    ),
-                  ),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: '메세지를 입력하세요.',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                ListTile(
-                  title: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text('어떤 여행지를 추천해 드릴까요?'),
-                    ),
-                  ),
-                ),
-                ListTile(
-                  title: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue[100],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text('액티비티 위주였으면 좋겠어'),
-                    ),
-                  ),
-                ),
-                ListTile(
-                  title: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text('추천 결과입니다.'),
-                        ),
-                        SizedBox(height: 5),
-                        Image.asset('assets/images/noImg.jpg'),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => CreatingScreen()),
-                            );
-                          },
-                          child: Text('더보기'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: '메세지를 입력하세요.',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {},
-                ),
-              ],
-            ),
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: _sendMessage,
           ),
         ],
       ),

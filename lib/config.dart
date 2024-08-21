@@ -13,12 +13,17 @@ class Config {
   static const registerCommentAPI = "/list/savecomment"; //댓글 작성
   static const registerReviewAPI = "/board/saveReview"; //게시물(후기) 작성
 
+  //!!!
+  // static const savePostAPI = "/savepost"; //게시물(후기) 작성
+  static const savePostAPI = "/post/board/saveReview"; //게시물(후기) 작성
+
   //My
   static const getMyReviewListAPI = "/my/myReviewList"; //내가 쓴 후기 리스트
   static const getMyTravelListAPI = "/my/mySavedTravel"; //내가 저장한 여행일정 리스트
 
   //Travel
-  static const getCreatedTravelDetailAPI = ""; //여행 일정 생성 결과 불러오기
+  static const getResponseForCreateSchedule = "/find_keywords"; //여행 일정 요청 전달 및 응답 받아오기
+
 
   //Sample
   static const sampleAPI = "/sample";
