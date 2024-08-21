@@ -1,5 +1,5 @@
-class CommentModel {
-  CommentModel({
+class CommentListModel {
+  CommentListModel({
     required this.postid,
     required this.travelid,
     required this.memberid,
@@ -16,7 +16,7 @@ class CommentModel {
   @override
   String toString() {
     return '''
-      Comment {
+      CommentList {
         postid: $postid,
         travelid: $travelid,
         memberid: $memberid,
@@ -25,8 +25,8 @@ class CommentModel {
       }''';
   }
 
-  factory CommentModel.fromJson(Map<String, dynamic> json) {
-    return CommentModel(
+  factory CommentListModel.fromJson(Map<String, dynamic> json) {
+    return CommentListModel(
       postid: json['postid'] ?? '',
       travelid: json['travelid'] ?? '',
       memberid: json['memberid'] ?? '',

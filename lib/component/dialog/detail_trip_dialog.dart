@@ -38,11 +38,24 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                            apiKey: apiKey,
-                            origin: '37.819929,-122.478255',
-                            destination: '37.787994,-122.407437',
-                            waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+                            apiKey: 'YOUR_API_KEY',
+                            origins: [
+                              '37.819929,-122.478255',
+                              '37.76999,-122.44696',
+                              '37.76899,-122.44596'
+                            ],
+                            destinations: [
+                              '37.787994,-122.407437',
+                              '37.76899,-122.44596',
+                              '37.787994,-122.407437'
+                            ],
+                            waypoints: [
+                              ['37.76999,-122.44696', '37.76899,-122.44596'],
+                              ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
+                              ['37.76999,-122.44696']
+                            ],
                           ),
+
                         ),
                       ),
                     ),
@@ -181,11 +194,24 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                            apiKey: apiKey,
-                            origin: '37.819929,-122.478255',
-                            destination: '37.787994,-122.407437',
-                            waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+                            apiKey: 'YOUR_API_KEY',
+                            origins: [
+                              '37.819929,-122.478255',
+                              '37.76999,-122.44696',
+                              '37.76899,-122.44596'
+                            ],
+                            destinations: [
+                              '37.787994,-122.407437',
+                              '37.76899,-122.44596',
+                              '37.787994,-122.407437'
+                            ],
+                            waypoints: [
+                              ['37.76999,-122.44696', '37.76899,-122.44596'],
+                              ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
+                              ['37.76999,-122.44696']
+                            ],
                           ),
+
                         ),
                       ),
                     ),
