@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
+import 'package:front/dto/board/board_mylist_response.dart';
 import 'package:front/responsive.dart';
+import 'package:front/service/board_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/request_login_dialog.dart';
+import '../../component/mypage/date_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
 import '../../controller/check_login_state.dart';
@@ -23,11 +26,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   bool _loginState = false;
   LoginResponseModel? _userinfo;
   bool _dialogShown  = false;
+  BoardMyListResponseModel? _myReviewInfo;
 
   @override
   void initState() {
     super.initState();
     _checkLoginUserInfo();
+    _getMyReviewList();
     _startLoadingTimeout(); // 로딩 시간 제한을 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('myInfo');
@@ -42,6 +47,40 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         });
       }
     });
+  }
+
+  Future<void> _getMyReviewList() async {
+    bool isLoggedIn = await checkLoginState(context);
+    if (isLoggedIn) {
+      setState(() {
+        _loginState = isLoggedIn;
+      });
+
+      try {
+        final result = await BoardService.getUserReviewList();
+        if (result.value?.status == 200) { // 유저정보 로드 성공
+          setState(() {
+            _myReviewInfo = result.value;
+            _isLoading = false;
+          });
+        } else {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      }
+    } else {
+      if (!_dialogShown) {
+        _dialogShown = true;
+        await showRequestLoginDialog(context);
+        _dialogShown = false;
+      }
+    }
   }
 
   Future<void> _checkLoginUserInfo() async {
@@ -294,7 +333,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 5),
                     Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
                     const SizedBox(height: 5),
@@ -306,7 +345,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -380,6 +419,39 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   //최근 작성 후기 카드
   Widget _myReviewCard() {
+    final highestReview = _myReviewInfo?.data?.isNotEmpty == true
+        ? _myReviewInfo!.data!.first
+        : null;
+
+    if (highestReview == null) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1.0),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
+        ),
+        child: const ListTile(
+          subtitle: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 30),
+                Center(
+                  child: Text('데이터가 존재하지 않습니다.'),
+                ),
+                SizedBox(height: 30),
+              ],
+            ),
+          ),
+        )
+      );
+    }
+
+    final imageUrl = highestReview.url?.isNotEmpty == true
+        ? highestReview.url!.first
+        : 'assets/images/noImg.jpg';
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 1.0),
@@ -397,83 +469,51 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/images/noImg.jpg'),
+                  image: DecorationImage(
+                    image: AssetImage(imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               const SizedBox(width: 15),
-              Responsive.isNarrowWidth(context)
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 5),
-                        Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 5),
-                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 5),
-                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                            const SizedBox(width: 10),
-                            Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                      ],
-                    ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '부산 여행 일정',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    changeDateFormat(highestReview.startTime),
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    highestReview.dayAndNights,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    highestReview.dday,
+                    style: const TextStyle(fontSize: 14, color: Colors.red),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
-        trailing: Responsive.isNarrowWidth(context)
-          ? GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('myReview');
-              },
-              child: const Icon(Icons.arrow_forward),
-            )
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('myReview');
-                  },
-                  child: Text(
-                    '3건',
-                    style: TextStyle(
-                      fontSize: 15,
-                      decoration: TextDecoration.underline,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('myReview');
-                  },
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ],
-            ),
+        trailing: GestureDetector(
+          onTap: () {
+            context.read<MyMenuController>().setSelectedScreen('myReview');
+          },
+          child: const Icon(Icons.arrow_forward),
+        ),
       ),
     );
   }
 
-  //좋아요 필
+  //좋아요 필드
   Widget _myLikesField() {
     return Column(
       children: [

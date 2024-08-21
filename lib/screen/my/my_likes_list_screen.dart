@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/mypage/my_title.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../dto/board/board_detail_response_model.dart';
+import '../../dto/board/board_detail_get_response_model.dart';
 import '../../dto/board/board_model.dart';
 import '../../key/key.dart';
 import '../../service/result.dart';
@@ -20,7 +20,8 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   // 상태를 저장하기 위한 변수
   final Set<int> _likedItems = Set<int>();
   late Board review;
-  late Result<BoardDetailResponseModel> result;
+  // late Result<BoardDetailResponseModel> result;
+  late Result<BoardDetailGetResponseModel> result;
 
   @override
   void initState() {

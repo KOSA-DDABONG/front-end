@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:front/dto/board/board_detail_response_model.dart';
+import 'package:front/component/snack_bar.dart';
 import 'package:front/dto/board/board_model.dart';
 import 'package:front/dto/comment/comment_request_model.dart';
 import 'package:front/dto/hashtag/hashtag_model.dart';
 import 'package:front/dto/image/image_model.dart';
 import 'package:front/responsive.dart';
+import 'package:front/service/board_service.dart';
 import 'package:front/service/result.dart';
 import 'package:front/service/session_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../dto/comment/comment_model.dart';
+import '../../dto/board/board_detail_get_response_model.dart';
+import '../../dto/comment/comment_info_model.dart';
+import '../../dto/comment/comment_list_model.dart';
 import '../map/get_map.dart';
 
 void showDetailReviewDialog(
@@ -17,13 +20,13 @@ void showDetailReviewDialog(
     String imageUrl,
     String apiKey,
     Board review,
-    Result<BoardDetailResponseModel> result
+    Result<BoardDetailGetResponseModel> result
   ) {
   final PageController pageController = PageController();
   final TextEditingController commentController = TextEditingController();
-  List<CommentModel>? commentList = result.value?.commentList;
-  List<HashtagModel>? hashtagList = result.value?.hashtagList;
-  List<ImageModel>? imageList = result.value?.imageList;
+  List<CommentInfoModel>? commentList = result.value?.data.commentInfoDTOs;
+  List<String>? hashtagList = result.value?.data.hashtags;
+  List<String>? imageList = result.value?.data.url;
 
   showDialog(
     context: context,
@@ -70,7 +73,7 @@ void showDetailReviewDialog(
                                           return ClipRRect(
                                             borderRadius: BorderRadius.circular(5.0),
                                             child: Image.network(
-                                              imageModel.url,
+                                              imageModel,
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) {
                                                 return Image.asset('assets/images/noImg.jpg'); // 대체 이미지
@@ -113,11 +116,24 @@ void showDetailReviewDialog(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: GetMap(
-                                  apiKey: apiKey,
-                                  origin: '37.819929,-122.478255',
-                                  destination: '37.787994,-122.407437',
-                                  waypoints: '37.76999,-122.44696|37.76899,-122.44596',
+                                  apiKey: 'YOUR_API_KEY',
+                                  origins: [
+                                    '37.819929,-122.478255',
+                                    '37.76999,-122.44696',
+                                    '37.76899,-122.44596'
+                                  ],
+                                  destinations: [
+                                    '37.787994,-122.407437',
+                                    '37.76899,-122.44596',
+                                    '37.787994,-122.407437'
+                                  ],
+                                  waypoints: [
+                                    ['37.76999,-122.44696', '37.76899,-122.44596'],
+                                    ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
+                                    ['37.76999,-122.44696']
+                                  ],
                                 ),
+
                               ),
                             ),
                           ),
@@ -137,7 +153,7 @@ void showDetailReviewDialog(
                                   },
                                 ),
                                 // Text('$likesNum'),
-                                Text('${result.value!.board.likecount}'),
+                                Text('${result.value!.data.likeCnt}'),
                                 const SizedBox(width: 16),
                                 (!showComments)
                                 ? IconButton(
@@ -158,7 +174,7 @@ void showDetailReviewDialog(
                                   ),
                                 const SizedBox(width: 8),
                                 // Text('$commentsNum'),
-                                Text('${result.value!.board.comcontentcount}'),
+                                Text('${result.value!.data.commentCnt}'),
                               ],
                             ),
                           ),
@@ -181,7 +197,7 @@ void showDetailReviewDialog(
                                               padding: EdgeInsets.symmetric(horizontal: 8),
                                               child: Text(
                                                 // "$commentContent",
-                                                "${result.value?.board.content}",
+                                                "${result.value?.data.content}",
                                                 style: TextStyle(fontSize: 18),
                                               ),
                                             )
@@ -267,44 +283,19 @@ void showDetailReviewDialog(
                               IconButton(
                                 icon: const Icon(Icons.send),
                                 onPressed: isButtonEnabled ? () async {
-                                  try {
-                                    final usermodel = await SessionService.loginDetails();
-                                    print("hhhhee " + usermodel.toString());
-                                    // final commentmodel = await CommentRequestModel(postid: review.postid, travelid: result.value!.board.travelid!, commentid2: 0, memberid: usermodel!.memberid, comcontent: commentController.text.trim());
-                                    // /
-                                    // if (result.value != null) {
-                                    //   savePreferences();
-                                    //
-                                    //   setState(() {
-                                    //     isApiCallProcess = false;
-                                    //   });
-                                    //
-                                    //   Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(builder: (context) => LandingScreen()),
-                                    //   );
-                                    //
-                                    // }
-                                    // else {
-                                    //   setState(() {
-                                    //     isApiCallProcess = false;
-                                    //   });
-                                    //
-                                    //   ScaffoldMessenger.of(context).showSnackBar(
-                                    //     const SnackBar(
-                                    //       content: Text('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 확인해주세요.'),
-                                    //     ),
-                                    //   );
-                                    // }
+                                  try{
+                                    final model = CommentRequestModel(postId: review.postid, comcontent: commentController.text.trim());
+                                    final result = BoardService.registerComment(model);
+                                    print("hhhhee1 " + result.toString());
+                                    if(result != null) {
+                                      Navigator.pop(context);
+                                      showCustomSnackBar(context, "댓글 작성에 성공하였습니다.");
+                                    }
+                                    else{
+                                      showCustomSnackBar(context, "댓글 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.");
+                                    }
                                   } catch (e) {
-                                    // setState(() {
-                                    //   isApiCallProcess = false;
-                                    // });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('에러가 발생했습니다: $e'),
-                                      ),
-                                    );
+                                    showCustomSnackBar(context, "에러가 발생하였습니다. 잠시 후 다시 시도해주세요.");
                                   }
                                 } : null
                               ),
@@ -353,7 +344,7 @@ void showDetailReviewDialog(
                                             return ClipRRect(
                                               borderRadius: BorderRadius.circular(5.0),
                                               child: Image.network(
-                                                imageModel.url,
+                                                imageModel,
                                                 errorBuilder: (context, error, stackTrace) {
                                                   return Image.asset('assets/images/noImg.jpg'); // 대체 이미지
                                                 },
@@ -398,11 +389,24 @@ void showDetailReviewDialog(
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5.0),
                                       child: GetMap(
-                                        apiKey: apiKey,
-                                        origin: '37.819929,-122.478255', // 출발지 좌표
-                                        destination: '37.787994,-122.407437', // 도착지 좌표
-                                        waypoints: '37.76999,-122.44696|37.76899,-122.44596', // 경유지 좌표
+                                        apiKey: 'YOUR_API_KEY',
+                                        origins: [
+                                          '37.819929,-122.478255',
+                                          '37.76999,-122.44696',
+                                          '37.76899,-122.44596'
+                                        ],
+                                        destinations: [
+                                          '37.787994,-122.407437',
+                                          '37.76899,-122.44596',
+                                          '37.787994,-122.407437'
+                                        ],
+                                        waypoints: [
+                                          ['37.76999,-122.44696', '37.76899,-122.44596'],
+                                          ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
+                                          ['37.76999,-122.44696']
+                                        ],
                                       ),
+
                                     ),
                                   ],
                                 ),
@@ -426,7 +430,7 @@ void showDetailReviewDialog(
                                         padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
                                           // "$commentContent",
-                                          "${result.value?.board.content}",
+                                          "${result.value?.data.content}",
                                           style: const TextStyle(fontSize: 18),
                                           textAlign: TextAlign.left,
                                         ),
@@ -438,7 +442,7 @@ void showDetailReviewDialog(
                                         padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
                                           hashtagList != null
-                                              ? hashtagList.map((hashtag) => '#${hashtag.hashname}').toSet().join(' ')
+                                              ? hashtagList.map((hashtag) => '#${hashtag}').toSet().join(' ')
                                               : '',
                                           style: const TextStyle(
                                             fontSize: 12,
@@ -472,14 +476,14 @@ void showDetailReviewDialog(
                                     padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                                     child:
                                     // Text('$likesNum'),
-                                    Text('${result.value?.board.likecount}'),
+                                    Text('${result.value?.data.likeCnt}'),
                                   ),
                                   const Icon(Icons.comment),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     child:
                                     // Text('$commentsNum'),
-                                    Text('${result.value?.board.comcontentcount}'),
+                                    Text('${result.value?.data.commentCnt}'),
                                   ),
                                 ],
                               ),
@@ -495,20 +499,20 @@ void showDetailReviewDialog(
                                   return Column(
                                     children: [
                                       ListTile(
-                                        leading: const CircleAvatar(
-                                          backgroundImage: AssetImage('assets/images/profile_pic.png'),
+                                        leading: CircleAvatar(
+                                          backgroundImage: AssetImage(comment.profileUrl),
                                         ),
                                         title: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '사용자 아이디 ${comment.memberid}',
+                                              comment.nickName,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             const SizedBox(height: 4),
-                                            Text(comment.comcontent),
+                                            Text(comment.content),
                                           ],
                                         ),
                                       ),
@@ -539,8 +543,20 @@ void showDetailReviewDialog(
                                     IconButton(
                                       icon: const Icon(Icons.send),
                                       onPressed: isButtonEnabled ? () async {
-                                        final usermodel = await SessionService.loginDetails();
-                                        print("hhhhee2 " + usermodel.toString());
+                                        try{
+                                          final model = CommentRequestModel(postId: review.postid, comcontent: commentController.text.trim());
+                                          final result = BoardService.registerComment(model);
+                                          print("hhhhee2 " + result.toString());
+                                          if(result != null) {
+                                            Navigator.pop(context);
+                                            showCustomSnackBar(context, "댓글 작성에 성공하였습니다.");
+                                          }
+                                          else{
+                                            showCustomSnackBar(context, "댓글 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.");
+                                          }
+                                        } catch (e) {
+                                          showCustomSnackBar(context, "댓글 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.");
+                                        }
                                       } : null,
                                     ),
                                   ],

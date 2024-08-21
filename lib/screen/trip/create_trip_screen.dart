@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../controller/login_state_for_header.dart';
+import '../../dto/chat/create_trip_request_model.dart';
 import '../../responsive.dart';
 import '../../service/chat_service.dart';
 
@@ -15,23 +16,32 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
 
-  void _sendMessage() async {
+  Future<void> _sendMessage() async {
     final text = _controller.text.trim();
     if (text.isNotEmpty) {
       setState(() {
         _messages.add({'text': text, 'isUser': true}); // 사용자 메시지 추가
       });
 
-      //서버로부터 응답 대기
-      final response = await ChatService.getResponseForCreateSchedule(text);
-
-      setState(() {
-        _messages.add({'text': response, 'isUser': false}); // 서버 응답 추가
-      });
-
-      _controller.clear();
+      try {
+        final model = CreateTripRequestModel(question: text);
+        print("@@@");
+        print(model.question);
+        print("@@@");
+        final result = await ChatService.getResponseForCreateSchedule(model);
+        print("@@@");
+        print(result.value);
+        print("@@@");
+        setState(() {
+          _messages.add({'text': result.value.toString(), 'isUser': false}); // 서버 응답 추가
+        });
+        _controller.clear();
+      } catch(e) {
+        print(e);
+      }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +136,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: _sendMessage,
           ),
         ],

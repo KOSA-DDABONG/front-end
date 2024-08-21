@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import '../../component/dialog/edit_number_dialog.dart';
 import '../../component/dialog/edit_pwd_dialog.dart';
-import '../../component/mypage/birth_format.dart';
+import '../../component/mypage/date_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/mypage/phone_number_format.dart';
 import '../../component/mypage/profile_form_field.dart';
@@ -222,7 +222,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormNarrowField(
                   label: '생년월일',
-                  value: formatDateOfBirth('${_userinfo?.birth}'),
+                  value: changeDateFormat('${_userinfo?.birth}'),
                 ),
               ),
             ],
@@ -314,7 +314,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
               Expanded(
                 child: ProfileFormWideField(
                   label: '생년월일',
-                  value: formatDateOfBirth('${_userinfo?.birth}'),
+                  value: changeDateFormat('${_userinfo?.birth}'),
                 ),
               ),
             ],
