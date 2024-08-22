@@ -40,8 +40,8 @@ class UserService {
   // }
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
-    // final url = Uri.https(API_URL, Config.signupAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
+    final url = Uri.https(API_URL, Config.signupAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
 
     try {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
@@ -53,8 +53,8 @@ class UserService {
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-    // final url = Uri.https(API_URL, Config.loginAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
+    final url = Uri.https(API_URL, Config.loginAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());

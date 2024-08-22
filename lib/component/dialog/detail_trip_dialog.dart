@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/responsive.dart';
 
 import '../../constants.dart';
+import '../../key/key.dart';
 import '../map/get_map.dart';
 
 void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<String, String>>> itinerary) {
@@ -38,22 +39,10 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                            apiKey: 'YOUR_API_KEY',
-                            origins: [
-                              '37.819929,-122.478255',
-                              '37.76999,-122.44696',
-                              '37.76899,-122.44596'
-                            ],
-                            destinations: [
-                              '37.787994,-122.407437',
-                              '37.76899,-122.44596',
-                              '37.787994,-122.407437'
-                            ],
-                            waypoints: [
-                              ['37.76999,-122.44696', '37.76899,-122.44596'],
-                              ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
-                              ['37.76999,-122.44696']
-                            ],
+                              apiKey: GOOGLE_MAP_KEY,
+                              origin: '35.819929,129.478255',
+                              destination: '35.787994,129.407437',
+                              waypoints: '35.76999,129.44696'
                           ),
 
                         ),
@@ -194,22 +183,10 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                            apiKey: 'YOUR_API_KEY',
-                            origins: [
-                              '37.819929,-122.478255',
-                              '37.76999,-122.44696',
-                              '37.76899,-122.44596'
-                            ],
-                            destinations: [
-                              '37.787994,-122.407437',
-                              '37.76899,-122.44596',
-                              '37.787994,-122.407437'
-                            ],
-                            waypoints: [
-                              ['37.76999,-122.44696', '37.76899,-122.44596'],
-                              ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
-                              ['37.76999,-122.44696']
-                            ],
+                              apiKey: GOOGLE_MAP_KEY,
+                              origin: '35.819929,129.478255',
+                              destination: '35.787994,129.407437',
+                              waypoints: '35.76999,129.44696'
                           ),
 
                         ),

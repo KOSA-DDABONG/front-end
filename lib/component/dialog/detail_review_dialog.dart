@@ -13,6 +13,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../dto/board/board_detail_get_response_model.dart';
 import '../../dto/comment/comment_info_model.dart';
 import '../../dto/comment/comment_list_model.dart';
+import '../../key/key.dart';
 import '../map/get_map.dart';
 
 void showDetailReviewDialog(
@@ -27,6 +28,11 @@ void showDetailReviewDialog(
   List<CommentInfoModel>? commentList = result.value?.data.commentInfoDTOs;
   List<String>? hashtagList = result.value?.data.hashtags;
   List<String>? imageList = result.value?.data.url;
+
+  print("#@#@#@");
+  print(result.value!.data.tour[0].latitude);
+  print(result.value!.data.restaurant[0].latitude);
+  print("#@#@#@");
 
   showDialog(
     context: context,
@@ -116,22 +122,10 @@ void showDetailReviewDialog(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: GetMap(
-                                  apiKey: 'YOUR_API_KEY',
-                                  origins: [
-                                    '37.819929,-122.478255',
-                                    '37.76999,-122.44696',
-                                    '37.76899,-122.44596'
-                                  ],
-                                  destinations: [
-                                    '37.787994,-122.407437',
-                                    '37.76899,-122.44596',
-                                    '37.787994,-122.407437'
-                                  ],
-                                  waypoints: [
-                                    ['37.76999,-122.44696', '37.76899,-122.44596'],
-                                    ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
-                                    ['37.76999,-122.44696']
-                                  ],
+                                  apiKey: GOOGLE_MAP_KEY,
+                                  origin: '35.819929,129.478255',
+                                  destination: '35.787994,129.407437',
+                                  waypoints: '35.76999,129.44696'
                                 ),
 
                               ),
@@ -389,22 +383,10 @@ void showDetailReviewDialog(
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5.0),
                                       child: GetMap(
-                                        apiKey: 'YOUR_API_KEY',
-                                        origins: [
-                                          '37.819929,-122.478255',
-                                          '37.76999,-122.44696',
-                                          '37.76899,-122.44596'
-                                        ],
-                                        destinations: [
-                                          '37.787994,-122.407437',
-                                          '37.76899,-122.44596',
-                                          '37.787994,-122.407437'
-                                        ],
-                                        waypoints: [
-                                          ['37.76999,-122.44696', '37.76899,-122.44596'],
-                                          ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
-                                          ['37.76999,-122.44696']
-                                        ],
+                                          apiKey: GOOGLE_MAP_KEY,
+                                          origin: '35.819929,129.478255',
+                                          destination: '35.787994,129.407437',
+                                          waypoints: '35.76999,129.44696'
                                       ),
 
                                     ),
