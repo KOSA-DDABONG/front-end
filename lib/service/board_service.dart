@@ -5,12 +5,13 @@ import '../config.dart';
 import '../dto/board/board_detail_get_response_model.dart';
 import '../dto/board/board_list_response_model.dart';
 import '../dto/board/board_mylist_response.dart';
+import '../dto/board/board_register_request_model.dart';
+import '../dto/board/board_register_response_model.dart';
 import '../dto/comment/comment_response_model.dart';
 import '../key/key.dart';
 import 'dio_client.dart';
 import 'session_service.dart';
 
-import 'package:http/http.dart' as http;
 
 class BoardService {
 
@@ -99,7 +100,7 @@ class BoardService {
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
         return Result.success(
-            boardMyListResponseJson(jsonData as Map<String, dynamic>)
+          boardMyListResponseJson(jsonData as Map<String, dynamic>)
         );
       }
       else {
@@ -139,76 +140,42 @@ class BoardService {
     }
   }
 
-  //게시물 작성
-  // static Future<Result<BoardRegisterResponseModel>> savePost(BoardRegisterRequestModel model) async {
-  //   print("TT0------------------");
-  //   print(model.postDto);
-  //   print(model.files);
-  //   print("TT0------------------");
-  //
-  //   final url = Uri.http(Config.apiUrl,  Config.savePostAPI).toString();
-  //   final accessToken = await SessionService.getAccessToken();
-  //   model
-  //   print("TT1------------------");
-  //   print(jsonData);
-  //   print("TT1------------------");
-  //
-  //   //웹
-  //   final formData = html.FormData();
-  //   print("TT2------------------");
-  //   print(formData);
-  //   print("TT2------------------");
-  //
-  //   formData.append('postDTO', jsonData);
-  //   print("========");
-  //   print(formData.get('postDTO'));
-  //   print(formData.get('postDTO'));
-  //   print("========");
-  //
-  //   for (var image in images) {
-  //     if (image != null) {
-  //       final bytes = await image.readAsBytes(); // Read bytes from XFile
-  //       final blob = html.Blob([bytes]); // Convert bytes to Blob
-  //       final file = html.File([blob], image.name); // Create html.File from Blob
-  //       formData.append('files', file, image.name); // Append file directly
-  //     }
-  //   }
-  //
-  //   print("TT3------------------");
-  //   print(formData);
-  //   print("TT3------------------");
-  //
-  //   final headers = {
-  //     'Authorization': 'Bearer $accessToken',
-  //     // 'Content-Type': 'multipart/form-data',
-  //   };
-  //
-  //   try {
-  //     print("===try===");
-  //     final response = await DioClient.sendRequest(
-  //       'POST',
-  //       url,
-  //       headers: headers,
-  //       body: formData
-  //     );
-  //     print("TT4------------------");
-  //     print(response);
-  //     print("TT4------------------");
-  //     if (response.statusCode == 200) {
-  //       return Result.success(
-  //           boardRegisterResponseJson(response.data as Map<String, dynamic>)
-  //       );
-  //     } else {
-  //       print("===");
-  //       throw Exception("Failed to get Board Information");
-  //     }
-  //   } catch (e) {
-  //     print("===");
-  //     print(e);
-  //     print("===");
-  //     return Result.failure("[Get Board Info] An Error Occurred: ${e}");
-  //   }
-  // }
+  // 게시물 작성
+  static Future<Result<BoardRegisterResponseModel>> savePost(BoardRegisterRequestModel model) async {
+    final url = Uri.https(API_URL,  Config.savePostAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.savePostAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+
+    try {
+      // FormData 생성
+      final formData = await model.toFormData();
+
+      // 요청 헤더 설정
+      final headers = {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'multipart/form-data'
+      };
+
+      // 응답 처리
+      final response = await DioClient.sendRequest(
+        'POST',
+        url,
+        headers: headers,
+        body: formData,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = response.data;
+        return Result.success(
+            boardRegisterResponseJson(jsonData as Map<String, dynamic>)
+        );
+      } else {
+        throw Exception("Failed to get Board Information");
+      }
+    } catch (e) {
+      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+    }
+  }
 }
 
 

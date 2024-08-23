@@ -9,12 +9,13 @@ class PostDTOModel {
   final String reviewContent;
   final List<String>? hashtags;
 
+
   //Json 형태(Raw)로 변환하는 메서드
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['travelId'] = travelId;
     _data['reviewContent'] = reviewContent;
-    _data['hashtags'] = hashtags?.map((hashtag) => hashtag).toList();
+    _data['hashtags'] = hashtags ?? [];
     return _data;
   }
 }

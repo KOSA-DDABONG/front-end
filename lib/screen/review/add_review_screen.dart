@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'dart:html' as html;
+import 'package:front/screen/start/landing_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front/component/snack_bar.dart';
-import 'package:front/screen/my/my_review_list_screen.dart';
 import '../../component/header/header_drawer.dart';
 import '../../controller/login_state_for_header.dart';
+import '../../dto/board/board_register_postDTO_model.dart';
 import '../../dto/board/board_register_request_model.dart';
 import '../../key/key.dart';
 import 'package:front/screen/review/all_review_screen.dart';
@@ -34,7 +34,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   bool _showHashtagLimitError = false;
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
-
   bool isButtonEnabled = false;
 
   @override
@@ -73,33 +72,39 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   // 등록 버튼 클릭 시 호출되는 함수
   void _submitReview() async {
-    // final BoardRegisterRequestModel model = BoardRegisterRequestModel(
-    //   postDto: {
-    //   },
-    //   files: [],
-    //   // images: _images.where((image) => image != null).toList(),
-    // );
-    print('------------');
-    print(_textController.text.trim());
-    print(_hashtags);
-    print(_images.first?.path);
-    print('------------');
+    // PostDTOModel 생성
+    final postDto = PostDTOModel(
+      travelId: 42, // 적절한 travelId로 수정 필요
+      reviewContent: _textController.text.trim(),
+      hashtags: _hashtags.isNotEmpty ? _hashtags : null,
+    );
+
+    // BoardRegisterRequestModel 생성
+    final BoardRegisterRequestModel model = BoardRegisterRequestModel(
+      postDto: postDto,
+      files: _images,
+    );
 
     try {
-      // final result = await BoardService.savePost(model);
+      final result = await BoardService.savePost(model);
+      print('-----00***00-----');
+      print(result.value);
+      print('-----00***00-----');
 
-      // if (result.isSuccess) {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const MyReviewListScreen()),
-      //   );
-      // } else {
-      //   showCustomSnackBar(context, '등록에 실패하였습니다.');
-      // }
+      if (result.value?.status ==200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LandingScreen()),
+        );
+        showCustomSnackBar(context, '등록에 성공하였습니다.');
+      } else {
+        showCustomSnackBar(context, '등록에 실패하였습니다.');
+      }
     } catch (e) {
       print('An unexpected error occurred: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +271,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           apiKey: GOOGLE_MAP_KEY,
           origin: '35.819929,129.478255',
           destination: '35.787994,129.407437',
-          waypoints: '35.89999,129.94696|35.78999,129.54996'
+          waypoints: '35.76999,129.44696'
       ),
 
     );

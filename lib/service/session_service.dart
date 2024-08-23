@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../dto/user/login/login_response_model.dart';
-import '../dto/user/user_model.dart';
 
 class SessionService {
 

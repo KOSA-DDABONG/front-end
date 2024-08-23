@@ -34,15 +34,23 @@ class _GetMapState extends State<GetMap> {
   Future<void> _fetchRoute() async {
     final url =
         'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/directions/json'
-        '?origin=${widget.origin}&destination=${widget.destination}'
+        '?origin=${widget.origin}'
+        '&destination=${widget.destination}'
         '&waypoints=${widget.waypoints}'
         '&key=${widget.apiKey}';
+    // final url = 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/directions/json?origin=6.9146871,79.9711348&waypoint=6.9040322,79.948803%7C&destination=6.9058482,79.9248089&sensor=false&key=AIzaSyBqFhlY9_6H7ZddukaBR7RCwzg_wYT0x1A';
 
     try {
       final response = await http.get(Uri.parse(url));
+      print("hihihihihi1");
+      print(response.body);
+      print("0000000");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        print("hihihihihi2");
+        print(data);
+        print("0000000");
         final encodedPoints = data['routes'][0]['overview_polyline']['points'];
         final points = PolylinePoints().decodePolyline(encodedPoints);
 
@@ -55,7 +63,7 @@ class _GetMapState extends State<GetMap> {
             _polylines.add(
               Polyline(
                 polylineId: PolylineId('route'),
-                color: Colors.blue,
+                color: Colors.red,
                 points: polylineCoordinates,
                 width: 4,
               ),
