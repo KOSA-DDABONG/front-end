@@ -41,45 +41,33 @@ class TokenInterceptor extends Interceptor {
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401 && retryCount < 3) {
-      // Change 3 to the max number of retries you want
-      retryCount++; // Increment the count on failure
+      retryCount++;
 
       RequestOptions options =
           err.response?.requestOptions ?? RequestOptions(path: "");
       options.headers['Authorization'] =
       'Bearer ${await SessionService.getAccessToken()}';
-      // await SessionService.refreshToken();
 
       try {
         Response response = await authClient.fetch(options);
 
-        // Update tokens based on the new response headers and cookies
         String? newAccessToken =
         response.headers.value('Authorization')?.split(' ')[1];
-        // String? newRefreshToken = response.headers['set-cookie']
-        //     ?.firstWhere((str) => str.startsWith('XRT='), orElse: () => '')
-        //     ?.split(';')[0]
-        //     ?.substring(4); // Skip 'XRT='
 
         if (newAccessToken != null) {
           await SessionService.setAccessToken(newAccessToken);
         }
-        // if (newRefreshToken != null) {
-        //   await SessionService.setRefreshToken(newRefreshToken);
-        // }
 
-        retryCount = 0; // Reset the retry count if successful
+        retryCount = 0;
         return handler.resolve(response);
       } catch (e) {
         return handler.next(err);
       }
     } else if (retryCount >= 3) {
-      // Check if the retry count has reached its limit
-      retryCount = 0; // Reset the retry count
-      // Do something to handle too many failed retries, for example:
+      retryCount = 0;
       return handler.next(DioException(
-          requestOptions: err.requestOptions,
-          error: "Maximum retry limit reached."));
+        requestOptions: err.requestOptions,
+        error: "Maximum retry limit reached."));
     }
 
     return handler.next(err);

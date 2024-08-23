@@ -8,11 +8,13 @@ import 'package:front/responsive.dart';
 import 'package:front/service/board_service.dart';
 import 'package:front/service/result.dart';
 import 'package:front/service/session_service.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../dto/board/board_detail_get_response_model.dart';
 import '../../dto/comment/comment_info_model.dart';
 import '../../dto/comment/comment_list_model.dart';
+import '../../key/key.dart';
 import '../map/get_map.dart';
 
 void showDetailReviewDialog(
@@ -27,6 +29,10 @@ void showDetailReviewDialog(
   List<CommentInfoModel>? commentList = result.value?.data.commentInfoDTOs;
   List<String>? hashtagList = result.value?.data.hashtags;
   List<String>? imageList = result.value?.data.url;
+
+  print("#@#@#@111");
+  print(result.value!.data.url);
+  print("#@#@#@111");
 
   showDialog(
     context: context,
@@ -76,7 +82,14 @@ void showDetailReviewDialog(
                                               imageModel,
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) {
-                                                return Image.asset('assets/images/noImg.jpg'); // 대체 이미지
+                                                print("---------#1Narrow---------");
+                                                print(error);
+                                                print(stackTrace);
+                                                print("--------------------");
+                                                return Image.asset(
+                                                  'assets/images/noImg.jpg',
+                                                  fit: BoxFit.cover,
+                                                ); // 대체 이미지
                                               },
                                             ),
                                           );
@@ -95,7 +108,7 @@ void showDetailReviewDialog(
                                     bottom: 8.0,
                                     child: SmoothPageIndicator(
                                       controller: pageController,
-                                      count: imageList?.length ?? 1,
+                                      count: imageList!.length,
                                       effect: const WormEffect(
                                         dotHeight: 8.0,
                                         dotWidth: 8.0,
@@ -115,23 +128,18 @@ void showDetailReviewDialog(
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
-                                child: GetMap(
-                                  apiKey: 'YOUR_API_KEY',
-                                  origins: [
-                                    '37.819929,-122.478255',
-                                    '37.76999,-122.44696',
-                                    '37.76899,-122.44596'
-                                  ],
-                                  destinations: [
-                                    '37.787994,-122.407437',
-                                    '37.76899,-122.44596',
-                                    '37.787994,-122.407437'
-                                  ],
-                                  waypoints: [
-                                    ['37.76999,-122.44696', '37.76899,-122.44596'],
-                                    ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
-                                    ['37.76999,-122.44696']
-                                  ],
+                                child:
+                                // GetMap(
+                                //   apiKey: GOOGLE_MAP_KEY,
+                                //   origin: '${result.value!.data.tour.first.latitude},${result.value!.data.tour.first.longitude}',
+                                //   destination: '${result.value!.data.tour.last.latitude},${result.value!.data.tour.last.longitude}',
+                                //   waypoints: '${result.value!.data.tour[1].latitude},${result.value!.data.tour[1].longitude}'
+                                // )
+                                GetMap(
+                                    apiKey: GOOGLE_MAP_KEY,
+                                    origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
+                                    destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
+                                    waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
                                 ),
 
                               ),
@@ -157,7 +165,7 @@ void showDetailReviewDialog(
                                 const SizedBox(width: 16),
                                 (!showComments)
                                 ? IconButton(
-                                    icon: Icon(Icons.comment_outlined),
+                                    icon: const Icon(Icons.comment_outlined),
                                     onPressed: () {
                                       setState(() {
                                         showComments = !showComments;
@@ -165,7 +173,7 @@ void showDetailReviewDialog(
                                     },
                                   )
                                 : IconButton(
-                                    icon: Icon(Icons.comment),
+                                    icon: const Icon(Icons.comment),
                                     onPressed: () {
                                       setState(() {
                                         showComments = !showComments;
@@ -173,7 +181,6 @@ void showDetailReviewDialog(
                                     },
                                   ),
                                 const SizedBox(width: 8),
-                                // Text('$commentsNum'),
                                 Text('${result.value!.data.commentCnt}'),
                               ],
                             ),
@@ -194,7 +201,7 @@ void showDetailReviewDialog(
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              padding: const EdgeInsets.symmetric(horizontal: 8),
                                               child: Text(
                                                 // "$commentContent",
                                                 "${result.value?.data.content}",
@@ -208,7 +215,9 @@ void showDetailReviewDialog(
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 8),
                                               child: Text(
-                                                "#힐링 #호캉스 #해운대",
+                                                hashtagList != null
+                                                    ? hashtagList.map((hashtag) => '#${hashtag}').toSet().join(' ')
+                                                    : '',
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.blueGrey,
@@ -227,23 +236,24 @@ void showDetailReviewDialog(
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemCount: 100,
                                       itemBuilder: (context, index) {
+                                        final comment = commentList![index];
                                         return Column(
                                           children: [
                                             ListTile(
                                               leading: const CircleAvatar(
-                                                backgroundImage: AssetImage('assets/images/profile_pic.png'),
+                                                backgroundImage: AssetImage('comment.profileUrl'),
                                               ),
                                               title: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'Nickname $index',
+                                                    comment.nickName,
                                                     style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                   const SizedBox(height: 4),
-                                                  Text('Comment $index'),
+                                                  Text(comment.content),
                                                 ],
                                               ),
                                             ),
@@ -346,7 +356,10 @@ void showDetailReviewDialog(
                                               child: Image.network(
                                                 imageModel,
                                                 errorBuilder: (context, error, stackTrace) {
-                                                  return Image.asset('assets/images/noImg.jpg'); // 대체 이미지
+                                                  return Image.asset(
+                                                    'assets/images/noImg.jpg',
+                                                    fit: BoxFit.cover,
+                                                  ); // 대체 이미지
                                                 },
                                                 fit: BoxFit.cover,
                                               ),
@@ -366,7 +379,7 @@ void showDetailReviewDialog(
                                       bottom: 8.0,
                                       child: SmoothPageIndicator(
                                         controller: pageController,
-                                        count: imageList?.length ?? 1,
+                                        count: imageList!.length,
                                         effect: const WormEffect(
                                           dotHeight: 8.0,
                                           dotWidth: 8.0,
@@ -388,23 +401,18 @@ void showDetailReviewDialog(
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5.0),
-                                      child: GetMap(
-                                        apiKey: 'YOUR_API_KEY',
-                                        origins: [
-                                          '37.819929,-122.478255',
-                                          '37.76999,-122.44696',
-                                          '37.76899,-122.44596'
-                                        ],
-                                        destinations: [
-                                          '37.787994,-122.407437',
-                                          '37.76899,-122.44596',
-                                          '37.787994,-122.407437'
-                                        ],
-                                        waypoints: [
-                                          ['37.76999,-122.44696', '37.76899,-122.44596'],
-                                          ['37.76999,-122.44696', '37.76899,-122.44596', '37.76599,-122.44296'],
-                                          ['37.76999,-122.44696']
-                                        ],
+                                      child:
+                                      // GetMap(
+                                      //     apiKey: GOOGLE_MAP_KEY,
+                                      //     origin: '${result.value!.data.tour.first.latitude},${result.value!.data.tour.first.longitude}',
+                                      //     destination: '${result.value!.data.tour.last.latitude},${result.value!.data.tour.last.longitude}',
+                                      //     waypoints: '${result.value!.data.tour[1].latitude},${result.value!.data.tour[1].longitude}'
+                                      // )
+                                      GetMap(
+                                          apiKey: GOOGLE_MAP_KEY,
+                                          origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
+                                          destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
+                                          waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
                                       ),
 
                                     ),
@@ -427,7 +435,7 @@ void showDetailReviewDialog(
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Padding(
-                                        padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                                        padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
                                         child: Text(
                                           // "$commentContent",
                                           "${result.value?.data.content}",
