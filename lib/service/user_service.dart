@@ -12,11 +12,13 @@ class UserService {
 
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
-    final url = Uri.https(API_URL, Config.signupAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
+    // final url = Uri.https(API_URL, Config.signupAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.signupAPI).toString();
 
     try {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
+      final jsonData = response.data;
+      print("[회원가입] : $jsonData");
       if (response == "Success") {
         return Result.success("Success");
       }
@@ -30,16 +32,18 @@ class UserService {
 
   //로그인
   static Future<Result<LoginResponseModel>> login(LoginRequestModel model) async {
-    final url = Uri.https(API_URL, Config.loginAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
+    // final url = Uri.https(API_URL, Config.loginAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.loginAPI).toString();
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-      print(response);
+      final jsonData = response.data;
+      print("[로그인] : $jsonData");
       if (response.statusCode == 200) {
         // 로그인 응답 데이터 처리
         final loginResponse = loginResponseJson(response.data['data'] as Map<String, dynamic>);
         print(response.data['data']);
+
         // accessToken 저장
         await SessionService.setLoginDetails(loginResponse);
         return Result.success(loginResponse);

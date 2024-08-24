@@ -31,6 +31,7 @@ class ChatService {
       if (response.statusCode == 200) {
         //응답 성공
         dynamic jsonData = response.data;
+        print("[채팅] : $jsonData");
         return Result.success(
             createTripResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -66,7 +67,7 @@ class ChatService {
       );
 
       final jsonData = response.data;
-
+      print("[채팅 시작 여부 전달] : $jsonData");
       return Result.success(
         startChatResponseJson(jsonData as Map<String, dynamic>)
       );
@@ -93,7 +94,7 @@ class ChatService {
       );
 
       final jsonData = response.data;
-
+      print("[사용자가 입력한 메세지 전달] : $jsonData");
       return Result.success(
           chatbotMessageResponseJson(jsonData as Map<String, dynamic>)
       );
@@ -119,7 +120,7 @@ class ChatService {
           body: userResponse
       );
       final jsonData = response.data;
-
+      print("[생성된 여행 일정에 대한 사용자의 반응 전달] : $jsonData");
       return Result.success(
           judgeResultResponseJson(jsonData as Map<String, dynamic>)
       );

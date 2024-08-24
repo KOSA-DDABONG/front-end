@@ -17,8 +17,8 @@ class BoardService {
 
   //후기 전체 조회
   static Future<Result<BoardListResponseModel>> getReviewList() async {
-    final url = Uri.https(API_URL, Config.getBoardListAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.getBoardListAPI).toString();
+    // final url = Uri.https(API_URL, Config.getBoardListAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.getBoardListAPI).toString();
     final accessToken = await SessionService.getAccessToken();
 
     final headers = {
@@ -33,6 +33,7 @@ class BoardService {
       );
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
+        print("[후기 전체 리스트 조회] : $jsonData");
         return Result.success(
             boardListResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -46,8 +47,8 @@ class BoardService {
 
   //후기 상세 조회
   static Future<Result<BoardDetailGetResponseModel>> getReviewDetailInfo(String boardId) async {
-    final url = Uri.https(API_URL, Config.getBoardInfoAPI+boardId).toString();
-    // final url = Uri.http(Config.apiUrl, Config.getBoardInfoAPI+boardId).toString();
+    // final url = Uri.https(API_URL, Config.getBoardInfoAPI+boardId).toString();
+    final url = Uri.http(Config.apiUrl, Config.getBoardInfoAPI+boardId).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -61,6 +62,7 @@ class BoardService {
       );
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
+        print("[후기 상세 정보 조회] : $jsonData");
         return Result.success(
             boardDetailGetResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -75,8 +77,8 @@ class BoardService {
 
   //사용자가 작성한 게시물 리스트 조회
   static Future<Result<BoardMyListResponseModel>> getUserReviewList() async {
-    final url = Uri.https(API_URL, Config.getUserBoardListAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.getUserBoardListAPI).toString();
+    // final url = Uri.https(API_URL, Config.getUserBoardListAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.getUserBoardListAPI).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -90,6 +92,7 @@ class BoardService {
       );
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
+        print("[사용자가 작성한 게시물 리스트 조회] : $jsonData");
         return Result.success(
           boardMyListResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -104,8 +107,8 @@ class BoardService {
 
   //댓글 작성
   static Future<Result<CommentResponseModel>> registerComment(CommentRequestModel model) async {
-    final url = Uri.https(API_URL,  Config.registerCommentAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.registerCommentAPI).toString();
+    // final url = Uri.https(API_URL,  Config.registerCommentAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.registerCommentAPI).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -120,6 +123,7 @@ class BoardService {
       );
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
+        print("[댓글 작성] : $jsonData");
         return Result.success(
             commentResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -133,8 +137,8 @@ class BoardService {
 
   // 게시물 작성
   static Future<Result<BoardRegisterResponseModel>> savePost(BoardRegisterRequestModel model) async {
-    final url = Uri.https(API_URL,  Config.savePostAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.savePostAPI).toString();
+    // final url = Uri.https(API_URL,  Config.savePostAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.savePostAPI).toString();
     final accessToken = await SessionService.getAccessToken();
 
     try {
@@ -157,6 +161,7 @@ class BoardService {
 
       if (response.statusCode == 200) {
         final jsonData = response.data;
+        print("[게시물 작성] : $jsonData");
         return Result.success(
             boardRegisterResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -170,8 +175,8 @@ class BoardService {
 
   //좋아요 변경
   static Future<Result<LikesResponseModel>> updateLikes(int postid) async {
-    final url = Uri.https(API_URL,  Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
-    // final url = Uri.http(Config.apiUrl, Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
+    // final url = Uri.https(API_URL,  Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
+    final url = Uri.http(Config.apiUrl, Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -183,10 +188,10 @@ class BoardService {
         url,
         headers: headers,
       );
-      print("[Likes Update Response] 1 : " + response.toString());
+
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
-        print("[Likes Update Response] 2 : " + jsonData.toString());
+        print("[좋아요 변경] : $jsonData");
         return Result.success(
             likesResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -198,5 +203,3 @@ class BoardService {
     }
   }
 }
-
-
