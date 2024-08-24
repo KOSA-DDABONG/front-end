@@ -15,32 +15,18 @@ class ChatService {
   //여행일정 생성 시 요청 전달 및 응답 받아오기
   static Future<Result<CreateTripResponseModel>> getResponseForCreateSchedule(CreateTripRequestModel model) async {
     final url = Uri.http(FLASK_URL, Config.getResponseForCreateScheduleAPI).toString();
-    print("=====");
-    print("${url}");
-    print("=====");
-    print("=====");
-    print("${model.toJson()}");
-    print("=====");
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     try {
-      print("=====");
-      print("Here is try");
-      print("=====");
-      // POST 요청을 위한 JSON 데이터 생성
       final response = await DioClient.sendRequest(
         'POST',
         url,
         headers: headers,
         body: model.toJson(),
       );
-      print("=====");
-      print("${response.statusCode}");
-      print("${response.data}");
-      print("=====");
 
       if (response.statusCode == 200) {
         //응답 성공

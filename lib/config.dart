@@ -13,6 +13,8 @@ class Config {
   static const registerCommentAPI = "/post/comment"; //댓글 작성
   static const registerReviewAPI = "/board/saveReview"; //게시물(후기) 작성
   static const savePostAPI = "/post/board/saveReview"; //게시물(후기) 작성
+  static const updateLikesListAPI = "/list/"; //좋아요 업데이트
+  static const updateLikesAPI = "/changelike"; //좋아요 업데이트
 
   //My
   static const getUserBoardListAPI = "/myinfo/review/list"; //내가 쓴 후기 리스트

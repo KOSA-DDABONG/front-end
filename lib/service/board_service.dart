@@ -1,4 +1,5 @@
 import 'package:front/dto/comment/comment_request_model.dart';
+import 'package:front/dto/like/likes_response_model.dart';
 import 'package:front/service/result.dart';
 
 import '../config.dart';
@@ -11,7 +12,6 @@ import '../dto/comment/comment_response_model.dart';
 import '../key/key.dart';
 import 'dio_client.dart';
 import 'session_service.dart';
-
 
 class BoardService {
 
@@ -59,9 +59,6 @@ class BoardService {
           url,
           headers: headers
       );
-      print("#######");
-      print("${response.data}");
-      print("#######");
       if (response.statusCode == 200) {
         dynamic jsonData = response.data;
         return Result.success(
@@ -69,15 +66,9 @@ class BoardService {
         );
       }
       else {
-        print("#######");
-        print("Else");
-        print("#######");
         throw Exception("Failed to get Board Information");
       }
     } catch (e) {
-      print("#######");
-      print("$e");
-      print("#######");
       return Result.failure("[Get Board Info] An Error Occurred: ${e}");
     }
   }
@@ -174,6 +165,36 @@ class BoardService {
       }
     } catch (e) {
       return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+    }
+  }
+
+  //좋아요 변경
+  static Future<Result<LikesResponseModel>> updateLikes(int postid) async {
+    final url = Uri.https(API_URL,  Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+    final headers = {
+      'Authorization': 'Bearer $accessToken'
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+        'GET',
+        url,
+        headers: headers,
+      );
+      print("[Likes Update Response] 1 : " + response.toString());
+      if (response.statusCode == 200) {
+        dynamic jsonData = response.data;
+        print("[Likes Update Response] 2 : " + jsonData.toString());
+        return Result.success(
+            likesResponseJson(jsonData as Map<String, dynamic>)
+        );
+      } else {
+        throw Exception("Failed to update Likes");
+      }
+    } catch (e) {
+      return Result.failure("[Update Likes] An Error Occurred: ${e}");
     }
   }
 }

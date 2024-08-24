@@ -129,12 +129,6 @@ void showDetailReviewDialog(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child:
-                                // GetMap(
-                                //   apiKey: GOOGLE_MAP_KEY,
-                                //   origin: '${result.value!.data.tour.first.latitude},${result.value!.data.tour.first.longitude}',
-                                //   destination: '${result.value!.data.tour.last.latitude},${result.value!.data.tour.last.longitude}',
-                                //   waypoints: '${result.value!.data.tour[1].latitude},${result.value!.data.tour[1].longitude}'
-                                // )
                                 GetMap(
                                     apiKey: GOOGLE_MAP_KEY,
                                     origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
@@ -155,9 +149,19 @@ void showDetailReviewDialog(
                                     color: isLiked ? Colors.red : Colors.black,
                                   ),
                                   onPressed: () {
-                                    setState(() {
-                                      isLiked = !isLiked;
-                                    });
+                                    try{
+                                      final response = BoardService.updateLikes(result.value!.data.postId);
+                                      print("[Likes Update Response] $response");
+                                      if(response != null) {
+                                        setState(() {
+                                          isLiked = !isLiked;
+                                        });
+                                      }
+                                    }
+                                    catch (e) {
+                                      print("[Likes Update Failed] : $e");
+                                      showCustomSnackBar(context, "좋아요 업데이트에 실패하였습니다.");
+                                    }
                                   },
                                 ),
                                 // Text('$likesNum'),
@@ -475,9 +479,19 @@ void showDetailReviewDialog(
                                       color: isLiked ? Colors.red : Colors.black,
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        isLiked = !isLiked;
-                                      });
+                                      try{
+                                        final response = BoardService.updateLikes(result.value!.data.postId);
+                                        print("[Likes Update Response] $response");
+                                        if(response != null) {
+                                          setState(() {
+                                            isLiked = !isLiked;
+                                          });
+                                        }
+                                      }
+                                      catch (e) {
+                                        print("[Likes Update Failed] : $e");
+                                        showCustomSnackBar(context, "좋아요 업데이트에 실패하였습니다.");
+                                      }
                                     },
                                   ),
                                   Padding(
