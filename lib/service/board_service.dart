@@ -17,8 +17,8 @@ class BoardService {
 
   //후기 전체 조회
   static Future<Result<BoardListResponseModel>> getReviewList() async {
-    // final url = Uri.https(API_URL, Config.getBoardListAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.getBoardListAPI).toString();
+    final url = Uri.https(API_URL, Config.getBoardListAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.getBoardListAPI).toString();
     final accessToken = await SessionService.getAccessToken();
 
     final headers = {
@@ -47,8 +47,8 @@ class BoardService {
 
   //후기 상세 조회
   static Future<Result<BoardDetailGetResponseModel>> getReviewDetailInfo(String boardId) async {
-    // final url = Uri.https(API_URL, Config.getBoardInfoAPI+boardId).toString();
-    final url = Uri.http(Config.apiUrl, Config.getBoardInfoAPI+boardId).toString();
+    final url = Uri.https(API_URL, Config.getBoardInfoAPI+boardId).toString();
+    // final url = Uri.http(Config.apiUrl, Config.getBoardInfoAPI+boardId).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -77,8 +77,8 @@ class BoardService {
 
   //사용자가 작성한 게시물 리스트 조회
   static Future<Result<BoardMyListResponseModel>> getUserReviewList() async {
-    // final url = Uri.https(API_URL, Config.getUserBoardListAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.getUserBoardListAPI).toString();
+    final url = Uri.https(API_URL, Config.getUserBoardListAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.getUserBoardListAPI).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -107,8 +107,8 @@ class BoardService {
 
   //댓글 작성
   static Future<Result<CommentResponseModel>> registerComment(CommentRequestModel model) async {
-    // final url = Uri.https(API_URL,  Config.registerCommentAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.registerCommentAPI).toString();
+    final url = Uri.https(API_URL,  Config.registerCommentAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.registerCommentAPI).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
@@ -137,8 +137,8 @@ class BoardService {
 
   // 게시물 작성
   static Future<Result<BoardRegisterResponseModel>> savePost(BoardRegisterRequestModel model) async {
-    // final url = Uri.https(API_URL,  Config.savePostAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.savePostAPI).toString();
+    final url = Uri.https(API_URL,  Config.savePostAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.savePostAPI).toString();
     final accessToken = await SessionService.getAccessToken();
 
     try {
@@ -175,8 +175,8 @@ class BoardService {
 
   //좋아요 변경
   static Future<Result<LikesResponseModel>> updateLikes(int postid) async {
-    // final url = Uri.https(API_URL,  Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
-    final url = Uri.http(Config.apiUrl, Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
+    final url = Uri.https(API_URL,  Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.updateLikesListAPI+(postid.toString())+Config.updateLikesAPI).toString();
     final accessToken = await SessionService.getAccessToken();
     final headers = {
       'Authorization': 'Bearer $accessToken'
