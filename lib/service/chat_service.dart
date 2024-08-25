@@ -15,36 +15,23 @@ class ChatService {
   //여행일정 생성 시 요청 전달 및 응답 받아오기
   static Future<Result<CreateTripResponseModel>> getResponseForCreateSchedule(CreateTripRequestModel model) async {
     final url = Uri.http(FLASK_URL, Config.getResponseForCreateScheduleAPI).toString();
-    print("=====");
-    print("${url}");
-    print("=====");
-    print("=====");
-    print("${model.toJson()}");
-    print("=====");
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     try {
-      print("=====");
-      print("Here is try");
-      print("=====");
-      // POST 요청을 위한 JSON 데이터 생성
       final response = await DioClient.sendRequest(
         'POST',
         url,
         headers: headers,
         body: model.toJson(),
       );
-      print("=====");
-      print("${response.statusCode}");
-      print("${response.data}");
-      print("=====");
 
       if (response.statusCode == 200) {
         //응답 성공
         dynamic jsonData = response.data;
+        print("[채팅] : $jsonData");
         return Result.success(
             createTripResponseJson(jsonData as Map<String, dynamic>)
         );
@@ -80,7 +67,7 @@ class ChatService {
       );
 
       final jsonData = response.data;
-
+      print("[채팅 시작 여부 전달] : $jsonData");
       return Result.success(
         startChatResponseJson(jsonData as Map<String, dynamic>)
       );
@@ -107,7 +94,7 @@ class ChatService {
       );
 
       final jsonData = response.data;
-
+      print("[사용자가 입력한 메세지 전달] : $jsonData");
       return Result.success(
           chatbotMessageResponseJson(jsonData as Map<String, dynamic>)
       );
@@ -133,7 +120,7 @@ class ChatService {
           body: userResponse
       );
       final jsonData = response.data;
-
+      print("[생성된 여행 일정에 대한 사용자의 반응 전달] : $jsonData");
       return Result.success(
           judgeResultResponseJson(jsonData as Map<String, dynamic>)
       );

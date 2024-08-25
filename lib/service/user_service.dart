@@ -10,32 +10,6 @@ import 'session_service.dart';
 
 class UserService {
 
-  // //회원가입
-  // static Future<Result<SignupResponseModel>> register(SignupRequestModel model) async {
-  //   print('register0: ');
-  //   print(model.userId);
-  //   print(model.username);
-  //   print('-------');
-  //   final url = Uri.http(Config.apiURL, Config.signupAPI).toString();
-  //   print('register1: ');
-  //   print(url);
-  //   print('-------');
-  //   try {
-  //     print('this is try section');
-  //     print('-------');
-  //     final response = await DioClient.sendRequest('POST', url, body: model.toFormData);
-  //     print('register2: ');
-  //     print(response.data);
-  //     print('-------');
-  //     return Result.success(
-  //         signupResponseJson(response.data['data'] as Map<String, dynamic>)
-  //     );
-  //   } catch (e) {
-  //     print(e);
-  //     print('-------');
-  //     return Result.failure("[Signup] An Error Occurred: ${e}");
-  //   }
-  // }
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
     final url = Uri.https(API_URL, Config.signupAPI).toString();
@@ -43,7 +17,14 @@ class UserService {
 
     try {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-      return Result.success("Success");
+      final jsonData = response.data;
+      print("[회원가입] : $jsonData");
+      if (response == "Success") {
+        return Result.success("Success");
+      }
+      else {
+        throw Exception("[Signup] Failed Signup");
+      }
     } catch (e) {
       return Result.failure("[Signup] An Error Occurred: ${e}");
     }
@@ -56,11 +37,13 @@ class UserService {
 
     try{
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
-      print(response);
+      final jsonData = response.data;
+      print("[로그인] : $jsonData");
       if (response.statusCode == 200) {
         // 로그인 응답 데이터 처리
         final loginResponse = loginResponseJson(response.data['data'] as Map<String, dynamic>);
-        print(response.data['data']);
+        print("[로그인] : $loginResponse");
+
         // accessToken 저장
         await SessionService.setLoginDetails(loginResponse);
         return Result.success(loginResponse);
@@ -72,5 +55,4 @@ class UserService {
     }
   }
 }
-
 

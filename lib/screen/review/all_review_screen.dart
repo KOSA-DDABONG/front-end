@@ -25,7 +25,6 @@ class AllReviewScreen extends StatefulWidget {
 }
 
 class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProviderStateMixin {
-  List<String> allReviews = List.generate(15, (index) => 'assets/images/noImg.jpg');
 
   final TextEditingController _searchController = TextEditingController();
   late TabController _tabController;
@@ -33,8 +32,8 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   bool _isLoading = true;
   bool _loginState = false;
-  List<Board> _allReviews = [];
-  List<Board> _rankReviews = [];
+  List<AllBoardList> _allReviews = [];
+  List<AllBoardList> _rankReviews = [];
 
   @override
   void initState() {
@@ -87,105 +86,92 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    if(_loginState) {
+    if(_loginState) {//로그인 상태라면
+      if(_isLoading) {
+          return CheckLoginStateWidget(
+              builder: (context, isLoggedIn) {
+                PreferredSizeWidget currentAppBar;
+                Widget? currentDrawer;
+                currentAppBar = Responsive.isNarrowWidth(context)
+                    ? ShortHeader(automaticallyImplyLeading: false)
+                    : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+                currentDrawer = Responsive.isNarrowWidth(context)
+                    ? AfterLoginHeaderDrawer()
+                    : null;
+                return Scaffold(
+                    appBar: currentAppBar,
+                    drawer: currentDrawer,
+                    body: _loadingUI(context),
+                );
+              }
+          );
+      }
+      else {
+        return CheckLoginStateWidget(
+          builder: (context, isLoggedIn) {
+            PreferredSizeWidget currentAppBar;
+            Widget? currentDrawer;
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? AfterLoginHeaderDrawer()
+                : null;
+            return Scaffold(
+              appBar: currentAppBar,
+              drawer: currentDrawer,
+              body: _allReviewPageUI(),
+            );
+          }
+        );
+      }
+    }
+    else { // 비로그인 상태라면
       return CheckLoginStateWidget(
           builder: (context, isLoggedIn) {
             PreferredSizeWidget currentAppBar;
             Widget? currentDrawer;
-            if (isLoggedIn) {
-              currentAppBar = Responsive.isNarrowWidth(context)
-                  ? ShortHeader(automaticallyImplyLeading: false)
-                  : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-              currentDrawer = Responsive.isNarrowWidth(context)
-                  ? AfterLoginHeaderDrawer()
-                  : null;
-            }
-            else {
-              currentAppBar = Responsive.isNarrowWidth(context)
-                  ? ShortHeader(automaticallyImplyLeading: false)
-                  : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-              currentDrawer = Responsive.isNarrowWidth(context)
-                  ? NotLoginHeaderDrawer()
-                  : null;
-            }
-
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? NotLoginHeaderDrawer()
+                : null;
             return Scaffold(
                 appBar: currentAppBar,
                 drawer: currentDrawer,
-                body: _allReviewPageUI()
+                body: _notLoginAllReviewUI()
             );
           }
       );
     }
-    else {
-      if(_isLoading) {
-        return CheckLoginStateWidget(
-            builder: (context, isLoggedIn) {
-              PreferredSizeWidget currentAppBar;
-              Widget? currentDrawer;
-              if (isLoggedIn) {
-                currentAppBar = Responsive.isNarrowWidth(context)
-                    ? ShortHeader(automaticallyImplyLeading: false)
-                    : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-                currentDrawer = Responsive.isNarrowWidth(context)
-                    ? AfterLoginHeaderDrawer()
-                    : null;
-              }
-              else {
-                currentAppBar = Responsive.isNarrowWidth(context)
-                    ? ShortHeader(automaticallyImplyLeading: false)
-                    : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-                currentDrawer = Responsive.isNarrowWidth(context)
-                    ? NotLoginHeaderDrawer()
-                    : null;
-              }
+  }
 
-              return Scaffold(
-                appBar: currentAppBar,
-                drawer: currentDrawer,
-                body: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                  ),
+  Widget _loadingUI(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue, // 로딩 표시 색상 설정 (파란색)
                 ),
-              );
-            }
-        );
-      }
-      else {
-        return CheckLoginStateWidget(
-            builder: (context, isLoggedIn) {
-              PreferredSizeWidget currentAppBar;
-              Widget? currentDrawer;
-              if (isLoggedIn) {
-                currentAppBar = Responsive.isNarrowWidth(context)
-                    ? ShortHeader(automaticallyImplyLeading: false)
-                    : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-                currentDrawer = Responsive.isNarrowWidth(context)
-                    ? AfterLoginHeaderDrawer()
-                    : null;
-              }
-              else {
-                currentAppBar = Responsive.isNarrowWidth(context)
-                    ? ShortHeader(automaticallyImplyLeading: false)
-                    : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-                currentDrawer = Responsive.isNarrowWidth(context)
-                    ? NotLoginHeaderDrawer()
-                    : null;
-              }
-
-              return Scaffold(
-                  appBar: currentAppBar,
-                  drawer: currentDrawer,
-                  body: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: _notLoginAllReviewUI(),
-                  ),
-              );
-            }
-        );
-      }
-    }
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _notLoginAllReviewUI() {
@@ -339,6 +325,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   //탭 선택에 따른 순위 내용
+  // List<AllBoardList> _allReviews = []; 이 리스트에서 이미지 URL을 가져와야 하므로 이를 가정하고 작성하였습니다.
   Widget _buildContestTab() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -365,17 +352,14 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           return Expanded(
             child: GestureDetector(
               onTap: () async {
-
                 try {
-                  // final result = await BoardService.getReviewInfo(review.postid.toString());
                   final result = await BoardService.getReviewDetailInfo(review.postid.toString());
                   final accessToken = await SessionService.getAccessToken();
                   if (result.value?.status == 200 /*result.value != null*/) {
                     showDetailReviewDialog(
                       context,
-                      'assets/images/noImg.jpg',
                       GOOGLE_MAP_KEY,
-                      review,
+                      review.postid,
                       result,
                     );
                   } else {
@@ -421,13 +405,20 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                 children: [
                   Icon(icon, size: 40),
                   const SizedBox(height: 5),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/noImg.jpg',
-                      fit: BoxFit.cover,
-                      width: 150,
-                      height: 100,
+                  SizedBox(
+                    width: 150,
+                    height: 100,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                      child: Image.network(
+                          (_allReviews[index - 1].imgurl!.isNotEmpty || _allReviews[index - 1].imgurl != null)
+                            ? _allReviews[index - 1].imgurl.toString()
+                            : 'assets/images/noImg.jpg',
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                          return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -521,16 +512,14 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
             return GestureDetector(
               onTap: () async {
                 try {
-                  // final result = await BoardService.getReviewInfo(review.postid.toString());
                   final result = await BoardService.getReviewDetailInfo(review.postid.toString());
                   final accessToken = await SessionService.getAccessToken();
                   if (result.value?.status == 200 /*result.value != null*/) {
                     showDetailReviewDialog(
-                        context,
-                        'assets/images/noImg.jpg',
-                        GOOGLE_MAP_KEY,
-                        review,
-                        result
+                      context,
+                      GOOGLE_MAP_KEY,
+                      review.postid,
+                      result,
                     );
                   } else {
                     if (accessToken == null) {
@@ -577,11 +566,21 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       builder: (context, constraints) {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            'assets/images/noImg.jpg',
-                            fit: BoxFit.cover,
-                            width: constraints.maxWidth,
-                            height: constraints.maxWidth * 3 / 4,
+                          child: SizedBox(
+                              width: constraints.maxWidth,
+                              height: constraints.maxWidth * 3 / 4,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                                child: Image.network(
+                                  (_allReviews[index].imgurl != null && _allReviews[index].imgurl!.isNotEmpty)
+                                  ? _allReviews[index].imgurl.toString()
+                                  : 'assets/images/noImg.jpg',
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                                  },
+                                ),
+                              )
                           ),
                         );
                       },
@@ -598,7 +597,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   //게시물 정보(좋아요수, 댓글수)
-  Widget _reviewInfoUI(Board review) {
+  Widget _reviewInfoUI(AllBoardList review) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -606,15 +605,17 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
         children: [
           Row(
             children: [
-              Icon(Icons.favorite, color: Colors.grey),
-              SizedBox(width: 4),
+              (review.likeflag)
+              ? const Icon(Icons.favorite, color: Colors.red)
+              : const Icon(Icons.favorite, color: Colors.grey),
+              const SizedBox(width: 4),
               Text(review.likecount.toString()),
             ],
           ),
           Row(
             children: [
-              Icon(Icons.comment, color: Colors.grey),
-              SizedBox(width: 4),
+              const Icon(Icons.comment, color: Colors.grey),
+              const SizedBox(width: 4),
               Text(review.comcontentcount?.toString() ?? '0'),
             ],
           ),

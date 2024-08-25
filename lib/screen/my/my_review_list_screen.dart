@@ -11,11 +11,13 @@ import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/board/board_detail_get_response_model.dart';
 import '../../dto/board/board_model.dart';
-import '../../dto/board/board_mylist_response.dart';
+import '../../dto/board/board_myreviewlist_response_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
 import '../../service/board_service.dart';
 import '../../service/result.dart';
+import '../../service/session_service.dart';
+import '../start/login_screen.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({Key? key}) : super(key: key);
@@ -25,9 +27,6 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
-  late Board review;
-  // late Result<BoardDetailResponseModel> result;
-  late Result<BoardDetailGetResponseModel> result;
   bool _isLoading = true;
   bool _loginState = false;
   bool _dialogShown  = false;
@@ -89,52 +88,92 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
-    //   return Scaffold(
-    //     body: Padding(
-    //       padding: const EdgeInsets.all(16.0),
-    //       child: _myReviewEmptyPageUI(context),
-    //     ),
-    //   );
-    // } else {
-    //   return Scaffold(
-    //     body: Padding(
-    //       padding: const EdgeInsets.all(16.0),
-    //       child: _myReviewNotEmptyPageUI(context),
-    //     ),
-    //   );
-    // }
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _myReviewNotEmptyPageUI(context),
-      ),
-    );
+    if(_isLoading) {
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _loadingUI(context),
+        ),
+      );
+    }
+    else {
+      if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _myReviewEmptyPageUI(context),
+          ),
+        );
+      } else {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _myReviewNotEmptyPageUI(context),
+          ),
+        );
+      }
+    }
   }
 
-
-  Widget _myReviewEmptyPageUI(BuildContext context) {
-    return SingleChildScrollView(
+  Widget _loadingUI(BuildContext context) {
+    return Container(
       padding: const EdgeInsets.all(25),
-      child:
-      Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showTitle('나의 후기'),
-          const SizedBox(height: 20),
-          Center(
-            child: Text('데이터가 존재하지 않습니다.'),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue, // 로딩 표시 색상 설정 (파란색)
+                ),
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
           )
         ],
       ),
     );
   }
+
+  Widget _myReviewEmptyPageUI(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('나의 후기'),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+            flex: 1,
+            child: Center(
+              child: Text('데이터가 존재하지 않습니다.'),
+            )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
+        ],
+      ),
+    );
+  }
+
   //나의 후기 페이지 UI
   Widget _myReviewNotEmptyPageUI(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(25),
-      child:
-      Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showTitle('나의 후기'),
@@ -145,15 +184,59 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
     );
   }
 
-  //
   // 내가 작성한 후기 카드
   Widget _myReviewCard(BuildContext context) {
-    return ListView.builder(
-      itemCount: _myReviewInfo!.data!.length,
-      itemBuilder: (context, index) {
+    return Column(
+      children: List.generate(_myReviewInfo!.data!.length, (index) {
         return GestureDetector(
-          onTap: () {
-            showDetailReviewDialog(context, _myReviewInfo!.data!.first.url as String, GOOGLE_MAP_KEY, review, result);
+          onTap: () async {
+            try {
+              final result = await BoardService.getReviewDetailInfo(_myReviewInfo!.data![index].postId.toString());
+              final accessToken = await SessionService.getAccessToken();
+              if (result.value?.status == 200 /*result.value != null*/) {
+                showDetailReviewDialog(
+                  context,
+                  GOOGLE_MAP_KEY,
+                  _myReviewInfo!.data![index].postId,
+                  result,
+                );
+              } else {
+                if (accessToken == null) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('메세지'),
+                        content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('취소'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()),
+                              );
+                            },
+                            child: Text('로그인'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
+                }
+              }
+            } catch (e) {
+              showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            }
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 10),
@@ -172,7 +255,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
             ),
           ),
         );
-      },
+      }),
     );
   }
 
@@ -187,20 +270,24 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
           Container(
             width: 100,
             height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage(_myReviewInfo!.data![index].url.isNotEmpty ? _myReviewInfo!.data![index].url[0] : 'assets/images/noImg.jpg'),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+              child: Image.network(
+                _myReviewInfo!.data![index].url.isNotEmpty ? _myReviewInfo!.data![index].url[0] : 'assets/images/noImg.jpg',
                 fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  // 오류가 발생할 경우 대체 이미지 제공
+                  return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                },
               ),
-            ),
+            )
           ),
           const SizedBox(width: 10),
           Responsive.isNarrowWidth(context)
               ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
               Text('${_myReviewInfo!.data![index].startTime} ~ ${_myReviewInfo!.data![index].endTime}', style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
@@ -212,7 +299,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
               : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -230,86 +317,6 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
       ),
     );
   }
-  //
-
-  // //내가 작성한 후기 카드
-  // Widget _myReviewCard(BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       showDetailReviewDialog(context, _myReviewInfo!.data!.first.url as String, GOOGLE_MAP_KEY, review, result);
-  //     },
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         border: Border.all(color: Colors.black, width: 1.0),
-  //         borderRadius: BorderRadius.circular(10),
-  //         color: Colors.transparent,
-  //       ),
-  //       child: Stack(
-  //         children: [
-  //           _cardContent(),
-  //           Responsive.isNarrowWidth(context)
-  //               ? _cardIconNarrowBtn(const Icon(Icons.edit_outlined), const Icon(Icons.delete_outline))
-  //               : _cardIconWideBtn(const Icon(Icons.edit_outlined), const Icon(Icons.delete_outline))
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // //카드 내용
-  // Widget _cardContent() {
-  //   return ListTile(
-  //     contentPadding: const EdgeInsets.all(10),
-  //     subtitle: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         const SizedBox(width: 10),
-  //         Container(
-  //           width: 100,
-  //           height: 100,
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(10),
-  //             image: const DecorationImage(
-  //               image: AssetImage('assets/images/landing_background.jpg'),
-  //               fit: BoxFit.cover,
-  //             ),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 10),
-  //         Responsive.isNarrowWidth(context)
-  //         ? Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-  //               const SizedBox(height: 5),
-  //               Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-  //               const SizedBox(height: 5),
-  //               Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-  //               const SizedBox(height: 5),
-  //               Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-  //             ],
-  //           )
-  //          : Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-  //                 const SizedBox(height: 10),
-  //                 Row(
-  //                   children: [
-  //                     Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-  //                     const SizedBox(width: 10),
-  //                     Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-  //                     const SizedBox(height: 10),
-  //                   ],
-  //                 ),
-  //                 const SizedBox(height: 10),
-  //                 Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-  //               ],
-  //             ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   //카드 내 아이콘 버튼(좁은 화면)
   Widget _cardIconNarrowBtn(Icon icon1, Icon icon2) {
