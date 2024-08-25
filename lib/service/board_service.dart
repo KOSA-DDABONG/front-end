@@ -5,6 +5,7 @@ import 'package:front/service/result.dart';
 import '../config.dart';
 import '../dto/board/board_detail_get_response_model.dart';
 import '../dto/board/board_all_list_response_model.dart';
+import '../dto/board/board_mylikelist_response_model.dart';
 import '../dto/board/board_myreviewlist_response_model.dart';
 import '../dto/board/board_register_request_model.dart';
 import '../dto/board/board_register_response_model.dart';
@@ -200,6 +201,37 @@ class BoardService {
       }
     } catch (e) {
       return Result.failure("[Update Likes] An Error Occurred: ${e}");
+    }
+  }
+
+  //사용자 좋아요 리스트 조회
+  static Future<Result<MyLikesListResponseModel>> getUserLikesList() async {
+    final url = Uri.https(API_URL, Config.getMyLikesListAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.getMyLikesListAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+    final headers = {
+      'Authorization': 'Bearer $accessToken'
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
+      );
+      if (response.statusCode == 200) {
+        dynamic jsonData = response.data;
+        print("[사용자의 좋아요 리스트 조회] : $jsonData");
+        return Result.success(
+            myLikesListResponseJson(jsonData as Map<String, dynamic>)
+        );
+      }
+      else {
+        throw Exception("Failed to get Board Information");
+      }
+    } catch (e) {
+      print("[사용자의 좋아요 리스트 조회] : $e");
+      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
     }
   }
 }
