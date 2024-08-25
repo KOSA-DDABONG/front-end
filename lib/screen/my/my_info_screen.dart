@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
-import 'package:front/dto/board/board_mylist_response.dart';
+import 'package:front/dto/board/board_myreviewlist_response_model.dart';
 import 'package:front/responsive.dart';
 import 'package:front/service/board_service.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLoginUserInfo();
     _getMyReviewList();
     _startLoadingTimeout(); // 로딩 시간 제한을 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -58,8 +57,10 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
       try {
         final result = await BoardService.getUserReviewList();
-        if (result.value?.status == 200) { // 유저정보 로드 성공
+        final usermodel = await SessionService.loginDetails();
+        if (result.value?.status == 200 && usermodel != null) { // 유저정보 로드 성공
           setState(() {
+            _userinfo = usermodel;
             _myReviewInfo = result.value;
             _isLoading = false;
           });
@@ -83,61 +84,28 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     }
   }
 
-  Future<void> _checkLoginUserInfo() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
-
-      try {
-        final usermodel = await SessionService.loginDetails();
-        if (usermodel != null) { // 유저정보 로드 성공
-          setState(() {
-            _userinfo = usermodel;
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
-        setState(() {
-          _isLoading = false;
-        });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
-      }
-    } else {
-        if (!_dialogShown) {
-          _dialogShown = true;
-          await showRequestLoginDialog(context);
-          _dialogShown = false;
-        }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_loginState) {
+    if(_isLoading) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Responsive.isNarrowWidth(context)
-              ? _profileNarrowUI(context)
-              : _profileWideUI(context),
+          child: _loadingUI(context),
         ),
       );
-    } else {
-      if (_isLoading) {
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-            ),
+    }
+    else{
+      if (_loginState) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Responsive.isNarrowWidth(context)
+                ? _profileNarrowUI(context)
+                : _profileWideUI(context),
           ),
         );
-      } else {
+      }
+      else {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -146,6 +114,34 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         );
       }
     }
+  }
+
+  Widget _loadingUI(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 프로필'),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue, // 로딩 표시 색상 설정 (파란색)
+                ),
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
+        ],
+      ),
+    );
   }
 
   //로그인X
@@ -318,15 +314,19 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           children: [
             const SizedBox(width: 10),
             Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/noImg.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+                width: 100,
+                height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                  child: Image.network(
+                    _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                    fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      // 오류가 발생할 경우 대체 이미지 제공
+                      return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                    },
+                  ),
+                )
             ),
             const SizedBox(width: 10),
             Responsive.isNarrowWidth(context)
@@ -448,10 +448,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       );
     }
 
-    final imageUrl = highestReview.url?.isNotEmpty == true
-        ? highestReview.url!.first
-        : 'assets/images/noImg.jpg';
-
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 1.0),
@@ -465,15 +461,19 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: AssetImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                  width: 100,
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                    child: Image.network(
+                      _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                        // 오류가 발생할 경우 대체 이미지 제공
+                        return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                      },
+                    ),
+                  )
               ),
               const SizedBox(width: 15),
               Column(
@@ -554,17 +554,22 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(8, (index) {
+                    //
                     return Container(
-                      margin: EdgeInsets.only(right: spacing),
-                      width: containerWidth,
-                      height: containerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/noImg.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                        margin: EdgeInsets.only(right: spacing),
+                        width: containerWidth,
+                        height: containerWidth,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100), // 모서리 둥글기 설정
+                          child: Image.network(
+                            _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                            fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                              // 오류가 발생할 경우 대체 이미지 제공
+                              return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                            },
+                          ),
+                        )
                     );
                   }),
                 );

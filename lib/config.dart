@@ -13,10 +13,13 @@ class Config {
   static const registerCommentAPI = "/post/comment"; //댓글 작성
   static const registerReviewAPI = "/board/saveReview"; //게시물(후기) 작성
   static const savePostAPI = "/post/board/saveReview"; //게시물(후기) 작성
+  static const updateLikesListAPI = "/list/"; //좋아요 업데이트
+  static const updateLikesAPI = "/changelike"; //좋아요 업데이트
 
   //My
   static const getUserBoardListAPI = "/myinfo/review/list"; //내가 쓴 후기 리스트
   static const getMyTravelListAPI = "/my/mySavedTravel"; //내가 저장한 여행일정 리스트
+  static const getMyLikesListAPI = "/mylist"; //나의 좋아요 리스트
 
   //Travel
   static const getResponseForCreateScheduleAPI = "/making"; //여행 일정 요청 전달 및 응답 받아오기

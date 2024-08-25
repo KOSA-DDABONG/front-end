@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class MyMenuController extends ChangeNotifier {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
 
   String _selectedScreen = 'myInfo';
@@ -31,6 +30,5 @@ class MyMenuController extends ChangeNotifier {
       _scaffoldKey.currentState!.openDrawer();
     }
   }
-
 
 }

@@ -1,76 +1,56 @@
 import '../comment/comment_info_model.dart';
-import '../hashtag/hashtag_model.dart';
 import '../place/hotel_model.dart';
 import '../place/restaurant_model.dart';
 import '../place/tour_model.dart';
 
-class Board {
-  Board({
+class AllBoardList {
+  AllBoardList({
     required this.likecount,
+    required this.likeflag,
     required this.comcontentcount,
     required this.postid,
-    this.memberid,
-    this.travelid,
-    this.content,
-    this.createdtime,
+    required this.createtime,
+    this.imgurl
   });
 
   late final int likecount;
+  late final bool likeflag;
   late final int comcontentcount;
   late final int postid;
-  late final int? memberid;
-  late final int? travelid;
-  late final String? content;
-  late final DateTime? createdtime;
+  late final DateTime? createtime;
+  late final String? imgurl;
 
   @override
   String toString() {
     return '''
       Board {
         likecount: $likecount,
+        likeflag: $likeflag,
         comcontentcount: $comcontentcount,
         postid: $postid,
-        memberid: $memberid,
-        travelid: $travelid,
-        content: $content,
-        createdtime: $createdtime,
+        createtime: $createtime,
+        imgurl: $imgurl,
       }''';
   }
 
-  // factory Board.fromJson(Map<String, dynamic> json) {
-  //   return Board(
-  //     likecount: json['likecount'] ?? '0',
-  //     comcontentcount: json['comcontentcount'] ?? '0',
-  //     postid: json['postid'] ?? '',
-  //     memberid: json['memberid'] ?? '',
-  //     travelid: json['travelid'] ?? '',
-  //     content: json['content'] ?? '',
-  //     createdtime: json['createdtime'] != null && json['createdtime'].isNotEmpty
-  //         ? DateTime.parse(json['createdtime'])
-  //         : null,
-  //   );
-  // }
-  factory Board.fromJson(Map<String, dynamic> json) {
-    return Board(
+  factory AllBoardList.fromJson(Map<String, dynamic> json) {
+    return AllBoardList(
       likecount: json['likecount'] != null
           ? int.tryParse(json['likecount'].toString()) ?? 0
           : 0,
+      likeflag: json['likeflag'] != null
+          ? json['likeflag'] as bool // JSON 데이터에서 bool로 변환
+          : false, // 기본값을 false로 설정
       comcontentcount: json['comcontentcount'] != null
           ? int.tryParse(json['comcontentcount'].toString()) ?? 0
           : 0,
       postid: json['postid'] != null
           ? int.tryParse(json['postid'].toString()) ?? 0
           : 0,
-      memberid: json['memberid'] != null
-          ? int.tryParse(json['memberid'].toString())
+      createtime: json['createtime'] != null && json['createtime'].isNotEmpty
+          ? DateTime.parse(json['createtime'])
           : null,
-      travelid: json['travelid'] != null
-          ? int.tryParse(json['travelid'].toString())
-          : null,
-      content: json['content'] as String?,
-      createdtime: json['createdtime'] != null && json['createdtime'].isNotEmpty
-          ? DateTime.parse(json['createdtime'])
-          : null,
+      imgurl: json['imgurl'] as String?,
     );
   }
 
@@ -78,12 +58,11 @@ class Board {
   Map<String, dynamic> toJson() {
     return {
       'likecount': likecount,
+      'likeflag': likeflag,
       'comcontentcount': comcontentcount,
       'postid': postid,
-      'memberid': memberid,
-      'travelid': travelid,
-      'content': content,
-      'createdtime': createdtime?.toIso8601String(),
+      'createtime': createtime?.toIso8601String(),
+      'imgurl': imgurl
     };
   }
 
@@ -117,8 +96,8 @@ class Board {
 
 
 
-class BoardListInfo {
-  BoardListInfo({
+class MyBoardListInfo {
+  MyBoardListInfo({
     required this.postId,
     required this.travelId,
     required this.url,
@@ -154,8 +133,8 @@ class BoardListInfo {
       }''';
   }
 
-  factory BoardListInfo.fromJson(Map<String, dynamic> json) {
-    return BoardListInfo(
+  factory MyBoardListInfo.fromJson(Map<String, dynamic> json) {
+    return MyBoardListInfo(
       postId: json['postId'] != null
           ? int.tryParse(json['postId'].toString()) ?? 0
           : 0,
@@ -215,6 +194,7 @@ class BoardDetailInfo {
     required this.hashtags,
     required this.likeCnt,
     required this.commentCnt,
+    required this.isLike,
     required this.commentInfoDTOs,
   });
 
@@ -230,6 +210,7 @@ class BoardDetailInfo {
   late final List<String> hashtags;
   late final int likeCnt;
   late final int commentCnt;
+  late final bool isLike;
   late final List<CommentInfoModel>? commentInfoDTOs;
 
   @override
@@ -248,6 +229,7 @@ class BoardDetailInfo {
         hashtags: $hashtags,
         likeCnt: $likeCnt,
         commentCnt: $commentCnt,
+        isLike: $isLike,
         commentInfoDTOs: $commentInfoDTOs,
       }''';
   }
@@ -290,28 +272,12 @@ class BoardDetailInfo {
       commentCnt: json['commentCnt'] != null
           ? int.tryParse(json['commentCnt'].toString()) ?? 0
           : 0,
+      isLike: json['isLike'] != null
+          ? json['isLike'] as bool // JSON 데이터에서 bool로 변환
+          : false, // 기본값을 false로 설정
       commentInfoDTOs: json['commentInfoDTOs'] != null
           ? (json['commentInfoDTOs'] as List<dynamic>).map((item) => CommentInfoModel.fromJson(item as Map<String, dynamic>)).toList()
           : [],
     );
   }
-
-  //
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'memberId': memberId,
-  //     'postId': postId,
-  //     'travelId': travelId,
-  //     'url': url,
-  //     'tour': tour.map((item) => item.toJson()).toList(),
-  //     'restaurant': restaurant.map((item) => item.toJson()).toList(),
-  //     'hotel': hotel.map((item) => item.toJson()).toList(),
-  //     'nickName': nickName,
-  //     'content': content,
-  //     'hashtags': hashtags.map((item) => item.toJson()).toList(),
-  //     'likeCnt': likeCnt,
-  //     'commentCnt': commentCnt,
-  //     'commentInfoDTOs': commentInfoDTOs?.map((item) => item.toJson()).toList(),
-  //   };
-  // }
 }
