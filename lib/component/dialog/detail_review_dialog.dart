@@ -15,13 +15,13 @@ import '../../dto/board/board_detail_get_response_model.dart';
 import '../../dto/comment/comment_info_model.dart';
 import '../../dto/comment/comment_list_model.dart';
 import '../../key/key.dart';
+import '../../screen/review/all_review_screen.dart';
 import '../map/get_map.dart';
 
 void showDetailReviewDialog(
     BuildContext context,
-    String imageUrl,
     String apiKey,
-    Board review,
+    AllBoardList review,
     Result<BoardDetailGetResponseModel> result
   ) {
   final PageController pageController = PageController();
@@ -30,14 +30,10 @@ void showDetailReviewDialog(
   List<String>? hashtagList = result.value?.data.hashtags;
   List<String>? imageList = result.value?.data.url;
 
-  print("#@#@#@111");
-  print(result.value!.data.url);
-  print("#@#@#@111");
-
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      bool isLiked = false;
+      bool isLiked = result.value!.data.isLike;
       bool showComments = false;
       bool isButtonEnabled = false;
 
@@ -82,10 +78,6 @@ void showDetailReviewDialog(
                                               imageModel,
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) {
-                                                print("---------#1Narrow---------");
-                                                print(error);
-                                                print(stackTrace);
-                                                print("--------------------");
                                                 return Image.asset(
                                                   'assets/images/noImg.jpg',
                                                   fit: BoxFit.cover,
@@ -151,7 +143,6 @@ void showDetailReviewDialog(
                                   onPressed: () {
                                     try{
                                       final response = BoardService.updateLikes(result.value!.data.postId);
-                                      print("[Likes Update Response] $response");
                                       if(response != null) {
                                         setState(() {
                                           isLiked = !isLiked;
@@ -159,7 +150,6 @@ void showDetailReviewDialog(
                                       }
                                     }
                                     catch (e) {
-                                      print("[Likes Update Failed] : $e");
                                       showCustomSnackBar(context, "좋아요 업데이트에 실패하였습니다.");
                                     }
                                   },
@@ -209,7 +199,7 @@ void showDetailReviewDialog(
                                               child: Text(
                                                 // "$commentContent",
                                                 "${result.value?.data.content}",
-                                                style: TextStyle(fontSize: 18),
+                                                style: const TextStyle(fontSize: 18),
                                               ),
                                             )
                                           ),
@@ -217,7 +207,7 @@ void showDetailReviewDialog(
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              padding: const EdgeInsets.symmetric(horizontal: 8),
                                               child: Text(
                                                 hashtagList != null
                                                     ? hashtagList.map((hashtag) => '#${hashtag}').toSet().join(' ')
@@ -244,8 +234,17 @@ void showDetailReviewDialog(
                                         return Column(
                                           children: [
                                             ListTile(
-                                              leading: const CircleAvatar(
-                                                backgroundImage: AssetImage('comment.profileUrl'),
+                                              leading: ClipRRect(
+                                                borderRadius: BorderRadius.circular(100),
+                                                child: Image.network(
+                                                  comment.profileUrl,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return Image.asset('assets/images/noImg.jpg',
+                                                      fit: BoxFit.cover,
+                                                    );
+                                                  },
+                                                ),
                                               ),
                                               title: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,8 +299,13 @@ void showDetailReviewDialog(
                                   try{
                                     final model = CommentRequestModel(postId: review.postid, comcontent: commentController.text.trim());
                                     final result = BoardService.registerComment(model);
-                                    print("hhhhee1 " + result.toString());
+
                                     if(result != null) {
+                                      // Navigator.of(context).pushReplacement(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => AllReviewScreen(),
+                                      //   ),
+                                      // );
                                       Navigator.pop(context);
                                       showCustomSnackBar(context, "댓글 작성에 성공하였습니다.");
                                     }
@@ -521,8 +525,17 @@ void showDetailReviewDialog(
                                   return Column(
                                     children: [
                                       ListTile(
-                                        leading: CircleAvatar(
-                                          backgroundImage: AssetImage(comment.profileUrl),
+                                        leading: ClipRRect(
+                                          borderRadius: BorderRadius.circular(100),
+                                          child: Image.network(
+                                            comment.profileUrl,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Image.asset('assets/images/noImg.jpg',
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          ),
                                         ),
                                         title: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -568,8 +581,13 @@ void showDetailReviewDialog(
                                         try{
                                           final model = CommentRequestModel(postId: review.postid, comcontent: commentController.text.trim());
                                           final result = BoardService.registerComment(model);
-                                          print("hhhhee2 " + result.toString());
+
                                           if(result != null) {
+                                            // Navigator.of(context).pushReplacement(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => AllReviewScreen(),
+                                            //   ),
+                                            // );
                                             Navigator.pop(context);
                                             showCustomSnackBar(context, "댓글 작성에 성공하였습니다.");
                                           }
@@ -598,4 +616,12 @@ void showDetailReviewDialog(
       }
     },
   );
+  //     .then((update) {
+  //   Navigator.of(context).pushReplacement(
+  //     MaterialPageRoute(
+  //       builder: (context) => AllReviewScreen(),
+  //     ),
+  //   );
+  // });
+
 }

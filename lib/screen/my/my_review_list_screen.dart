@@ -11,7 +11,7 @@ import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/board/board_detail_get_response_model.dart';
 import '../../dto/board/board_model.dart';
-import '../../dto/board/board_mylist_response.dart';
+import '../../dto/board/board_myreviewlist_response_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
 import '../../service/board_service.dart';
@@ -25,7 +25,7 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
-  late Board review;
+  late AllBoardList review;
   // late Result<BoardDetailResponseModel> result;
   Result<BoardDetailGetResponseModel>? result;
   bool _isLoading = true;
@@ -89,35 +89,81 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+    if(_isLoading) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _myReviewEmptyPageUI(context),
-        ),
-      );
-    } else {
-      return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: _myReviewNotEmptyPageUI(context),
+          child: _loadingUI(context),
         ),
       );
     }
+    else {
+      if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _myReviewEmptyPageUI(context),
+          ),
+        );
+      } else {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _myReviewNotEmptyPageUI(context),
+          ),
+        );
+      }
+    }
   }
 
-
-  Widget _myReviewEmptyPageUI(BuildContext context) {
-    return SingleChildScrollView(
+  Widget _loadingUI(BuildContext context) {
+    return Container(
       padding: const EdgeInsets.all(25),
-      child:
-      Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           showTitle('나의 후기'),
-          const SizedBox(height: 20),
-          Center(
-            child: Text('데이터가 존재하지 않습니다.'),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue, // 로딩 표시 색상 설정 (파란색)
+                ),
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _myReviewEmptyPageUI(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('나의 후기'),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+            flex: 1,
+            child: Center(
+              child: Text('데이터가 존재하지 않습니다.'),
+            )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
           )
         ],
       ),
@@ -145,7 +191,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
       children: List.generate(_myReviewInfo!.data!.length, (index) {
         return GestureDetector(
           onTap: () {
-            showDetailReviewDialog(context, _myReviewInfo!.data!.first.url as String, GOOGLE_MAP_KEY, review, result!);
+            showDetailReviewDialog(context, GOOGLE_MAP_KEY, review, result!);
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 10),
@@ -179,17 +225,17 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
           Container(
             width: 100,
             height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Image.network(
-              _myReviewInfo!.data![index].url.isNotEmpty ? _myReviewInfo!.data![index].url[0] : 'assets/images/noImg.jpg',
-              fit: BoxFit.cover,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                // 오류가 발생할 경우 대체 이미지 제공
-                return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
-              },
-            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+              child: Image.network(
+                _myReviewInfo!.data![index].url.isNotEmpty ? _myReviewInfo!.data![index].url[0] : 'assets/images/noImg.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  // 오류가 발생할 경우 대체 이미지 제공
+                  return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                },
+              ),
+            )
           ),
           const SizedBox(width: 10),
           Responsive.isNarrowWidth(context)

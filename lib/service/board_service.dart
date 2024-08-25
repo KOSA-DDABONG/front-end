@@ -4,8 +4,8 @@ import 'package:front/service/result.dart';
 
 import '../config.dart';
 import '../dto/board/board_detail_get_response_model.dart';
-import '../dto/board/board_list_response_model.dart';
-import '../dto/board/board_mylist_response.dart';
+import '../dto/board/board_all_list_response_model.dart';
+import '../dto/board/board_myreviewlist_response_model.dart';
 import '../dto/board/board_register_request_model.dart';
 import '../dto/board/board_register_response_model.dart';
 import '../dto/comment/comment_response_model.dart';
@@ -16,7 +16,7 @@ import 'session_service.dart';
 class BoardService {
 
   //후기 전체 조회
-  static Future<Result<BoardListResponseModel>> getReviewList() async {
+  static Future<Result<BoardAllListResponseModel>> getReviewList() async {
     final url = Uri.https(API_URL, Config.getBoardListAPI).toString();
     // final url = Uri.http(Config.apiUrl, Config.getBoardListAPI).toString();
     final accessToken = await SessionService.getAccessToken();
@@ -35,7 +35,7 @@ class BoardService {
         dynamic jsonData = response.data;
         print("[후기 전체 리스트 조회] : $jsonData");
         return Result.success(
-            boardListResponseJson(jsonData as Map<String, dynamic>)
+            boardAllListResponseJson(jsonData as Map<String, dynamic>)
         );
       } else {
         throw Exception("Failed to get Board Information");

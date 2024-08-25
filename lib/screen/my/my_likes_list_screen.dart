@@ -19,7 +19,7 @@ class MyLikesListScreen extends StatefulWidget {
 class _MyLikesListScreenState extends State<MyLikesListScreen> {
   // 상태를 저장하기 위한 변수
   final Set<int> _likedItems = Set<int>();
-  late Board review;
+  late AllBoardList review;
   // late Result<BoardDetailResponseModel> result;
   late Result<BoardDetailGetResponseModel> result;
 
@@ -78,7 +78,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
 
     return GestureDetector(
       onTap: () {
-        showDetailReviewDialog(context, 'assets/images/landing_background.jpg', GOOGLE_MAP_KEY, review, result);
+        showDetailReviewDialog(context, GOOGLE_MAP_KEY, review, result);
       },
       child: Stack(
         children: [

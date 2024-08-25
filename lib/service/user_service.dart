@@ -42,7 +42,7 @@ class UserService {
       if (response.statusCode == 200) {
         // 로그인 응답 데이터 처리
         final loginResponse = loginResponseJson(response.data['data'] as Map<String, dynamic>);
-        print(response.data['data']);
+        print("[로그인] : $loginResponse");
 
         // accessToken 저장
         await SessionService.setLoginDetails(loginResponse);
@@ -55,5 +55,4 @@ class UserService {
     }
   }
 }
-
 

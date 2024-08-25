@@ -12,13 +12,13 @@ class BoardMyListResponseModel {
 
   late final String message;
   late final int status;
-  late final List<BoardListInfo>? data;
+  late final List<MyBoardListInfo>? data;
 
   BoardMyListResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
     if (json['data'] != null) {
-      data = (json['data'] as List<dynamic>).map((item) => BoardListInfo.fromJson(item as Map<String, dynamic>)).toList();
+      data = (json['data'] as List<dynamic>).map((item) => MyBoardListInfo.fromJson(item as Map<String, dynamic>)).toList();
     }
   }
 
