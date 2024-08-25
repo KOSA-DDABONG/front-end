@@ -230,7 +230,6 @@ class BoardService {
         throw Exception("Failed to get Board Information");
       }
     } catch (e) {
-      print("[사용자의 좋아요 리스트 조회] : $e");
       return Result.failure("[Get Board Info] An Error Occurred: ${e}");
     }
   }

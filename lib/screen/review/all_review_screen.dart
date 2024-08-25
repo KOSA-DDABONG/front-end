@@ -411,12 +411,11 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
                       child: Image.network(
-                        _allReviews[index - 1].imgurl!.isNotEmpty
-                            ? _allReviews[index - 1].imgurl![0]
+                          (_allReviews[index - 1].imgurl!.isNotEmpty || _allReviews[index - 1].imgurl != null)
+                            ? _allReviews[index - 1].imgurl.toString()
                             : 'assets/images/noImg.jpg',
                         fit: BoxFit.cover,
                         errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                          // 오류가 발생할 경우 대체 이미지 제공
                           return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
                         },
                       ),
@@ -578,13 +577,10 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                                 borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
                                 child: Image.network(
                                   (_allReviews[index].imgurl != null && _allReviews[index].imgurl!.isNotEmpty)
-                                  ? _allReviews[index].imgurl![0]
+                                  ? _allReviews[index].imgurl.toString()
                                   : 'assets/images/noImg.jpg',
-                                  // encodedImgUrl,
                                   fit: BoxFit.cover,
                                   errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                    // 오류가 발생할 경우 대체 이미지 제공
-                                    print("@@@@@ postid: ${review.postid} + $exception" );
                                     return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
                                   },
                                 ),
