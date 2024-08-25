@@ -16,6 +16,8 @@ import '../../key/key.dart';
 import '../../responsive.dart';
 import '../../service/board_service.dart';
 import '../../service/result.dart';
+import '../../service/session_service.dart';
+import '../start/login_screen.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({Key? key}) : super(key: key);
@@ -25,9 +27,6 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
-  late AllBoardList review;
-  // late Result<BoardDetailResponseModel> result;
-  Result<BoardDetailGetResponseModel>? result;
   bool _isLoading = true;
   bool _loginState = false;
   bool _dialogShown  = false;
@@ -190,8 +189,54 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
     return Column(
       children: List.generate(_myReviewInfo!.data!.length, (index) {
         return GestureDetector(
-          onTap: () {
-            showDetailReviewDialog(context, GOOGLE_MAP_KEY, review, result!);
+          onTap: () async {
+            try {
+              final result = await BoardService.getReviewDetailInfo(_myReviewInfo!.data![index].postId.toString());
+              final accessToken = await SessionService.getAccessToken();
+              if (result.value?.status == 200 /*result.value != null*/) {
+                showDetailReviewDialog(
+                  context,
+                  GOOGLE_MAP_KEY,
+                  _myReviewInfo!.data![index].postId,
+                  result,
+                );
+              } else {
+                if (accessToken == null) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('메세지'),
+                        content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('취소'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()),
+                              );
+                            },
+                            child: Text('로그인'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
+                }
+              }
+            } catch (e) {
+              showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            }
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 10),

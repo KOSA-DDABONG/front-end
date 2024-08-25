@@ -21,7 +21,8 @@ import '../map/get_map.dart';
 void showDetailReviewDialog(
     BuildContext context,
     String apiKey,
-    AllBoardList review,
+    int postid,
+    // AllBoardList review,
     Result<BoardDetailGetResponseModel> result
   ) {
   final PageController pageController = PageController();
@@ -29,6 +30,8 @@ void showDetailReviewDialog(
   List<CommentInfoModel>? commentList = result.value?.data.commentInfoDTOs;
   List<String>? hashtagList = result.value?.data.hashtags;
   List<String>? imageList = result.value?.data.url;
+
+
 
   showDialog(
     context: context,
@@ -297,7 +300,7 @@ void showDetailReviewDialog(
                                 icon: const Icon(Icons.send),
                                 onPressed: isButtonEnabled ? () async {
                                   try{
-                                    final model = CommentRequestModel(postId: review.postid, comcontent: commentController.text.trim());
+                                    final model = CommentRequestModel(postId: postid, comcontent: commentController.text.trim());
                                     final result = BoardService.registerComment(model);
 
                                     if(result != null) {
@@ -579,7 +582,7 @@ void showDetailReviewDialog(
                                       icon: const Icon(Icons.send),
                                       onPressed: isButtonEnabled ? () async {
                                         try{
-                                          final model = CommentRequestModel(postId: review.postid, comcontent: commentController.text.trim());
+                                          final model = CommentRequestModel(postId: postid, comcontent: commentController.text.trim());
                                           final result = BoardService.registerComment(model);
 
                                           if(result != null) {

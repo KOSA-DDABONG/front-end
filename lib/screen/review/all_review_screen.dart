@@ -359,7 +359,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                     showDetailReviewDialog(
                       context,
                       GOOGLE_MAP_KEY,
-                      review,
+                      review.postid,
                       result,
                     );
                   } else {
@@ -509,10 +509,6 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
           itemCount: _allReviews.length,
           itemBuilder: (context, index) {
             final review = _allReviews[index];
-            // String imgUrl = _allReviews[index].imgurl != null && _allReviews[index].imgurl!.isNotEmpty
-            //     ? _allReviews[index].imgurl![0]
-            //     : 'assets/images/noImg.jpg';
-            // String encodedImgUrl = Uri.encodeFull(imgUrl);
             return GestureDetector(
               onTap: () async {
                 try {
@@ -522,7 +518,7 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                     showDetailReviewDialog(
                       context,
                       GOOGLE_MAP_KEY,
-                      review,
+                      review.postid,
                       result,
                     );
                   } else {
@@ -609,7 +605,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
         children: [
           Row(
             children: [
-              const Icon(Icons.favorite, color: Colors.grey),
+              (review.likeflag)
+              ? const Icon(Icons.favorite, color: Colors.red)
+              : const Icon(Icons.favorite, color: Colors.grey),
               const SizedBox(width: 4),
               Text(review.likecount.toString()),
             ],

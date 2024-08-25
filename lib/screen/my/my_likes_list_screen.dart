@@ -13,6 +13,8 @@ import '../../dto/board/board_mylikelist_response_model.dart';
 import '../../key/key.dart';
 import '../../service/board_service.dart';
 import '../../service/result.dart';
+import '../../service/session_service.dart';
+import '../start/login_screen.dart';
 
 class MyLikesListScreen extends StatefulWidget {
   const MyLikesListScreen({Key? key}) : super(key: key);
@@ -23,8 +25,6 @@ class MyLikesListScreen extends StatefulWidget {
 
 class _MyLikesListScreenState extends State<MyLikesListScreen> {
   final Map<int, bool> _likedItems = {}; // 각 카드의 좋아요 상태를 저장하는 맵
-  late AllBoardList review; // 리뷰가 필요 없으면 제거할 수 있음
-  late Result<BoardDetailGetResponseModel> result;
   MyLikesListResponseModel? _myLikesInfo;
   bool _isLoading = true;
   bool _loginState = false;
@@ -123,7 +123,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          showTitle('나의 좋아'),
+          showTitle('나의 좋아요'),
           Expanded(
             flex: 2,
             child: Container(),
@@ -205,15 +205,56 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   // 좋아요 누른 후기 이미지 카드
   Widget _buildImageCard(BuildContext context, int index) {
     final postId = _myLikesInfo!.myLikesList![index].postid;
-    final isLiked = _likedItems[postId] ?? false;
+    final isLiked = _likedItems[postId] ?? true;
 
     return GestureDetector(
-      onTap: () {
-        // 초기화되지 않은 review 객체를 사용하기 전에 확인 필요
-        if (_myLikesInfo != null) {
-          showDetailReviewDialog(context, GOOGLE_MAP_KEY, review, result);
-        } else {
-          showCustomSnackBar(context, '리뷰 정보를 불러올 수 없습니다.');
+      onTap: () async {
+        try {
+          final result = await BoardService.getReviewDetailInfo(postId.toString());
+          final accessToken = await SessionService.getAccessToken();
+          if (result.value?.status == 200 /*result.value != null*/) {
+            showDetailReviewDialog(
+              context,
+              GOOGLE_MAP_KEY,
+              postId,
+              result,
+            );
+          } else {
+            if (accessToken == null) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('메세지'),
+                    content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('취소'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
+                        child: Text('로그인'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
+            }
+          }
+        } catch (e) {
+          showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
       },
       child: Stack(
@@ -267,8 +308,6 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
           width: double.infinity,
           height: double.infinity,
           errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-            // 오류가 발생할 경우 대체 이미지 제공
-            print("@@@@@ postid: ${_myLikesInfo!.myLikesList![index].postid} + $exception" );
             return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
           },
         ),
