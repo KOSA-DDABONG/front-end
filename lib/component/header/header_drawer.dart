@@ -5,6 +5,7 @@ import 'package:front/screen/start/signup_screen.dart';
 import '../../screen/contact/contact_screen.dart';
 import '../../screen/review/all_review_screen.dart';
 import '../../screen/start/landing_screen.dart';
+import '../../screen/trip/check_start_trip_date_screen.dart';
 import '../../screen/trip/create_trip_screen.dart';
 import '../../service/session_service.dart';
 import '../mypage/my_menu.dart';
@@ -45,7 +46,7 @@ class NotLoginHeaderDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CreateTripScreen()),
+                      MaterialPageRoute(builder: (context) => CheckStartTripDateScreen()),
                     );
                   },
                 ),
@@ -153,7 +154,7 @@ class AfterLoginHeaderDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CreateTripScreen()),
+                      MaterialPageRoute(builder: (context) => CheckStartTripDateScreen()),
                     );
                   },
                 ),

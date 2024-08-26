@@ -10,6 +10,7 @@ import 'package:front/screen/review/add_review_screen.dart';
 import 'package:front/screen/review/all_review_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:front/screen/loading/loading_screen.dart';
+import 'package:front/screen/trip/create_trip_screen.dart';
 import 'package:front/screen/trip/result_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
       // home: ResultScreen(),
       // home: LoadingScreen(),
       // home: CreatingScreen(),
+      // home: CreateTripScreen(),
     );
   }
 }
