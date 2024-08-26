@@ -32,7 +32,7 @@ class ChatService {
         chatResponseJson(jsonData as Map<String, dynamic>)
       );
     } catch (e) {
-      return Result.failure("[isChatStart] An Error Occurred: ${e}");
+      return Result.failure("[isChatStart] An Error Occurred: $e");
     }
   }
 
@@ -59,8 +59,7 @@ class ChatService {
         chatResponseJson(jsonData as Map<String, dynamic>)
       );
     } catch (e) {
-      print("[getChatConversation] : $e");
-      return Result.failure("[getChatConversation] An Error Occurred: ${e}");
+      return Result.failure("[getChatConversation] An Error Occurred: $e");
     }
   }
 
@@ -86,8 +85,7 @@ class ChatService {
           judgeResultResponseJson(jsonData as Map<String, dynamic>)
       );
     } catch (e) {
-      return Result.failure("[getChatConversation] An Error Occurred: ${e}");
+      return Result.failure("[getChatConversation] An Error Occurred: $e");
     }
   }
-
 }

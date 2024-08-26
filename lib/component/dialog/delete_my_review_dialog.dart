@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/start/landing_screen.dart';
+import '../../service/board_service.dart';
 import '../snack_bar.dart';
 
-void showDeleteMyReviewDialog(BuildContext context) {
+void showDeleteMyReviewDialog(BuildContext context, int postid) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -58,13 +58,25 @@ void showDeleteMyReviewDialog(BuildContext context) {
                         const SizedBox(width: 10),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              showCustomSnackBar(context, '삭제되었습니다.');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => LandingScreen()),
-                              );
+                            onPressed: () async {
+                              //삭제 구현
+                              try {
+                                final result = await BoardService.deleteReview(postid);
+                                if(result.value?.status==200) {
+                                  Navigator.of(context).pop();
+                                  showCustomSnackBar(context, '해당 게시물이 삭제되었습니다.');
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(builder: (context) => LandingScreen()),
+                                  // );
+                                }
+                                else{
+                                  showCustomSnackBar(context, "게시물 삭제에 실패하였습니다.");
+                                }
+                              }
+                              catch(e) {
+                                showCustomSnackBar(context, "에러가 발생하였습니다. 잠시 후 다시 시도해주세요.");
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,

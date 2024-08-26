@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
-import 'package:front/screen/start/login_screen.dart';
 import 'package:front/service/board_service.dart';
-import 'package:front/service/session_service.dart';
 
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
@@ -87,46 +85,39 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     if(_loginState) {//로그인 상태라면
-      if(_isLoading) {
-          return CheckLoginStateWidget(
-              builder: (context, isLoggedIn) {
-                PreferredSizeWidget currentAppBar;
-                Widget? currentDrawer;
-                currentAppBar = Responsive.isNarrowWidth(context)
-                    ? ShortHeader(automaticallyImplyLeading: false)
-                    : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-                currentDrawer = Responsive.isNarrowWidth(context)
-                    ? AfterLoginHeaderDrawer()
-                    : null;
-                return Scaffold(
-                    appBar: currentAppBar,
-                    drawer: currentDrawer,
-                    body: _loadingUI(context),
-                );
-              }
-          );
+      if(_isLoading) { //
+        return Scaffold(
+          appBar: Responsive.isNarrowWidth(context)
+            ? ShortHeader(automaticallyImplyLeading: false)
+            : AfterLoginHeader(automaticallyImplyLeading: false, context: context),
+          drawer: Responsive.isNarrowWidth(context)
+              ? AfterLoginHeaderDrawer()
+              : null,
+          body: _loadingUI(context),
+        );
       }
       else {
-        return CheckLoginStateWidget(
-          builder: (context, isLoggedIn) {
-            PreferredSizeWidget currentAppBar;
-            Widget? currentDrawer;
-            currentAppBar = Responsive.isNarrowWidth(context)
-                ? ShortHeader(automaticallyImplyLeading: false)
-                : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-            currentDrawer = Responsive.isNarrowWidth(context)
-                ? AfterLoginHeaderDrawer()
-                : null;
-            return Scaffold(
-              appBar: currentAppBar,
-              drawer: currentDrawer,
-              body: _allReviewPageUI(),
-            );
-          }
+        return Scaffold(
+          appBar: Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : AfterLoginHeader(automaticallyImplyLeading: false, context: context),
+          drawer: Responsive.isNarrowWidth(context)
+              ? AfterLoginHeaderDrawer()
+              : null,
+          body: _allReviewPageUI(),
         );
       }
     }
     else { // 비로그인 상태라면
+      // return Scaffold(
+      //   appBar: Responsive.isNarrowWidth(context)
+      //       ? ShortHeader(automaticallyImplyLeading: false)
+      //       : AfterLoginHeader(automaticallyImplyLeading: false, context: context),
+      //   drawer: Responsive.isNarrowWidth(context)
+      //       ? AfterLoginHeaderDrawer()
+      //       : null,
+      //   body: _notLoginAllReviewUI(),
+      // );
       return CheckLoginStateWidget(
           builder: (context, isLoggedIn) {
             PreferredSizeWidget currentAppBar;
@@ -175,18 +166,18 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   Widget _notLoginAllReviewUI() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+    return const SingleChildScrollView(
+      padding: EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 200),
-          const Center(
+          SizedBox(height: 200),
+          Center(
             child: Text(
               '데이터를 불러올 수 없습니다.',
             ),
           ),
-          const SizedBox(height: 200),
+          SizedBox(height: 200),
         ],
       ),
     );
@@ -325,13 +316,15 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   //탭 선택에 따른 순위 내용
-  // List<AllBoardList> _allReviews = []; 이 리스트에서 이미지 URL을 가져와야 하므로 이를 가정하고 작성하였습니다.
   Widget _buildContestTab() {
+    print("000999");
+    print(_rankReviews);
+    print("000999");
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: (_rankReviews.isEmpty)
+        children: (_rankReviews.isEmpty || _rankReviews == null)
             ? [const Text('데이터가 존재하지 않습니다.')]
             : _rankReviews.map((review) {
           int index = _rankReviews.indexOf(review) + 1;
@@ -354,7 +347,6 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               onTap: () async {
                 try {
                   final result = await BoardService.getReviewDetailInfo(review.postid.toString());
-                  final accessToken = await SessionService.getAccessToken();
                   if (result.value?.status == 200 /*result.value != null*/) {
                     showDetailReviewDialog(
                       context,
@@ -362,39 +354,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       review.postid,
                       result,
                     );
-                  } else {
-                    if (accessToken == null) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('메세지'),
-                            content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('취소'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()),
-                                  );
-                                },
-                                child: Text('로그인'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      showCustomSnackBar(context, '정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
-                    }
+                  }
+                  else {
+                    showCustomSnackBar(context, '정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
                   }
                 } catch (e) {
                   showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
@@ -409,10 +371,10 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                     width: 150,
                     height: 100,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                      borderRadius: BorderRadius.circular(10.0),
                       child: Image.network(
-                          (_allReviews[index - 1].imgurl!.isNotEmpty || _allReviews[index - 1].imgurl != null)
-                            ? _allReviews[index - 1].imgurl.toString()
+                          (_rankReviews[index - 1].imgurl != null)
+                            ? _rankReviews[index - 1].imgurl.toString()
                             : 'assets/images/noImg.jpg',
                         fit: BoxFit.cover,
                         errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
@@ -466,9 +428,26 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               controller: _tabController,
               children: [
                 _buildContestTab(),
-                _buildContestTab(),
-                _buildContestTab(),
-                _buildContestTab(),
+                // const Center(
+                //     child: Text(
+                //         "현재 데이터가 없습니다."
+                //     )
+                // ),
+                const Center(
+                  child: Text(
+                    "현재 데이터가 없습니다."
+                  )
+                ),
+                const Center(
+                  child: Text(
+                    "현재 데이터가 없습니다."
+                  )
+                ),
+                const Center(
+                  child: Text(
+                    "현재 데이터가 없습니다."
+                  )
+                ),
               ],
             ),
           ),
@@ -513,7 +492,6 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
               onTap: () async {
                 try {
                   final result = await BoardService.getReviewDetailInfo(review.postid.toString());
-                  final accessToken = await SessionService.getAccessToken();
                   if (result.value?.status == 200 /*result.value != null*/) {
                     showDetailReviewDialog(
                       context,
@@ -521,39 +499,9 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
                       review.postid,
                       result,
                     );
-                  } else {
-                    if (accessToken == null) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('메세지'),
-                            content: Text('로그인 후 이용 가능한 서비스입니다. 로그인 하시겠습니까?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('취소'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()),
-                                  );
-                                },
-                                child: Text('로그인'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
-                    }
+                  }
+                  else {
+                    showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
                   }
                 } catch (e) {
                   showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
@@ -623,5 +571,4 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
       ),
     );
   }
-
 }

@@ -133,11 +133,21 @@ class _CheckStartTripDateScreenState extends State<CheckStartTripDateScreen> {
           setState(() {
             tripDateText = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
             if (pickedDate.month == 10 || pickedDate.month == 11 || pickedDate.month == 12) {
-              sendDate = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+              if(1<=pickedDate.day && pickedDate.day<=9) {
+                sendDate = "${pickedDate.year}${pickedDate.month}0${pickedDate.day}";
+              }
+              else {
+                sendDate = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+              }
             }
             //한자리수 월
             else {
-              sendDate = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+              if(1<=pickedDate.day && pickedDate.day<=9) {
+                sendDate = "${pickedDate.year}0${pickedDate.month}0${pickedDate.day}";
+              }
+              else {
+                sendDate = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+              }
             }
             isTripDateSelected = true;
           });
@@ -211,8 +221,6 @@ class _CheckStartTripDateScreenState extends State<CheckStartTripDateScreen> {
         try {
           print(sendDate);
           final response = await ChatService.isChatStart(sendDate);
-          print("[@@@@@] ${response.isSuccess}");
-          print("[@@@@@] ${response.value?.status}");
           if(response.isSuccess && response.value?.status == 200){
             Navigator.push(
               context,

@@ -4,17 +4,895 @@ import 'package:front/responsive.dart';
 import '../../constants.dart';
 import '../../key/key.dart';
 import '../map/get_map.dart';
+//
+// void showDetailTripDialog(BuildContext context, String apiKey, Map<String, dynamic> scheduleInfo) {
+//   int selectedDay = 1;
+//   int? selectedIndex;
+//
+//   List<String> getPlaceNames(String keyValue) {
+//     // 일정에 포함된 장소 이름들 리스트를 반환
+//     List<String> placeNames = [];
+//     var dayInfo = scheduleInfo[keyValue];
+//
+//     for (var entry in dayInfo.entries) {
+//       var value = entry.value;
+//       if (value is List) {
+//         if (value.isNotEmpty && value[0] is List) {
+//           // tourist_spots와 같이 중첩된 리스트의 경우
+//           for (var spot in value) {
+//             placeNames.add(spot[0]); // 장소 이름 추출
+//           }
+//         } else {
+//           // 일반 리스트의 경우
+//           placeNames.add(value[0]); // 장소 이름 추출
+//         }
+//       }
+//     }
+//     return placeNames;
+//   }
+//
+//   List<double> getLatitude(String keyValue) {
+//     // 일정에 포함된 장소 위도 리스트를 반환
+//     List<double> placeLatitude = [];
+//     var dayInfo = scheduleInfo[keyValue];
+//
+//     for (var entry in dayInfo.entries) {
+//       var value = entry.value;
+//       if (value is List) {
+//         if (value.isNotEmpty && value[0] is List) {
+//           // tourist_spots와 같이 중첩된 리스트의 경우
+//           for (var spot in value) {
+//             placeLatitude.add(spot[1]); // 장소 위도 추출
+//           }
+//         } else {
+//           // 일반 리스트의 경우
+//           placeLatitude.add(value[1]); // 장소 위도 추출
+//         }
+//       }
+//     }
+//     return placeLatitude;
+//   }
+//
+//   List<double> getLongitude(String keyValue) {
+//     // 일정에 포함된 장소 위도 리스트를 반환
+//     List<double> placeLongitude = [];
+//     var dayInfo = scheduleInfo[keyValue];
+//
+//     for (var entry in dayInfo.entries) {
+//       var value = entry.value;
+//       if (value is List) {
+//         if (value.isNotEmpty && value[0] is List) {
+//           // tourist_spots와 같이 중첩된 리스트의 경우
+//           for (var spot in value) {
+//             placeLongitude.add(spot[2]); // 장소 경도 추출
+//           }
+//         } else {
+//           // 일반 리스트의 경우
+//           placeLongitude.add(value[2]); // 장소 경도 추출
+//         }
+//       }
+//     }
+//     return placeLongitude;
+//   }
+//
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return StatefulBuilder(
+//         builder: (context, setState) {
+//           if (Responsive.isNarrowWidth(context)) {
+//             return Dialog(
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(5.0),
+//               ),
+//               child: Container(
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(5.0),
+//                 ),
+//                 width: MediaQuery.of(context).size.width * 0.8,
+//                 height: MediaQuery.of(context).size.height * 0.8,
+//                 child: Column(
+//                   children: [
+//                     Expanded(
+//                       flex: 4,
+//                       child: Container(
+//                         margin: const EdgeInsets.all(15.0),
+//                         decoration: BoxDecoration(
+//                           border: Border.all(color: Colors.blueAccent),
+//                           borderRadius: BorderRadius.circular(5),
+//                         ),
+//                         child: ClipRRect(
+//                           borderRadius: BorderRadius.circular(5),
+//                           child: GetMap(
+//                             lat: getLatitude(selectedDay.toString())[0],
+//                             long: getLongitude(selectedDay.toString())[0],
+//                           )
+//                         ),
+//                       ),
+//                     ),
+//                     Expanded(
+//                       flex: 5,
+//                       child: Padding(
+//                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+//                         child: Column(
+//                           children: [
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                               children: List.generate(scheduleInfo.length, (index) {
+//                                 return Expanded(
+//                                   child: Padding(
+//                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+//                                     child: ElevatedButton(
+//                                       onPressed: () {
+//                                         setState(() {
+//                                           selectedDay = index + 1;
+//                                           selectedIndex = null;
+//                                         });
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+//                                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+//                                         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//                                       ),
+//                                       child: Text(
+//                                         '${index + 1}일차',
+//                                         style: const TextStyle(color: Colors.white),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 );
+//                               }),
+//                             ),
+//                             Expanded(
+//                               child: ListView.builder(
+//                                 itemCount: getPlaceNames(selectedDay.toString()).length,
+//                                 itemBuilder: (context, index) {
+//                                   var placeNames = getPlaceNames(selectedDay.toString());
+//                                   return Stack(
+//                                     children: [
+//                                       Positioned.fill(
+//                                         left: 12,
+//                                         child: Align(
+//                                           alignment: Alignment.topLeft,
+//                                           child: DashedLine(
+//                                             height: double.infinity,
+//                                             color: Colors.grey,
+//                                             strokeWidth: 2,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                       Padding(
+//                                         padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                                         child: Row(
+//                                           children: [
+//                                             CircleAvatar(
+//                                               backgroundColor: Colors.blue,
+//                                               radius: 12,
+//                                               child: Text(
+//                                                 '${index + 1}',
+//                                                 style: const TextStyle(color: Colors.white, fontSize: 12),
+//                                               ),
+//                                             ),
+//                                             const SizedBox(width: 8),
+//                                             Expanded(
+//                                               child: GestureDetector(
+//                                                 onTap: () {
+//                                                   setState(() {
+//                                                     selectedIndex = index;
+//                                                   });
+//                                                 },
+//                                                 child: Card(
+//                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+//                                                   child: ListTile(
+//                                                     title: Text(
+//                                                       placeNames[index],
+//                                                       style: const TextStyle(
+//                                                         fontWeight: FontWeight.bold,
+//                                                         fontSize: 16,
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             );
+//           } else {
+//             return Dialog(
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(5.0),
+//               ),
+//               child: Container(
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(5.0),
+//                 ),
+//                 width: MediaQuery.of(context).size.width * 0.8,
+//                 height: MediaQuery.of(context).size.height * 0.8,
+//                 child: Row(
+//                   children: [
+//                     Expanded(
+//                       flex: 3,
+//                       child: Container(
+//                         margin: const EdgeInsets.all(20.0),
+//                         decoration: BoxDecoration(
+//                           border: Border.all(color: Colors.blueAccent),
+//                           borderRadius: BorderRadius.circular(5),
+//                         ),
+//                         child: ClipRRect(
+//                           borderRadius: BorderRadius.circular(5),
+//                           child: GetMap(
+//                             lat: getLatitude(selectedDay.toString())[0],
+//                             long: getLongitude(selectedDay.toString())[0],
+//                           )
+//                         ),
+//                       ),
+//                     ),
+//                     Expanded(
+//                       flex: 2,
+//                       child: Padding(
+//                         padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
+//                         child: Column(
+//                           children: [
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                               children: List.generate(scheduleInfo.length, (index) {
+//                                 return Expanded(
+//                                   child: Padding(
+//                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+//                                     child: ElevatedButton(
+//                                       onPressed: () {
+//                                         setState(() {
+//                                           selectedDay = index + 1;
+//                                           selectedIndex = null;
+//                                         });
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+//                                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+//                                         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//                                       ),
+//                                       child: Text(
+//                                         '${index + 1}일차',
+//                                         style: const TextStyle(color: Colors.white),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 );
+//                               }),
+//                             ),
+//                             Expanded(
+//                               child: ListView.builder(
+//                                 itemCount: getPlaceNames(selectedDay.toString()).length,
+//                                 itemBuilder: (context, index) {
+//                                   var placeNames = getPlaceNames(selectedDay.toString());
+//                                   return Stack(
+//                                     children: [
+//                                       Positioned.fill(
+//                                         left: 12,
+//                                         child: Align(
+//                                           alignment: Alignment.topLeft,
+//                                           child: DashedLine(
+//                                             height: double.infinity,
+//                                             color: Colors.grey,
+//                                             strokeWidth: 2,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                       Padding(
+//                                         padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                                         child: Row(
+//                                           children: [
+//                                             CircleAvatar(
+//                                               backgroundColor: Colors.blue,
+//                                               radius: 12,
+//                                               child: Text(
+//                                                 '${index + 1}',
+//                                                 style: const TextStyle(color: Colors.white, fontSize: 12),
+//                                               ),
+//                                             ),
+//                                             const SizedBox(width: 8),
+//                                             Expanded(
+//                                               child: GestureDetector(
+//                                                 onTap: () {
+//                                                   setState(() {
+//                                                     selectedIndex = index;
+//                                                   });
+//                                                 },
+//                                                 child: Card(
+//                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+//                                                   child: ListTile(
+//                                                     title: Text(
+//                                                       placeNames[index],
+//                                                       style: const TextStyle(
+//                                                         fontWeight: FontWeight.bold,
+//                                                         fontSize: 16,
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             );
+//           }
+//         },
+//       );
+//     },
+//   );
+// }
+//
+// class DashedLine extends StatelessWidget {
+//   final double height;
+//   final Color color;
+//   final double strokeWidth;
+//
+//   DashedLine({
+//     required this.height,
+//     required this.color,
+//     this.strokeWidth = 1.0,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomPaint(
+//       size: Size(strokeWidth, height),
+//       painter: _DashedLinePainter(
+//         color: color,
+//         strokeWidth: strokeWidth,
+//       ),
+//     );
+//   }
+// }
+//
+// class _DashedLinePainter extends CustomPainter {
+//   final Color color;
+//   final double strokeWidth;
+//
+//   _DashedLinePainter({
+//     required this.color,
+//     required this.strokeWidth,
+//   });
+//
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     double dashHeight = 5, dashSpace = 5, startY = 0;
+//     final paint = Paint()
+//       ..color = color
+//       ..strokeWidth = strokeWidth;
+//
+//     while (startY < size.height) {
+//       canvas.drawLine(Offset(0, startY), Offset(0, startY + dashHeight), paint);
+//       startY += dashHeight + dashSpace;
+//     }
+//   }
+//
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) => false;
+// }
 
-void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<String, String>>> itinerary) {
+
+
+
+
+//2
+// void showDetailTripDialog(BuildContext context, String apiKey, Map<String, dynamic> scheduleInfo) {
+//   int selectedDay = 1;
+//   int? selectedIndex;
+//
+//   List<String> getPlaceNames(String keyValue) {
+//     // 일정에 포함된 장소 이름들 리스트를 반환
+//     List<String> placeNames = [];
+//     var dayInfo = scheduleInfo[keyValue];
+//
+//     for (var entry in dayInfo.entries) {
+//       var value = entry.value;
+//       if (value is List) {
+//         if (value.isNotEmpty && value[0] is List) {
+//           // tourist_spots와 같이 중첩된 리스트의 경우
+//           for (var spot in value) {
+//             placeNames.add(spot[0]); // 장소 이름 추출
+//           }
+//         } else {
+//           // 일반 리스트의 경우
+//           placeNames.add(value[0]); // 장소 이름 추출
+//         }
+//       }
+//     }
+//     return placeNames;
+//   }
+//
+//   List<List<double>> getLatitudes() {
+//     // 일정에 포함된 장소 위도 리스트를 반환
+//     List<List<double>> latitudes = [];
+//     for (var day in scheduleInfo.keys) {
+//       var dayInfo = scheduleInfo[day];
+//       List<double> placeLatitude = [];
+//       for (var entry in dayInfo.entries) {
+//         var value = entry.value;
+//         if (value is List) {
+//           if (value.isNotEmpty && value[0] is List) {
+//             // tourist_spots와 같이 중첩된 리스트의 경우
+//             for (var spot in value) {
+//               placeLatitude.add(spot[1]); // 장소 위도 추출
+//             }
+//           } else {
+//             // 일반 리스트의 경우
+//             placeLatitude.add(value[1]); // 장소 위도 추출
+//           }
+//         }
+//       }
+//       latitudes.add(placeLatitude);
+//     }
+//     return latitudes;
+//   }
+//
+//   List<List<double>> getLongitudes() {
+//     // 일정에 포함된 장소 경도 리스트를 반환
+//     List<List<double>> longitudes = [];
+//     for (var day in scheduleInfo.keys) {
+//       var dayInfo = scheduleInfo[day];
+//       List<double> placeLongitude = [];
+//       for (var entry in dayInfo.entries) {
+//         var value = entry.value;
+//         if (value is List) {
+//           if (value.isNotEmpty && value[0] is List) {
+//             // tourist_spots와 같이 중첩된 리스트의 경우
+//             for (var spot in value) {
+//               placeLongitude.add(spot[2]); // 장소 경도 추출
+//             }
+//           } else {
+//             // 일반 리스트의 경우
+//             placeLongitude.add(value[2]); // 장소 경도 추출
+//           }
+//         }
+//       }
+//       longitudes.add(placeLongitude);
+//     }
+//     return longitudes;
+//   }
+//
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return StatefulBuilder(
+//         builder: (context, setState) {
+//           if (Responsive.isNarrowWidth(context)) {
+//             return Dialog(
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(5.0),
+//               ),
+//               child: Container(
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(5.0),
+//                 ),
+//                 width: MediaQuery.of(context).size.width * 0.8,
+//                 height: MediaQuery.of(context).size.height * 0.8,
+//                 child: Column(
+//                   children: [
+//                     Expanded(
+//                       flex: 4,
+//                       child: Container(
+//                         margin: const EdgeInsets.all(15.0),
+//                         decoration: BoxDecoration(
+//                           border: Border.all(color: Colors.blueAccent),
+//                           borderRadius: BorderRadius.circular(5),
+//                         ),
+//                         child: ClipRRect(
+//                           borderRadius: BorderRadius.circular(5),
+//                           child: GetMap(
+//                             latitudes: getLatitudes(),
+//                             longitudes: getLongitudes(),
+//                             selectedDay: selectedDay,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                     Expanded(
+//                       flex: 5,
+//                       child: Padding(
+//                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+//                         child: Column(
+//                           children: [
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                               children: List.generate(scheduleInfo.length, (index) {
+//                                 return Expanded(
+//                                   child: Padding(
+//                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+//                                     child: ElevatedButton(
+//                                       onPressed: () {
+//                                         setState(() {
+//                                           selectedDay = index + 1;
+//                                           selectedIndex = null;
+//                                         });
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+//                                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+//                                         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//                                       ),
+//                                       child: Text(
+//                                         '${index + 1}일차',
+//                                         style: const TextStyle(color: Colors.white),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 );
+//                               }),
+//                             ),
+//                             Expanded(
+//                               child: ListView.builder(
+//                                 itemCount: getPlaceNames(selectedDay.toString()).length,
+//                                 itemBuilder: (context, index) {
+//                                   var placeNames = getPlaceNames(selectedDay.toString());
+//                                   return Stack(
+//                                     children: [
+//                                       Positioned.fill(
+//                                         left: 12,
+//                                         child: Align(
+//                                           alignment: Alignment.topLeft,
+//                                           child: DashedLine(
+//                                             height: double.infinity,
+//                                             color: Colors.grey,
+//                                             strokeWidth: 2,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                       Padding(
+//                                         padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                                         child: Row(
+//                                           children: [
+//                                             CircleAvatar(
+//                                               backgroundColor: Colors.blue,
+//                                               radius: 12,
+//                                               child: Text(
+//                                                 '${index + 1}',
+//                                                 style: const TextStyle(color: Colors.white, fontSize: 12),
+//                                               ),
+//                                             ),
+//                                             const SizedBox(width: 8),
+//                                             Expanded(
+//                                               child: GestureDetector(
+//                                                 onTap: () {
+//                                                   setState(() {
+//                                                     selectedIndex = index;
+//                                                   });
+//                                                 },
+//                                                 child: Card(
+//                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+//                                                   child: ListTile(
+//                                                     title: Text(
+//                                                       placeNames[index],
+//                                                       style: const TextStyle(
+//                                                         fontWeight: FontWeight.bold,
+//                                                         fontSize: 16,
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             );
+//           } else {
+//             return Dialog(
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(5.0),
+//               ),
+//               child: Container(
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(5.0),
+//                 ),
+//                 width: MediaQuery.of(context).size.width * 0.8,
+//                 height: MediaQuery.of(context).size.height * 0.8,
+//                 child: Row(
+//                   children: [
+//                     Expanded(
+//                       flex: 3,
+//                       child: Container(
+//                         margin: const EdgeInsets.all(20.0),
+//                         decoration: BoxDecoration(
+//                           border: Border.all(color: Colors.blueAccent),
+//                           borderRadius: BorderRadius.circular(5),
+//                         ),
+//                         child: ClipRRect(
+//                           borderRadius: BorderRadius.circular(5),
+//                           child: GetMap(
+//                             latitudes: getLatitudes(),
+//                             longitudes: getLongitudes(),
+//                             selectedDay: selectedDay,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                     Expanded(
+//                       flex: 2,
+//                       child: Padding(
+//                         padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
+//                         child: Column(
+//                           children: [
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                               children: List.generate(scheduleInfo.length, (index) {
+//                                 return Expanded(
+//                                   child: Padding(
+//                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+//                                     child: ElevatedButton(
+//                                       onPressed: () {
+//                                         setState(() {
+//                                           selectedDay = index + 1;
+//                                           selectedIndex = null;
+//                                         });
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+//                                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+//                                         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//                                       ),
+//                                       child: Text(
+//                                         '${index + 1}일차',
+//                                         style: const TextStyle(color: Colors.white),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 );
+//                               }),
+//                             ),
+//                             Expanded(
+//                               child: ListView.builder(
+//                                 itemCount: getPlaceNames(selectedDay.toString()).length,
+//                                 itemBuilder: (context, index) {
+//                                   var placeNames = getPlaceNames(selectedDay.toString());
+//                                   return Stack(
+//                                     children: [
+//                                       Positioned.fill(
+//                                         left: 12,
+//                                         child: Align(
+//                                           alignment: Alignment.topLeft,
+//                                           child: DashedLine(
+//                                             height: double.infinity,
+//                                             color: Colors.grey,
+//                                             strokeWidth: 2,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                       Padding(
+//                                         padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                                         child: Row(
+//                                           children: [
+//                                             CircleAvatar(
+//                                               backgroundColor: Colors.blue,
+//                                               radius: 12,
+//                                               child: Text(
+//                                                 '${index + 1}',
+//                                                 style: const TextStyle(color: Colors.white, fontSize: 12),
+//                                               ),
+//                                             ),
+//                                             const SizedBox(width: 8),
+//                                             Expanded(
+//                                               child: GestureDetector(
+//                                                 onTap: () {
+//                                                   setState(() {
+//                                                     selectedIndex = index;
+//                                                   });
+//                                                 },
+//                                                 child: Card(
+//                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+//                                                   child: ListTile(
+//                                                     title: Text(
+//                                                       placeNames[index],
+//                                                       style: const TextStyle(
+//                                                         fontWeight: FontWeight.bold,
+//                                                         fontSize: 16,
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             );
+//           }
+//         },
+//       );
+//     },
+//   );
+// }
+//
+// class DashedLine extends StatelessWidget {
+//   final double height;
+//   final Color color;
+//   final double strokeWidth;
+//
+//   DashedLine({
+//     required this.height,
+//     required this.color,
+//     this.strokeWidth = 1.0,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomPaint(
+//       size: Size(strokeWidth, height),
+//       painter: _DashedLinePainter(
+//         color: color,
+//         strokeWidth: strokeWidth,
+//       ),
+//     );
+//   }
+// }
+//
+// class _DashedLinePainter extends CustomPainter {
+//   final Color color;
+//   final double strokeWidth;
+//
+//   _DashedLinePainter({
+//     required this.color,
+//     required this.strokeWidth,
+//   });
+//
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     double dashHeight = 5, dashSpace = 5, startY = 0;
+//     final paint = Paint()
+//       ..color = color
+//       ..strokeWidth = strokeWidth;
+//
+//     while (startY < size.height) {
+//       canvas.drawLine(Offset(0, startY), Offset(0, startY + dashHeight), paint);
+//       startY += dashHeight + dashSpace;
+//     }
+//   }
+//
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) => false;
+// }
+
+
+
+//3
+void showDetailTripDialog(BuildContext context, String apiKey, Map<String, dynamic> scheduleInfo) {
   int selectedDay = 1;
   int? selectedIndex;
+
+  List<String> getPlaceNames(String keyValue) {
+    // 일정에 포함된 장소 이름들 리스트를 반환
+    List<String> placeNames = [];
+    var dayInfo = scheduleInfo[keyValue];
+
+    for (var entry in dayInfo.entries) {
+      var value = entry.value;
+      if (value is List) {
+        if (value.isNotEmpty && value[0] is List) {
+          // tourist_spots와 같이 중첩된 리스트의 경우
+          for (var spot in value) {
+            placeNames.add(spot[0]); // 장소 이름 추출
+          }
+        } else {
+          // 일반 리스트의 경우
+          placeNames.add(value[0]); // 장소 이름 추출
+        }
+      }
+    }
+    return placeNames;
+  }
+
+  List<List<double>> getLatitudes() {
+    // 일정에 포함된 장소 위도 리스트를 반환
+    List<List<double>> latitudes = [];
+    for (var day in scheduleInfo.keys) {
+      var dayInfo = scheduleInfo[day];
+      List<double> placeLatitude = [];
+      for (var entry in dayInfo.entries) {
+        var value = entry.value;
+        if (value is List) {
+          if (value.isNotEmpty && value[0] is List) {
+            // tourist_spots와 같이 중첩된 리스트의 경우
+            for (var spot in value) {
+              placeLatitude.add(spot[1]); // 장소 위도 추출
+            }
+          } else {
+            // 일반 리스트의 경우
+            placeLatitude.add(value[1]); // 장소 위도 추출
+          }
+        }
+      }
+      latitudes.add(placeLatitude);
+    }
+    return latitudes;
+  }
+
+  List<List<double>> getLongitudes() {
+    // 일정에 포함된 장소 경도 리스트를 반환
+    List<List<double>> longitudes = [];
+    for (var day in scheduleInfo.keys) {
+      var dayInfo = scheduleInfo[day];
+      List<double> placeLongitude = [];
+      for (var entry in dayInfo.entries) {
+        var value = entry.value;
+        if (value is List) {
+          if (value.isNotEmpty && value[0] is List) {
+            // tourist_spots와 같이 중첩된 리스트의 경우
+            for (var spot in value) {
+              placeLongitude.add(spot[2]); // 장소 경도 추출
+            }
+          } else {
+            // 일반 리스트의 경우
+            placeLongitude.add(value[2]); // 장소 경도 추출
+          }
+        }
+      }
+      longitudes.add(placeLongitude);
+    }
+    return longitudes;
+  }
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          if(Responsive.isNarrowWidth(context)) {
+          if (Responsive.isNarrowWidth(context)) {
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -39,12 +917,10 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                              apiKey: GOOGLE_MAP_KEY,
-                              origin: '{35.819929,129.478255}',
-                              destination: '{35.787994,129.407437}',
-                              waypoints: '{35.76999,129.44696}'
+                            latitudes: getLatitudes(),
+                            longitudes: getLongitudes(),
+                            selectedDay: selectedDay,
                           ),
-
                         ),
                       ),
                     ),
@@ -56,7 +932,7 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(3, (index) {
+                              children: List.generate(scheduleInfo.length, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
@@ -83,9 +959,9 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: itinerary[selectedDay - 1].length,
+                                itemCount: getPlaceNames(selectedDay.toString()).length,
                                 itemBuilder: (context, index) {
-                                  var place = itinerary[selectedDay - 1][index];
+                                  var placeNames = getPlaceNames(selectedDay.toString());
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -122,20 +998,12 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                                                 child: Card(
                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                   child: ListTile(
-                                                    leading: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(5),
-                                                      child: Image.asset(place['image']!,
-                                                          width: 60, height: 60, fit: BoxFit.cover
-                                                      ),
-                                                    ),
                                                     title: Text(
-                                                      place['title']!,
+                                                      placeNames[index],
                                                       style: const TextStyle(
-                                                          fontWeight: FontWeight.bold, fontSize: 16
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 16,
                                                       ),
-                                                    ),
-                                                    subtitle: Text(place['time']!,
-                                                        style: const TextStyle(fontSize: 14)
                                                     ),
                                                   ),
                                                 ),
@@ -157,8 +1025,7 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                 ),
               ),
             );
-          }
-          else {
+          } else {
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -183,12 +1050,10 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                              apiKey: GOOGLE_MAP_KEY,
-                              origin: '{35.819929,129.478255}',
-                              destination: '{35.787994,129.407437}',
-                              waypoints: '{35.76999,129.44696}'
+                            latitudes: getLatitudes(),
+                            longitudes: getLongitudes(),
+                            selectedDay: selectedDay,
                           ),
-
                         ),
                       ),
                     ),
@@ -200,7 +1065,7 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(3, (index) {
+                              children: List.generate(scheduleInfo.length, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
@@ -227,9 +1092,9 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: itinerary[selectedDay - 1].length,
+                                itemCount: getPlaceNames(selectedDay.toString()).length,
                                 itemBuilder: (context, index) {
-                                  var place = itinerary[selectedDay - 1][index];
+                                  var placeNames = getPlaceNames(selectedDay.toString());
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -266,20 +1131,12 @@ void showDetailTripDialog(BuildContext context, String apiKey, List<List<Map<Str
                                                 child: Card(
                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                   child: ListTile(
-                                                    leading: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(5),
-                                                      child: Image.asset(place['image']!,
-                                                          width: 60, height: 60, fit: BoxFit.cover
-                                                      ),
-                                                    ),
                                                     title: Text(
-                                                      place['title']!,
+                                                      placeNames[index],
                                                       style: const TextStyle(
-                                                          fontWeight: FontWeight.bold, fontSize: 16
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 16,
                                                       ),
-                                                    ),
-                                                    subtitle: Text(place['time']!,
-                                                        style: const TextStyle(fontSize: 14)
                                                     ),
                                                   ),
                                                 ),
@@ -321,41 +1178,38 @@ class DashedLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: 2,
-      child: CustomPaint(
-        painter: DashedLinePainter(color: color, strokeWidth: strokeWidth),
+    return CustomPaint(
+      size: Size(strokeWidth, height),
+      painter: _DashedLinePainter(
+        color: color,
+        strokeWidth: strokeWidth,
       ),
     );
   }
 }
 
-class DashedLinePainter extends CustomPainter {
+class _DashedLinePainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
 
-  DashedLinePainter({required this.color, this.strokeWidth = 2.0});
+  _DashedLinePainter({
+    required this.color,
+    required this.strokeWidth,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()
+    double dashHeight = 5, dashSpace = 5, startY = 0;
+    final paint = Paint()
       ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
+      ..strokeWidth = strokeWidth;
 
-    double dashWidth = 8,
-        dashSpace = 3,
-        startY = 0;
     while (startY < size.height) {
-      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashWidth), paint);
-      startY += dashWidth + dashSpace;
+      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashHeight), paint);
+      startY += dashHeight + dashSpace;
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
-

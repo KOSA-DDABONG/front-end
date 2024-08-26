@@ -3,6 +3,7 @@ import 'package:front/dto/like/likes_response_model.dart';
 import 'package:front/service/result.dart';
 
 import '../config.dart';
+import '../dto/board/board_delete_response_model.dart';
 import '../dto/board/board_detail_get_response_model.dart';
 import '../dto/board/board_all_list_response_model.dart';
 import '../dto/board/board_register_request_model.dart';
@@ -37,10 +38,10 @@ class BoardService {
             boardAllListResponseJson(jsonData as Map<String, dynamic>)
         );
       } else {
-        throw Exception("Failed to get Board Information");
+        throw Exception("Failed to get Board List");
       }
     } catch (e) {
-      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+      return Result.failure("[Get Board List] An Error Occurred: ${e}");
     }
   }
 
@@ -67,10 +68,10 @@ class BoardService {
         );
       }
       else {
-        throw Exception("Failed to get Board Information");
+        throw Exception("Failed to get Board Detail");
       }
     } catch (e) {
-      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+      return Result.failure("[Get Board Detail] An Error Occurred: ${e}");
     }
   }
 
@@ -97,10 +98,10 @@ class BoardService {
             commentResponseJson(jsonData as Map<String, dynamic>)
         );
       } else {
-        throw Exception("Failed to register Comment");
+        throw Exception("Failed to save Comment");
       }
     } catch (e) {
-      return Result.failure("[Register Comment] An Error Occurred: ${e}");
+      return Result.failure("[Save Comment] An Error Occurred: ${e}");
     }
   }
 
@@ -135,10 +136,10 @@ class BoardService {
             boardRegisterResponseJson(jsonData as Map<String, dynamic>)
         );
       } else {
-        throw Exception("Failed to get Board Information");
+        throw Exception("Failed to save Board");
       }
     } catch (e) {
-      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+      return Result.failure("[Save Board] An Error Occurred: ${e}");
     }
   }
 
@@ -169,6 +170,36 @@ class BoardService {
       }
     } catch (e) {
       return Result.failure("[Update Likes] An Error Occurred: ${e}");
+    }
+  }
+
+  //게시물 삭제
+  static Future<Result<BoardDeleteResponseModel>> deleteReview(int postid) async {
+    final url = Uri.https(API_URL,  Config.deleteBoardListAPI+(postid.toString())+Config.deleteBoardAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.deleteBoardListAPI+(postid.toString())+Config.deleteBoardAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken'
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
+      );
+      if (response.statusCode == 200) {
+        dynamic jsonData = response.data;
+        print("[게시물 삭제] : $jsonData");
+        return Result.success(
+            boardDeleteResponseJson(jsonData as Map<String, dynamic>)
+        );
+      } else {
+        throw Exception("Failed to delete Board");
+      }
+    } catch (e) {
+      return Result.failure("[Delete Board] An Error Occurred: ${e}");
     }
   }
 }

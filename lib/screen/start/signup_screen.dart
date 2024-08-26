@@ -417,11 +417,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 birthDateText = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
                 //두자리수 월
                 if (pickedDate.month == 10 || pickedDate.month == 11 || pickedDate.month == 12) {
-                  birth = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+                  if(1<=pickedDate.day && pickedDate.day<=9) {
+                    birth = "${pickedDate.year}${pickedDate.month}0${pickedDate.day}";
+                  }
+                  else {
+                    birth = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+                  }
                 }
                 //한자리수 월
                 else {
-                  birth = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+                  if(1<=pickedDate.day && pickedDate.day<=9) {
+                    birth = "${pickedDate.year}0${pickedDate.month}0${pickedDate.day}";
+                  }
+                  else {
+                    birth = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+                  }
                 }
                 isBirthSelected = true;
               });

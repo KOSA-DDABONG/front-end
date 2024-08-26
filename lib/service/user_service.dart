@@ -80,10 +80,10 @@ class UserService {
         );
       }
       else {
-        throw Exception("Failed to get Board Information");
+        throw Exception("Failed to get My Board List");
       }
     } catch (e) {
-      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+      return Result.failure("[Get My Board List] An Error Occurred: ${e}");
     }
   }
 
@@ -110,11 +110,10 @@ class UserService {
         );
       }
       else {
-        throw Exception("Failed to get Board Information");
+        throw Exception("Failed to get My Likes List");
       }
     } catch (e) {
-      return Result.failure("[Get Board Info] An Error Occurred: ${e}");
+      return Result.failure("[Get My Likes List] An Error Occurred: ${e}");
     }
   }
 }
-
