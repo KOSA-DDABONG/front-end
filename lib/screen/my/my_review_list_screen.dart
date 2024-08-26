@@ -9,14 +9,12 @@ import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
 import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../dto/board/board_detail_get_response_model.dart';
-import '../../dto/board/board_model.dart';
 import '../../dto/board/board_myreviewlist_response_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
 import '../../service/board_service.dart';
-import '../../service/result.dart';
 import '../../service/session_service.dart';
+import '../../service/user_service.dart';
 import '../start/login_screen.dart';
 
 class MyReviewListScreen extends StatefulWidget {
@@ -60,7 +58,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
       });
 
       try {
-        final result = await BoardService.getUserReviewList();
+        final result = await UserService.getUserReviewList();
         if (result.value?.status == 200) { // 유저정보 로드 성공
           setState(() {
             _myReviewInfo = result.value;
