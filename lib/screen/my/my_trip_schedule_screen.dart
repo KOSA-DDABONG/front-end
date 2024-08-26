@@ -206,7 +206,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
           Responsive.isNarrowWidth(context)
@@ -278,7 +278,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
           Responsive.isNarrowWidth(context)
@@ -350,7 +350,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY);
             },
           ),
           Responsive.isNarrowWidth(context)

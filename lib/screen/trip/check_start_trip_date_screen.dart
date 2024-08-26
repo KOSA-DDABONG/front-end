@@ -6,6 +6,7 @@ import 'package:front/service/chat_service.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../constants.dart';
+import '../../controller/check_login_state.dart';
 import '../../controller/login_state_for_header.dart';
 import '../../responsive.dart';
 import 'create_trip_screen.dart';
@@ -21,37 +22,68 @@ class _CheckStartTripDateScreenState extends State<CheckStartTripDateScreen> {
   String? tripDateText;
   bool isTripDateSelected = false;
   String sendDate = "";
+  bool _isLoading = true;
+  bool _loginState = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLoginState();
+    _startLoadingTimeout();
+  }
+
+  void _startLoadingTimeout() {
+    Future.delayed(const Duration(seconds: 5), () {
+      if (_isLoading) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _loadLoginState() async {
+    bool isLoggedIn = await checkLoginState(context);
+    if(isLoggedIn) {
+      setState(() {
+        _loginState = isLoggedIn;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CheckLoginStateWidget(builder: (context, isLoggedIn) {
-      PreferredSizeWidget currentAppBar;
-      Widget? currentDrawer;
-      if (isLoggedIn) {
-        currentAppBar = Responsive.isNarrowWidth(context)
-            ? ShortHeader(automaticallyImplyLeading: false)
-            : AfterLoginHeader(
-            automaticallyImplyLeading: false, context: context);
-        currentDrawer = Responsive.isNarrowWidth(context)
-            ? AfterLoginHeaderDrawer()
-            : null;
-      } else {
-        currentAppBar = Responsive.isNarrowWidth(context)
-            ? ShortHeader(automaticallyImplyLeading: false)
-            : NotLoginHeader(
-            automaticallyImplyLeading: false, context: context);
-        currentDrawer = Responsive.isNarrowWidth(context)
-            ? NotLoginHeaderDrawer()
-            : null;
-      }
-
+    if(_loginState) { //로그인 상태라면
       return Scaffold(
-        appBar: currentAppBar,
-        drawer: currentDrawer,
-        backgroundColor: subBackgroundColor,
-        body:_selectTripDateUI()
+          appBar: Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : AfterLoginHeader(automaticallyImplyLeading: false, context: context),
+          drawer: Responsive.isNarrowWidth(context)
+              ? AfterLoginHeaderDrawer()
+              : null,
+          backgroundColor: subBackgroundColor,
+          body:_selectTripDateUI()
       );
-    });
+    }
+    else {
+      return CheckLoginStateWidget(
+          builder: (context, isLoggedIn) {
+            PreferredSizeWidget currentAppBar;
+            Widget? currentDrawer;
+            currentAppBar = Responsive.isNarrowWidth(context)
+                ? ShortHeader(automaticallyImplyLeading: false)
+                : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+            currentDrawer = Responsive.isNarrowWidth(context)
+                ? NotLoginHeaderDrawer()
+                : null;
+            return Scaffold(
+                appBar: currentAppBar,
+                drawer: currentDrawer,
+                body: _notLoginUI()
+            );
+          }
+      );
+    }
   }
 
   Widget _selectTripDateUI() {
@@ -83,6 +115,31 @@ class _CheckStartTripDateScreenState extends State<CheckStartTripDateScreen> {
             _btnsField(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _notLoginUI() {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                child: Text("페이지에 접근할 수 없습니다.")
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
+        ],
       ),
     );
   }

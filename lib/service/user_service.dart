@@ -11,7 +11,6 @@ import 'dio_client.dart';
 import 'session_service.dart';
 
 class UserService {
-
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
     final url = Uri.https(API_URL, Config.signupAPI).toString();

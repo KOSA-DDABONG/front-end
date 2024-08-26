@@ -267,14 +267,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           width: 2.0,
         ),
       ),
-      // child: GetMap(
-      //     apiKey: GOOGLE_MAP_KEY,
-      //     origin: '35.819929,129.478255',
-      //     destination: '35.787994,129.407437',
-      //     waypoints: '35.76999,129.44696'
-      // ),
-        /////////?!!!!!!!!!!!!!!!!!
-      child: Container()
+      child: GetMap(
+          apiKey: GOOGLE_MAP_KEY,
+          origin: '35.819929,129.478255',
+          destination: '35.787994,129.407437',
+          waypoints: '35.76999,129.44696'
+      ),
     );
   }
 

@@ -18,6 +18,13 @@ import '../../key/key.dart';
 import '../../screen/review/all_review_screen.dart';
 import '../map/get_map.dart';
 
+import 'dart:async';
+
+// Define a StreamController for likes and comments
+final StreamController<int> _likesController = StreamController<int>.broadcast();
+final StreamController<int> _commentsController = StreamController<int>.broadcast();
+
+
 void showDetailReviewDialog(
     BuildContext context,
     String apiKey,
@@ -123,13 +130,12 @@ void showDetailReviewDialog(
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
-                                child:Container()
-                                // GetMap(
-                                //     apiKey: GOOGLE_MAP_KEY,
-                                //     origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
-                                //     destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
-                                //     waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
-                                // ),
+                                child: GetMap(
+                                    apiKey: GOOGLE_MAP_KEY,
+                                    origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
+                                    destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
+                                    waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
+                                ),
 
                               ),
                             ),
@@ -412,13 +418,12 @@ void showDetailReviewDialog(
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5.0),
-                                      child:Container()
-                                      // GetMap(
-                                      //     apiKey: GOOGLE_MAP_KEY,
-                                      //     origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
-                                      //     destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
-                                      //     waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
-                                      // ),
+                                      child: GetMap(
+                                          apiKey: GOOGLE_MAP_KEY,
+                                          origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
+                                          destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
+                                          waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
+                                      ),
 
                                     ),
                                   ],
@@ -613,12 +618,4 @@ void showDetailReviewDialog(
       }
     },
   );
-  //     .then((update) {
-  //   Navigator.of(context).pushReplacement(
-  //     MaterialPageRoute(
-  //       builder: (context) => AllReviewScreen(),
-  //     ),
-  //   );
-  // });
-
 }
