@@ -15,6 +15,8 @@ class Config {
   static const savePostAPI = "/post/board/saveReview"; //게시물(후기) 작성
   static const updateLikesListAPI = "/list/"; //좋아요 업데이트
   static const updateLikesAPI = "/changelike"; //좋아요 업데이트
+  static const deleteBoardListAPI = "/list/"; // 게시물 삭제
+  static const deleteBoardAPI = "/delete"; // 게시물 삭제
 
   //My
   static const getUserBoardListAPI = "/myinfo/review/list"; //내가 쓴 후기 리스트

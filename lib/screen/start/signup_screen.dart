@@ -324,145 +324,9 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ],
         ),
-        // if (verifyEmailSuccess == 1)
-        //   const Padding(
-        //     padding: EdgeInsets.only(top: 8.0),
-        //     child: Text(
-        //       '이메일 인증이 완료되었습니다.',
-        //       style: TextStyle(color: Colors.green),
-        //     ),
-        //   )
-        // else if (verifyEmailSuccess == 2)
-        //   const Padding(
-        //     padding: EdgeInsets.only(top: 8.0),
-        //     child: Text(
-        //       '이메일 인증에 실패했습니다.',
-        //       style: TextStyle(color: Colors.red),
-        //     ),
-        //   )
       ],
     );
   }
-
-  // //인증코드 입력 다이어로그
-  // void showVerificationDialog() {
-  //   TextEditingController verificationCodeController = TextEditingController();
-  //   int timerDuration = 5 * 60;
-  //   int currentTimerValue = timerDuration;
-  //
-  //   StreamController<int> timerStreamController = StreamController<int>();
-  //
-  //   void resetTimer() {
-  //     currentTimerValue = timerDuration;
-  //     timerStreamController.add(currentTimerValue);
-  //   }
-  //
-  //   // Start the countdown
-  //   Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     if (currentTimerValue == 0) {
-  //       timer.cancel();
-  //       timerStreamController.close();
-  //     } else {
-  //       timerStreamController.add(currentTimerValue);
-  //       currentTimerValue--;
-  //     }
-  //   });
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: Container(
-  //           width: 300, // Set the width as per your requirement
-  //           padding: const EdgeInsets.all(16),
-  //           child: StreamBuilder<int>(
-  //             initialData: currentTimerValue, // Start from the full duration
-  //             stream: timerStreamController.stream,
-  //             builder: (context, snapshot) {
-  //               bool isCodeMatched =
-  //               (verificationCodeController.text == expectedToken);
-  //
-  //               return Column(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: [
-  //                   const Text(
-  //                     "인증코드를 입력하세요",
-  //                     style: TextStyle(
-  //                       fontSize: 20,
-  //                     ),
-  //                   ),
-  //                   const SizedBox(height: 10),
-  //                   TextField(
-  //                     controller: verificationCodeController,
-  //                     decoration: const InputDecoration(labelText: '인증코드'),
-  //                   ),
-  //                   if (!isCodeMatched &&
-  //                       verificationCodeController.text.isNotEmpty)
-  //                     const Padding(
-  //                       padding: EdgeInsets.only(top: 8.0),
-  //                       child: Text(
-  //                         "인증 코드가 일치하지 않습니다",
-  //                         style: TextStyle(color: Colors.red),
-  //                       ),
-  //                     ),
-  //                   const SizedBox(height: 10),
-  //                   Text(
-  //                     "남은 시간: ${(snapshot.data ?? 0) ~/ 60}:${(snapshot.data ?? 0) % 60}",
-  //                     style: const TextStyle(fontSize: 16),
-  //                   ),
-  //                   const SizedBox(height: 16),
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                     children: [
-  //                       TextButton(
-  //                         onPressed: () {
-  //                           resetTimer();
-  //                         },
-  //                         child: const Text("재전송"),
-  //                       ),
-  //                       TextButton(
-  //                         onPressed: () async {
-  //                           if (isCodeMatched) {
-  //                             timerStreamController.close();
-  //                             Navigator.of(context).pop();
-  //                             try {
-  //                               final tokenResponse = await UserService
-  //                                   .emailVerifyTokenRequest(
-  //                                   verificationCodeController.text);
-  //                               if (tokenResponse.statusCode == 200) {
-  //                                 setState(() {
-  //                                   verifyEmailSuccess = 1;
-  //                                 });
-  //                               } else {
-  //                                 setState(() {
-  //                                   verifyEmailSuccess = 2;
-  //                                 });
-  //                               }
-  //                             } catch (e) {
-  //                               // 에러가 발생한 경우
-  //                               print("Error: $e");
-  //                               setState(() {
-  //                                 verifyEmailSuccess = 2;
-  //                               });
-  //                             }
-  //                           }
-  //                         },
-  //                         child: const Text("확인"),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ],
-  //               );
-  //             },
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   //전화번호 입력란
   Widget _buildNumberField() {
@@ -553,11 +417,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 birthDateText = "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
                 //두자리수 월
                 if (pickedDate.month == 10 || pickedDate.month == 11 || pickedDate.month == 12) {
-                  birth = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+                  if(1<=pickedDate.day && pickedDate.day<=9) {
+                    birth = "${pickedDate.year}${pickedDate.month}0${pickedDate.day}";
+                  }
+                  else {
+                    birth = "${pickedDate.year}${pickedDate.month}${pickedDate.day}";
+                  }
                 }
                 //한자리수 월
                 else {
-                  birth = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+                  if(1<=pickedDate.day && pickedDate.day<=9) {
+                    birth = "${pickedDate.year}0${pickedDate.month}0${pickedDate.day}";
+                  }
+                  else {
+                    birth = "${pickedDate.year}0${pickedDate.month}${pickedDate.day}";
+                  }
                 }
                 isBirthSelected = true;
               });

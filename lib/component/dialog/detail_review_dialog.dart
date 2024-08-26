@@ -123,13 +123,13 @@ void showDetailReviewDialog(
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
-                                child:
-                                GetMap(
-                                    apiKey: GOOGLE_MAP_KEY,
-                                    origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
-                                    destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
-                                    waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
-                                ),
+                                child:Container()
+                                // GetMap(
+                                //     apiKey: GOOGLE_MAP_KEY,
+                                //     origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
+                                //     destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
+                                //     waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
+                                // ),
 
                               ),
                             ),
@@ -412,19 +412,13 @@ void showDetailReviewDialog(
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5.0),
-                                      child:
+                                      child:Container()
                                       // GetMap(
                                       //     apiKey: GOOGLE_MAP_KEY,
-                                      //     origin: '${result.value!.data.tour.first.latitude},${result.value!.data.tour.first.longitude}',
-                                      //     destination: '${result.value!.data.tour.last.latitude},${result.value!.data.tour.last.longitude}',
-                                      //     waypoints: '${result.value!.data.tour[1].latitude},${result.value!.data.tour[1].longitude}'
-                                      // )
-                                      GetMap(
-                                          apiKey: GOOGLE_MAP_KEY,
-                                          origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
-                                          destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
-                                          waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
-                                      ),
+                                      //     origin: LatLng(result.value!.data.tour[0].latitude,result.value!.data.tour[0].longitude).toString(),
+                                      //     destination: LatLng(result.value!.data.hotel[0].latitude,result.value!.data.hotel[0].longitude).toString(),
+                                      //     waypoints: LatLng(result.value!.data.restaurant[0].latitude,result.value!.data.restaurant[0].longitude).toString()
+                                      // ),
 
                                     ),
                                   ],

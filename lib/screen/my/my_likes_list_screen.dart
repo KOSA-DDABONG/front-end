@@ -7,13 +7,11 @@ import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
 import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../dto/board/board_detail_get_response_model.dart';
-import '../../dto/board/board_model.dart';
 import '../../dto/board/board_mylikelist_response_model.dart';
 import '../../key/key.dart';
 import '../../service/board_service.dart';
-import '../../service/result.dart';
 import '../../service/session_service.dart';
+import '../../service/user_service.dart';
 import '../start/login_screen.dart';
 
 class MyLikesListScreen extends StatefulWidget {
@@ -58,7 +56,7 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
       });
 
       try {
-        final result = await BoardService.getUserLikesList();
+        final result = await UserService.getUserLikesList();
         if (result.value?.status == 200) { // 유저정보 로드 성공
           setState(() {
             _myLikesInfo = result.value;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 import 'package:front/dto/board/board_myreviewlist_response_model.dart';
 import 'package:front/responsive.dart';
-import 'package:front/service/board_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/request_login_dialog.dart';
@@ -13,6 +12,7 @@ import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/user/login/login_response_model.dart';
 import '../../service/session_service.dart';
+import '../../service/user_service.dart';
 
 class MyInfoScreen extends StatefulWidget {
   const MyInfoScreen({Key? key}) : super(key: key);
@@ -56,7 +56,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
       });
 
       try {
-        final result = await BoardService.getUserReviewList();
+        final result = await UserService.getUserReviewList();
         final usermodel = await SessionService.loginDetails();
         if (result.value?.status == 200 && usermodel != null) { // 유저정보 로드 성공
           setState(() {

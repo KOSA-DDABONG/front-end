@@ -1,6 +1,8 @@
 import 'package:front/service/result.dart';
 
 import '../config.dart';
+import '../dto/board/board_mylikelist_response_model.dart';
+import '../dto/board/board_myreviewlist_response_model.dart';
 import '../dto/user/login/login_request_model.dart';
 import '../dto/user/login/login_response_model.dart';
 import '../dto/user/signup/signup_request_model.dart';
@@ -54,5 +56,64 @@ class UserService {
       return Result.failure("[Login] An Error Occurred: $e");
     }
   }
-}
 
+  //사용자가 작성한 게시물 리스트 조회
+  static Future<Result<BoardMyListResponseModel>> getUserReviewList() async {
+    final url = Uri.https(API_URL, Config.getUserBoardListAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.getUserBoardListAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+    final headers = {
+      'Authorization': 'Bearer $accessToken'
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
+      );
+      if (response.statusCode == 200) {
+        dynamic jsonData = response.data;
+        print("[사용자가 작성한 게시물 리스트 조회] : $jsonData");
+        return Result.success(
+            boardMyListResponseJson(jsonData as Map<String, dynamic>)
+        );
+      }
+      else {
+        throw Exception("Failed to get My Board List");
+      }
+    } catch (e) {
+      return Result.failure("[Get My Board List] An Error Occurred: ${e}");
+    }
+  }
+
+  //사용자 좋아요 리스트 조회
+  static Future<Result<MyLikesListResponseModel>> getUserLikesList() async {
+    final url = Uri.https(API_URL, Config.getMyLikesListAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.getMyLikesListAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+    final headers = {
+      'Authorization': 'Bearer $accessToken'
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+          'GET',
+          url,
+          headers: headers
+      );
+      if (response.statusCode == 200) {
+        dynamic jsonData = response.data;
+        print("[사용자의 좋아요 리스트 조회] : $jsonData");
+        return Result.success(
+            myLikesListResponseJson(jsonData as Map<String, dynamic>)
+        );
+      }
+      else {
+        throw Exception("Failed to get My Likes List");
+      }
+    } catch (e) {
+      return Result.failure("[Get My Likes List] An Error Occurred: ${e}");
+    }
+  }
+}

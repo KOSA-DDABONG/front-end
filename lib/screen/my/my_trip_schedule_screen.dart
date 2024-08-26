@@ -19,24 +19,7 @@ class MyTripScheduleScreen extends StatefulWidget {
 }
 
 class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
-  List<List<Map<String, String>>> itinerary = [
-    [
-      {'title': '부산역', 'time': '오전 07:48 - 오전 10:03', 'image': 'assets/images/noImg.jpg'},
-      {'title': '부산 돼지 국밥', 'time': '오전 10:10 - 오전 10:45', 'image': 'assets/images/noImg.jpg'},
-      {'title': '감천 문화 마을', 'time': '오전 10:45 - 오전 12:00', 'image': 'assets/images/noImg.jpg'},
-      {'title': '부산역', 'time': '오전 07:48 - 오전 10:03', 'image': 'assets/images/noImg.jpg'},
-      {'title': '부산 돼지 국밥', 'time': '오전 10:10 - 오전 10:45', 'image': 'assets/images/noImg.jpg'},
-      {'title': '감천 문화 마을', 'time': '오전 10:45 - 오전 12:00', 'image': 'assets/images/noImg.jpg'},
-    ],
-    [
-      {'title': '해운대 해수욕장', 'time': '오전 09:00 - 오후 12:00', 'image': 'assets/images/noImg.jpg'},
-      {'title': '광안리 해수욕장', 'time': '오후 01:00 - 오후 03:00', 'image': 'assets/images/noImg.jpg'},
-    ],
-    [
-      {'title': '해동 용궁사', 'time': '오전 08:00 - 오전 10:00', 'image': 'assets/images/noImg.jpg'},
-      {'title': '태종대', 'time': '오전 11:00 - 오후 01:00', 'image': 'assets/images/noImg.jpg'},
-    ],
-  ];
+  late Map<String, String> scheduleInfo;
 
   @override
   void initState() {
@@ -223,7 +206,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY, itinerary);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
             },
           ),
           Responsive.isNarrowWidth(context)
@@ -295,7 +278,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY, itinerary);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
             },
           ),
           Responsive.isNarrowWidth(context)
@@ -367,7 +350,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
               ],
             ),
             onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY, itinerary);
+              showDetailTripDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
             },
           ),
           Responsive.isNarrowWidth(context)

@@ -10,6 +10,7 @@ import 'package:front/service/session_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../screen/start/login_screen.dart';
+import '../../screen/trip/check_start_trip_date_screen.dart';
 
 class NotLoginHeader extends AppBar {
   NotLoginHeader({Key? key, required bool automaticallyImplyLeading, BuildContext? context})
@@ -70,7 +71,7 @@ class NotLoginHeader extends AppBar {
               onPressed: () {
                 Navigator.push(
                   context!,
-                  MaterialPageRoute(builder: (context) => CreateTripScreen()),
+                  MaterialPageRoute(builder: (context) => CheckStartTripDateScreen()),
                 );
               },
               child: Text(
@@ -242,7 +243,7 @@ class AfterLoginHeader extends AppBar {
               onPressed: () {
                 Navigator.push(
                   context!,
-                  MaterialPageRoute(builder: (context) => CreateTripScreen()),
+                  MaterialPageRoute(builder: (context) => CheckStartTripDateScreen()),
                 );
               },
               child: Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/controller/login_state_for_header.dart';
 import 'package:front/responsive.dart';
+import 'package:front/screen/trip/check_start_trip_date_screen.dart';
 import 'package:front/screen/trip/create_trip_screen.dart';
 import 'dart:ui' as ui;
 import 'package:google_fonts/google_fonts.dart';
@@ -268,7 +269,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CreateTripScreen()),
+          MaterialPageRoute(builder: (context) => CheckStartTripDateScreen()),
         );
       },
       style: ElevatedButton.styleFrom(
@@ -291,7 +292,7 @@ class _LandingScreenState extends State<LandingScreen> with SingleTickerProvider
      onPressed: () {
        Navigator.push(
          context,
-         MaterialPageRoute(builder: (context) => CreateTripScreen()),
+         MaterialPageRoute(builder: (context) => CheckStartTripDateScreen()),
        );
      },
      style: ElevatedButton.styleFrom(
