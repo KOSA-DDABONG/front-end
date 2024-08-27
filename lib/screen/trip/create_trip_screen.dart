@@ -282,6 +282,7 @@ import 'dart:async';
 //   }
 // }
 
+
 //2 타이핑 형식
 class TypingText extends StatefulWidget {
   final String text;
@@ -349,6 +350,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   final ScrollController _scrollController = ScrollController();
   final List<Map<String, dynamic>> _messages = [];
   bool showMoreButton = false;
+  bool getResponseOfTripSchedule = false;
   Map<String, dynamic> travelScheduleMap = {};
 
   @override
@@ -375,52 +377,73 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
 
   Future<void> _sendMessage() async {
     final text = _controller.text.trim();
-    if (text.isNotEmpty) {
-      setState(() {
-        _messages.add({'text': text, 'isUser': true});
-        _controller.clear();
-      });
+    if(!getResponseOfTripSchedule) {
+      if (text.isNotEmpty) {
+        setState(() {
+          _messages.add({'text': text, 'isUser': true});
+          _controller.clear();
+        });
+        _scrollToBottom();
 
-      _scrollToBottom();
+        try {
+          final conversationResult = await ChatService.getChatConversation(text);
 
-      try {
-        final conversationResult = await ChatService.getChatConversation(text);
-
-        if (conversationResult.isSuccess && conversationResult.value?.status == 200) {
-          if (conversationResult.value!.data.travelSchedule.is_valid == 0) { //일정 생성 전
-            setState(() {
-              _messages.add({'text': conversationResult.value?.data.travelSchedule!.response, 'isUser': false});
-            });
-          } else {
-            setState(() {
-              _messages.add({'text': '다음은 추천된 일정입니다!', 'isUser': false});
-              _messages.add({'text': conversationResult.value?.data.travelSchedule.explain, 'isUser': false, 'isMore': true});
-              _messages.add({'text': "${conversationResult.value!.data.chatbotMessage}\n의견을 작성해주세요~😄", 'isUser': false});
-              showMoreButton = true;
-            });
-
-            //////로직 추가
-            final userResponseResult = await ChatService.sendUserResponse(text);
-            if(userResponseResult.isSuccess && userResponseResult.value?.status == 200) {
-              // 응답이 성공적으로 전송되었을 때 추가로 할 작업이 있다면 여기에 추가
-            }
-            else {
+          if (conversationResult.isSuccess && conversationResult.value?.status == 200) {
+            if (conversationResult.value!.data.travelSchedule.is_valid == 0) { //일정 생성 전
               setState(() {
-                _messages.add({'text': '사용자 응답을 전송하는 데 실패했습니다.', 'isUser': false});
+                _messages.add({'text': conversationResult.value?.data.travelSchedule!.response, 'isUser': false});
+              });
+            } else {
+              setState(() {
+                _messages.add({'text': '다음은 추천된 일정입니다!', 'isUser': false});
+                _messages.add({'text': conversationResult.value?.data.travelSchedule.explain, 'isUser': false, 'isMore': true});
+                _messages.add({'text': "${conversationResult.value!.data.chatbotMessage}\n의견을 작성해주세요~😄", 'isUser': false});
+                showMoreButton = true;
+                getResponseOfTripSchedule = true;
               });
             }
+          } else {
+            setState(() {
+              _messages.add({'text': '응답을 불러올 수 없습니다. 다시 시도해주세요.', 'isUser': false});
+            });
           }
-        } else {
-          setState(() {
-            _messages.add({'text': '응답을 불러올 수 없습니다. 다시 시도해주세요.', 'isUser': false});
-          });
+        } catch (e) {
+          showCustomSnackBar(context, "에러가 발생하였습니다. 다시 시도해주세요.");
         }
-      } catch (e) {
-        print(e);
-        showCustomSnackBar(context, "에러가 발생하였습니다. 다시 시도해주세요.");
-      }
 
-      _scrollToBottom();
+        _scrollToBottom();
+      }
+    }
+    else{
+      if (text.isNotEmpty) {
+        setState(() {
+          _messages.add({'text': text, 'isUser': true});
+          _controller.clear();
+        });
+
+        _scrollToBottom();
+
+        try {
+          final sendResponseResult = await ChatService.sendUserResponse(text);
+
+          if (sendResponseResult.isSuccess && sendResponseResult.value?.status == 200) {
+            setState(() {
+              _messages.add({'text': '반응 전달에 성공하였습니다.', 'isUser': false});
+            });
+            //조건 추가 계속해서 받을 수 있음
+            getResponseOfTripSchedule = false;
+          } else {
+            setState(() {
+              _messages.add({'text': '반응 전송에 실패하였습니다.. 다시 시도해주세요.', 'isUser': false});
+            });
+          }
+        } catch (e) {
+          print(e);
+          showCustomSnackBar(context, "에러가 발생하였습니다. 다시 시도해주세요.");
+        }
+
+        _scrollToBottom();
+      }
     }
   }
 
