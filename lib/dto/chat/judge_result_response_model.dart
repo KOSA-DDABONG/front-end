@@ -8,7 +8,7 @@ class JudgeResultResponseModel {
   });
 
   late final String message;
-  late final String status;
+  late final int status;
 
   JudgeResultResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];

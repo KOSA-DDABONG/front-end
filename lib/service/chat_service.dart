@@ -3,6 +3,7 @@ import 'package:front/service/result.dart';
 import 'package:front/service/session_service.dart';
 
 import '../config.dart';
+import '../dto/chat/chat_start_response_model.dart';
 import '../dto/chat/judge_result_response_model.dart';
 import '../dto/chat/chat_response_model.dart';
 import '../key/key.dart';
@@ -10,7 +11,7 @@ import '../key/key.dart';
 class ChatService {
 
   //채팅 시작 여부 전달
-  static Future<Result<ChatResponseModel>> isChatStart(String startDate) async {
+  static Future<Result<ChatStartResponseModel>> isChatStart(String startDate) async {
     final url = Uri.https(API_URL, Config.getChatConnectionAPI).toString();
     // final url = Uri.http(Config.apiUrl, Config.getChatConnectionAPI).toString();
     final accessToken = await SessionService.getAccessToken();
@@ -29,7 +30,7 @@ class ChatService {
       final jsonData = response.data;
       print("[채팅 시작 여부 전달] : $jsonData");
       return Result.success(
-        chatResponseJson(jsonData as Map<String, dynamic>)
+        chatStartResponseJson(jsonData as Map<String, dynamic>)
       );
     } catch (e) {
       return Result.failure("[isChatStart] An Error Occurred: $e");
@@ -44,7 +45,6 @@ class ChatService {
     final headers = {
       'Authorization': 'Bearer $accessToken',
     };
-    print("[사용자가 입력한 메세지 전달 - 유저 메세지] : $userMessage");
     try {
       final response = await DioClient.sendRequest(
         'POST',
@@ -71,7 +71,7 @@ class ChatService {
     final headers = {
       'Authorization': 'Bearer $accessToken'
     };
-
+    print("[사용자가 반응 전달 - 유저 반응] : $userResponse");
     try {
       final response = await DioClient.sendRequest(
           'POST',
@@ -85,6 +85,7 @@ class ChatService {
           judgeResultResponseJson(jsonData as Map<String, dynamic>)
       );
     } catch (e) {
+      print("[생성된 여행 일정에 대한 사용자의 반응 전달 에러] : $e");
       return Result.failure("[getChatConversation] An Error Occurred: $e");
     }
   }

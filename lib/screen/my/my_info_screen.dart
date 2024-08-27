@@ -299,102 +299,123 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     );
   }
 
+
   //일정 카드
   Widget _myScheduleCard() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(10),
-        subtitle: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 10),
-            Container(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
-                  child: Image.network(
-                    _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                      // 오류가 발생할 경우 대체 이미지 제공
-                      return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
-                    },
-                  ),
-                )
-            ),
-            const SizedBox(width: 10),
-            Responsive.isNarrowWidth(context)
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(width: 10),
-                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                ),
-          ],
+    if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1.0),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
         ),
-        trailing: Responsive.isNarrowWidth(context)
-          ? GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('mySchedule');
-              },
-              child: const Icon(Icons.arrow_forward),
-            )
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
-                  },
-                  child: Text(
-                    '3건',
-                    style: TextStyle(
-                      fontSize: 15,
-                      decoration: TextDecoration.underline,
-                      color: Colors.black,
+        child: const ListTile(
+          subtitle: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: Center(
+              child: Text('일정 데이터가 없습니다.'),
+            ),
+          ),
+        ),
+      );
+    }
+    else {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1.0),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(10),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 10),
+              Container(
+                  width: 100,
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                    child: Image.network(
+                      _myReviewInfo!.data![0].url.isNotEmpty
+                          ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                        // 오류가 발생할 경우 대체 이미지 제공
+                        return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                      },
                     ),
+                  )
+              ),
+              const SizedBox(width: 10),
+              Responsive.isNarrowWidth(context)
+                  ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5),
+                  Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                  const SizedBox(height: 5),
+                  Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                  const SizedBox(height: 5),
+                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                ],
+              )
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                      const SizedBox(width: 10),
+                      Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                ],
+              ),
+            ],
+          ),
+          trailing: Responsive.isNarrowWidth(context)
+              ? GestureDetector(
+            onTap: () {
+              context.read<MyMenuController>().setSelectedScreen('mySchedule');
+            },
+            child: const Icon(Icons.arrow_forward),
+          )
+              : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                },
+                child: Text(
+                  '3건',
+                  style: TextStyle(
+                    fontSize: 15,
+                    decoration: TextDecoration.underline,
+                    color: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
-                  },
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ],
-            ),
-      ),
-    );
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                },
+                child: const Icon(Icons.arrow_forward),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   //작성 후기 필드

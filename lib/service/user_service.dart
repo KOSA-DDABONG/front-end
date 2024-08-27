@@ -20,7 +20,7 @@ class UserService {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
       final jsonData = response.data;
       print("[회원가입] : $jsonData");
-      if (response == "Success") {
+      if (jsonData == "ok") {
         return Result.success("Success");
       }
       else {

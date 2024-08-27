@@ -202,4 +202,35 @@ class BoardService {
       return Result.failure("[Delete Board] An Error Occurred: ${e}");
     }
   }
+
+  //게시물 수정 ////////////////
+  static Future<Result<BoardDeleteResponseModel>> updateReview(int postid) async {
+    final url = Uri.https(API_URL,  Config.editBoardFirstAPI+(postid.toString())+Config.editBoardSecondAPI).toString();
+    // final url = Uri.http(Config.apiUrl, Config.deleteBoardListAPI+(postid.toString())+Config.deleteBoardAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+
+    final headers = {
+      'Authorization': 'Bearer $accessToken'
+    };
+
+    try {
+      final response = await DioClient.sendRequest(
+        'POST',
+        url,
+        headers: headers,
+        // body: body
+      );
+      if (response.statusCode == 200) {
+        dynamic jsonData = response.data;
+        print("[게시물 수정] : $jsonData");
+        return Result.success(
+            boardDeleteResponseJson(jsonData as Map<String, dynamic>)
+        );
+      } else {
+        throw Exception("Failed to edit Board");
+      }
+    } catch (e) {
+      return Result.failure("[Edit Board] An Error Occurred: $e");
+    }
+  }
 }

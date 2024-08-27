@@ -8,6 +8,7 @@ import '../../controller/login_state_for_header.dart';
 import '../../dto/chat/chat_data_model.dart';
 import '../../responsive.dart';
 import '../../service/chat_service.dart';
+import 'dart:async';
 
 
 //1 Origin
@@ -282,9 +283,6 @@ import '../../service/chat_service.dart';
 // }
 
 //2 타이핑 형식
-import 'package:flutter/material.dart';
-import 'dart:async';
-
 class TypingText extends StatefulWidget {
   final String text;
   final TextStyle? style;
@@ -387,21 +385,30 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
 
       try {
         final conversationResult = await ChatService.getChatConversation(text);
+
         if (conversationResult.isSuccess && conversationResult.value?.status == 200) {
-          if (conversationResult.value?.message == "Please Request Next User Input") {
+          if (conversationResult.value!.data.travelSchedule.is_valid == 0) { //일정 생성 전
             setState(() {
-              _messages.add({'text': conversationResult.value?.data.chatbotMessage, 'isUser': false});
+              _messages.add({'text': conversationResult.value?.data.travelSchedule!.response, 'isUser': false});
             });
           } else {
-            travelScheduleMap = parseTravelSchedule(conversationResult.value!.data.travelSchedule);
-            final travelScheduleString = formatTravelSchedule(travelScheduleMap);
-
             setState(() {
-              _messages.add({'text': '생성된 일정:', 'isUser': false});
-              _messages.add({'text': travelScheduleString, 'isUser': false, 'isMore': true});
+              _messages.add({'text': '다음은 추천된 일정입니다!', 'isUser': false});
+              _messages.add({'text': conversationResult.value?.data.travelSchedule.explain, 'isUser': false, 'isMore': true});
               _messages.add({'text': "${conversationResult.value!.data.chatbotMessage}\n의견을 작성해주세요~😄", 'isUser': false});
               showMoreButton = true;
             });
+
+            //////로직 추가
+            final userResponseResult = await ChatService.sendUserResponse(text);
+            if(userResponseResult.isSuccess && userResponseResult.value?.status == 200) {
+              // 응답이 성공적으로 전송되었을 때 추가로 할 작업이 있다면 여기에 추가
+            }
+            else {
+              setState(() {
+                _messages.add({'text': '사용자 응답을 전송하는 데 실패했습니다.', 'isUser': false});
+              });
+            }
           }
         } else {
           setState(() {
@@ -538,6 +545,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
     );
   }
 
+
   Widget _buildChatBubble({
     required Alignment alignment,
     required Color? color,
@@ -545,11 +553,17 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
     bool isMore = false,
     VoidCallback? onMorePressed,
   }) {
+    // 말풍선의 최대 너비를 설정
+    double maxWidth = MediaQuery.of(context).size.width * 2 / 3;
+
+    // 텍스트가 3줄까지만 표시되도록 조정
+    String truncatedText = _truncateTextToThreeLines(text, maxWidth, const TextStyle(fontSize: 18));
+
     return Align(
       alignment: alignment,
       child: Container(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 2 / 3,
+          maxWidth: maxWidth,
         ),
         margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
         padding: const EdgeInsets.all(10.0),
@@ -561,14 +575,14 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TypingText(
-              text: text,
+              text: truncatedText,
               style: const TextStyle(fontSize: 18),
               duration: const Duration(milliseconds: 50), // 타이핑 속도 조절
             ),
-            if (isMore)
+            if (isMore) // "더보기" 버튼을 표시
               TextButton(
                 onPressed: onMorePressed,
-                child: Text(
+                child: const Text(
                   '더보기',
                   style: TextStyle(color: Colors.blue),
                 ),
@@ -577,6 +591,24 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
         ),
       ),
     );
+  }
+
+  String _truncateTextToThreeLines(String text, double maxWidth, TextStyle style) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 3,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout(maxWidth: maxWidth);
+
+    if (textPainter.didExceedMaxLines) {
+      final position = textPainter.getPositionForOffset(Offset(maxWidth, textPainter.height));
+      final endOffset = textPainter.getOffsetBefore(position.offset) ?? text.length;
+      return '${text.substring(0, endOffset)}...';
+    }
+
+    return text; // 3줄 이하일 때는 원래 텍스트를 반환
   }
 
   Widget _buildInputArea() {
