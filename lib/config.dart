@@ -17,6 +17,8 @@ class Config {
   static const updateLikesAPI = "/changelike"; //좋아요 업데이트
   static const deleteBoardListAPI = "/list/"; // 게시물 삭제
   static const deleteBoardAPI = "/delete"; // 게시물 삭제
+  static const editBoardFirstAPI = "/list/"; // 게시물 수정
+  static const editBoardSecondAPI = "/update"; // 게시물 수정
 
   //My
   static const getUserBoardListAPI = "/myinfo/review/list"; //내가 쓴 후기 리스트

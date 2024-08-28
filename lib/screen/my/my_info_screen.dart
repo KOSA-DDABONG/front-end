@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
+import 'package:front/dto/board/board_mylikelist_response_model.dart';
 import 'package:front/dto/board/board_myreviewlist_response_model.dart';
 import 'package:front/responsive.dart';
 import 'package:provider/provider.dart';
 
-import '../../component/dialog/request_login_dialog.dart';
 import '../../component/mypage/date_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
-import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/user/login/login_response_model.dart';
 import '../../service/session_service.dart';
 import '../../service/user_service.dart';
 
 class MyInfoScreen extends StatefulWidget {
-  const MyInfoScreen({Key? key}) : super(key: key);
+  final bool currentLoginState;
+  const MyInfoScreen({Key? key, required this.currentLoginState}) : super(key: key);
 
   @override
   _MyInfoScreenState createState() => _MyInfoScreenState();
@@ -25,12 +25,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   bool _isLoading = true;
   bool _loginState = false;
   LoginResponseModel? _userinfo;
-  bool _dialogShown  = false;
   BoardMyListResponseModel? _myReviewInfo;
+  MyLikesListResponseModel? _myLikesInfo;
 
   @override
   void initState() {
     super.initState();
+    _loginState = widget.currentLoginState;
     _getMyReviewList();
     _startLoadingTimeout(); // 로딩 시간 제한을 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,59 +50,46 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   }
 
   Future<void> _getMyReviewList() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
-
-      try {
-        final result = await UserService.getUserReviewList();
-        final usermodel = await SessionService.loginDetails();
-        if (result.value?.status == 200 && usermodel != null) { // 유저정보 로드 성공
-          setState(() {
-            _userinfo = usermodel;
-            _myReviewInfo = result.value;
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
+    try {
+      final reviewListResult = await UserService.getUserReviewList();
+      final likesListResult  = await UserService.getUserLikesList();
+      final usermodel = await SessionService.loginDetails();
+      if (reviewListResult.value?.status == 200 || usermodel != null || likesListResult.value?.status == 200) { // 유저정보 로드 성공
+        setState(() {
+          _userinfo = usermodel;
+          _myReviewInfo = reviewListResult.value;
+          _myLikesInfo = likesListResult.value;
+          _isLoading = false;
+        });
+      } else {
         setState(() {
           _isLoading = false;
         });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
-    } else {
-      if (!_dialogShown) {
-        _dialogShown = true;
-        await showRequestLoginDialog(context);
-        _dialogShown = false;
-      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_isLoading) {
+    if(!_loginState) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _loadingUI(context),
+          child: _notLoginProfileUI(),
         ),
       );
     }
-    else{
-      if (_loginState) {
+    else {
+      if(_isLoading) {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Responsive.isNarrowWidth(context)
-                ? _profileNarrowUI(context)
-                : _profileWideUI(context),
+            child: _loadingUI(context),
           ),
         );
       }
@@ -109,7 +97,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _notLoginProfileUI(),
+            child: Responsive.isNarrowWidth(context)
+                ? _profileNarrowUI(context)
+                : _profileWideUI(context),
           ),
         );
       }
@@ -155,7 +145,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           const SizedBox(height: 200),
           const Center(
             child: Text(
-              '데이터를 불러올 수 없습니다.',
+              '페이지에 접근할 수 없습니다.',
             ),
           ),
           const SizedBox(height: 200),
@@ -299,102 +289,130 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     );
   }
 
+
   //일정 카드
   Widget _myScheduleCard() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(10),
-        subtitle: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 10),
-            Container(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
-                  child: Image.network(
-                    _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                      // 오류가 발생할 경우 대체 이미지 제공
-                      return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
-                    },
+    if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+      return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 1.0),
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.transparent,
+          ),
+          child: const ListTile(
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30),
+                  Center(
+                    child: Text('데이터가 존재하지 않습니다.'),
                   ),
-                )
+                  SizedBox(height: 30),
+                ],
+              ),
             ),
-            const SizedBox(width: 10),
-            Responsive.isNarrowWidth(context)
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(width: 10),
-                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                ),
-          ],
+          )
+      );
+    }
+    else {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1.0),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
         ),
-        trailing: Responsive.isNarrowWidth(context)
-          ? GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('mySchedule');
-              },
-              child: const Icon(Icons.arrow_forward),
-            )
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
-                  },
-                  child: Text(
-                    '3건',
-                    style: TextStyle(
-                      fontSize: 15,
-                      decoration: TextDecoration.underline,
-                      color: Colors.black,
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(10),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 10),
+              Container(
+                  width: 100,
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
+                    child: Image.network(
+                      _myReviewInfo!.data![0].url.isNotEmpty
+                          ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                        // 오류가 발생할 경우 대체 이미지 제공
+                        return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                      },
                     ),
+                  )
+              ),
+              const SizedBox(width: 10),
+              Responsive.isNarrowWidth(context)
+                  ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5),
+                  Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                  const SizedBox(height: 5),
+                  Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                  const SizedBox(height: 5),
+                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                ],
+              )
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                      const SizedBox(width: 10),
+                      Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                ],
+              ),
+            ],
+          ),
+          trailing: Responsive.isNarrowWidth(context)
+              ? GestureDetector(
+            onTap: () {
+              context.read<MyMenuController>().setSelectedScreen('mySchedule');
+            },
+            child: const Icon(Icons.arrow_forward),
+          )
+              : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                },
+                child: Text(
+                  '3건',
+                  style: TextStyle(
+                    fontSize: 15,
+                    decoration: TextDecoration.underline,
+                    color: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('mySchedule');
-                  },
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ],
-            ),
-      ),
-    );
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  context.read<MyMenuController>().setSelectedScreen('mySchedule');
+                },
+                child: const Icon(Icons.arrow_forward),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   //작성 후기 필드
@@ -535,81 +553,108 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   //최근 좋아요 카드
   Widget _myLikesCard() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: ListTile(
-        subtitle: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                double containerWidth = 100;
-                double spacing = 15;
+    if (_myLikesInfo == null || _myLikesInfo!.myLikesList == null || _myLikesInfo!.myLikesList!.isEmpty) {
+      return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 1.0),
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.transparent,
+          ),
+          child: const ListTile(
+            subtitle: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30),
+                  Center(
+                    child: Text('데이터가 존재하지 않습니다.'),
+                  ),
+                  SizedBox(height: 30),
+                ],
+              ),
+            ),
+          )
+      );
+    }
+    else {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1.0),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
+        ),
+        child: ListTile(
+          subtitle: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  double containerWidth = 100;
+                  double spacing = 15;
 
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(8, (index) {
-                    //
-                    return Container(
-                        margin: EdgeInsets.only(right: spacing),
-                        width: containerWidth,
-                        height: containerWidth,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100), // 모서리 둥글기 설정
-                          child: Image.network(
-                            _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                              // 오류가 발생할 경우 대체 이미지 제공
-                              return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
-                            },
-                          ),
-                        )
-                    );
-                  }),
-                );
-              },
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(_myLikesInfo!.myLikesList!.length, (index) {
+                      return Container(
+                          margin: EdgeInsets.only(right: spacing),
+                          width: containerWidth,
+                          height: containerWidth,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100), // 모서리 둥글기 설정
+                            child: Image.network(
+                              (_myLikesInfo!.myLikesList?[index].imgurl != null)
+                                  ? _myLikesInfo!.myLikesList![index].imgurl.toString()
+                                  : 'assets/images/noImg.jpg',
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                // 오류가 발생할 경우 대체 이미지 제공
+                                return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
+                              },
+                            ),
+                          )
+                      );
+                    }),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-        trailing: Responsive.isNarrowWidth(context)
-          ? GestureDetector(
-              onTap: () {
-                context.read<MyMenuController>().setSelectedScreen('myLikes');
-              },
-              child: const Icon(Icons.arrow_forward),
-            )
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('myLikes');
-                  },
-                  child: Text(
-                    '8건',
-                    style: TextStyle(
-                      fontSize: 15,
-                      decoration: TextDecoration.underline,
-                      color: Colors.black,
-                    ),
+          trailing: Responsive.isNarrowWidth(context)
+              ? GestureDetector(
+            onTap: () {
+              context.read<MyMenuController>().setSelectedScreen('myLikes');
+            },
+            child: const Icon(Icons.arrow_forward),
+          )
+              : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  context.read<MyMenuController>().setSelectedScreen('myLikes');
+                },
+                child: Text(
+                  '${_myLikesInfo!.myLikesList!.length}건',
+                  style: TextStyle(
+                    fontSize: 15,
+                    decoration: TextDecoration.underline,
+                    color: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    context.read<MyMenuController>().setSelectedScreen('myLikes');
-                  },
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ],
-            ),
-      ),
-    );
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  context.read<MyMenuController>().setSelectedScreen('myLikes');
+                },
+                child: const Icon(Icons.arrow_forward),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

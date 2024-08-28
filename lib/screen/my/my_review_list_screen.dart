@@ -16,7 +16,8 @@ import '../../service/board_service.dart';
 import '../../service/user_service.dart';
 
 class MyReviewListScreen extends StatefulWidget {
-  const MyReviewListScreen({Key? key}) : super(key: key);
+  final bool currentLoginState;
+  const MyReviewListScreen({Key? key, required this.currentLoginState}) : super(key: key);
 
   @override
   _MyReviewListScreenState createState() => _MyReviewListScreenState();
@@ -25,12 +26,12 @@ class MyReviewListScreen extends StatefulWidget {
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
   bool _isLoading = true;
   bool _loginState = false;
-  bool _dialogShown  = false;
   BoardMyListResponseModel? _myReviewInfo;
 
   @override
   void initState() {
     super.initState();
+    _loginState = widget.currentLoginState;
     _getMyReviewList();
     _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,66 +50,107 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
   }
 
   Future<void> _getMyReviewList() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
-
-      try {
-        final result = await UserService.getUserReviewList();
-        if (result.value?.status == 200) { // 유저정보 로드 성공
-          setState(() {
-            _myReviewInfo = result.value;
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
+    try {
+      final result = await UserService.getUserReviewList();
+      if (result.value?.status == 200) { // 유저정보 로드 성공
+        setState(() {
+          _myReviewInfo = result.value;
+          _isLoading = false;
+        });
+      } else {
         setState(() {
           _isLoading = false;
         });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
-    } else {
-      if (!_dialogShown) {
-        _dialogShown = true;
-        await showRequestLoginDialog(context);
-        _dialogShown = false;
-      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_isLoading) {
+    if(!_loginState) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _loadingUI(context),
+          child: _notLoginProfileUI(),
         ),
       );
     }
     else {
-      if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+      if(_isLoading) {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _myReviewEmptyPageUI(context),
+            child: _loadingUI(context),
           ),
         );
-      } else {
+      }
+      else {
         return Scaffold(
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _myReviewNotEmptyPageUI(context),
+              padding: const EdgeInsets.all(16.0),
+              child: _myReviewListPageUI()
           ),
         );
       }
     }
+    // if(_isLoading) {
+    //   return Scaffold(
+    //     body: Padding(
+    //       padding: const EdgeInsets.all(16.0),
+    //       child: _loadingUI(context),
+    //     ),
+    //   );
+    // }
+    // else {
+    //   if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+    //     return Scaffold(
+    //       body: Padding(
+    //         padding: const EdgeInsets.all(16.0),
+    //         child: _myReviewEmptyPageUI(context),
+    //       ),
+    //     );
+    //   } else {
+    //     return Scaffold(
+    //       body: Padding(
+    //         padding: const EdgeInsets.all(16.0),
+    //         child: _myReviewNotEmptyPageUI(context),
+    //       ),
+    //     );
+    //   }
+    // }
+  }
+
+  Widget _myReviewListPageUI() {
+    if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+      return _myReviewEmptyPageUI(context);
+    }
+    else {
+      return _myReviewNotEmptyPageUI(context);
+    }
+  }
+
+  Widget _notLoginProfileUI() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('나의 후기'),
+          const SizedBox(height: 200),
+          const Center(
+            child: Text(
+              '페이지에 접근할 수 없습니다.',
+            ),
+          ),
+          const SizedBox(height: 200),
+        ],
+      ),
+    );
   }
 
   Widget _loadingUI(BuildContext context) {

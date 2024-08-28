@@ -6,7 +6,7 @@ import 'package:front/screen/my/my_review_list_screen.dart';
 import 'package:front/screen/my/my_trip_schedule_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/login_state_for_header.dart';
+import '../../controller/check_login_state.dart';
 import '../header/header.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../responsive.dart';
@@ -14,77 +14,103 @@ import '../header/header_drawer.dart';
 import 'my_side_menu.dart';
 
 class MyMenuScreen extends StatelessWidget {
-
-  final Map<String, Widget> _screens = {
-    'myEdit': MyInfoEditScreen(),
-    'myInfo': MyInfoScreen(),
-    'mySchedule': MyTripScheduleScreen(),
-    'myReview': MyReviewListScreen(),
-    'myLikes': MyLikesListScreen(),
-  };
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return CheckLoginStateWidget(
-        builder: (context, isLoggedIn) {
-          PreferredSizeWidget currentAppBar;
-          Widget? currentDrawer;
-          if (isLoggedIn) {
-            currentAppBar = Responsive.isNarrowWidth(context)
-                ? ShortHeader(automaticallyImplyLeading: false)
-                : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
-            currentDrawer = Responsive.isNarrowWidth(context)
-                ? AfterLoginHeaderDrawer()
-                : null;
-          }
-          else {
-            currentAppBar = Responsive.isNarrowWidth(context)
-                ? ShortHeader(automaticallyImplyLeading: false)
-                : NotLoginHeader(automaticallyImplyLeading: false, context: context);
-            currentDrawer = Responsive.isNarrowWidth(context)
-                ? NotLoginHeaderDrawer()
-                : null;
-          }
+    return FutureBuilder<bool>(
+      future: checkLoginState(context),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          return Scaffold(
-            appBar: currentAppBar,
-            drawer: currentDrawer,
-            body: SafeArea(
+        bool isLoggedIn = snapshot.data ?? false;
+
+        final Map<String, Widget> _screens = {
+          'myEdit': MyInfoEditScreen(currentLoginState: isLoggedIn),
+          'myInfo': MyInfoScreen(currentLoginState: isLoggedIn),
+          'mySchedule': MyTripScheduleScreen(currentLoginState: isLoggedIn),
+          'myReview': MyReviewListScreen(currentLoginState: isLoggedIn),
+          'myLikes': MyLikesListScreen(currentLoginState: isLoggedIn),
+        };
+
+        PreferredSizeWidget currentAppBar;
+        Widget? currentDrawer;
+        if (isLoggedIn) {
+          currentAppBar = Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : AfterLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+              ? AfterLoginHeaderDrawer()
+              : null;
+        } else {
+          currentAppBar = Responsive.isNarrowWidth(context)
+              ? ShortHeader(automaticallyImplyLeading: false)
+              : NotLoginHeader(automaticallyImplyLeading: false, context: context);
+          currentDrawer = Responsive.isNarrowWidth(context)
+              ? NotLoginHeaderDrawer()
+              : null;
+        }
+
+        return Scaffold(
+          appBar: currentAppBar,
+          drawer: currentDrawer,
+          body: (!isLoggedIn)
+            ? SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/images/banner.png',
-                    width: screenWidth,
-                    height: screenHeight * 1 / 6,
-                    fit: BoxFit.fill,
+                  Expanded(
+                      flex: 2,
+                      child: Container()
+                  ),
+                  const Expanded(
+                      flex: 1,
+                      child: Text('페이지에 접근할 수 없습니다.')
                   ),
                   Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (Responsive.isWideWidth(context))
-                          Expanded(
-                            child: SideMenu(),
-                          ),
-                        Expanded(
-                          flex: 5,
-                          //MenuAppController에서 시작페이지 변경 가능
-                          child: _screens[
-                          context.watch<MyMenuController>().selectedScreen] ??
-                              Container(),
-                        ),
-                      ],
-                    ),
+                      flex: 2,
+                      child: Container()
                   ),
                 ],
               ),
+            )
+          : SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/banner.png',
+                  width: screenWidth,
+                  height: screenHeight * 1 / 6,
+                  fit: BoxFit.fill,
+                ),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (Responsive.isWideWidth(context))
+                        const Expanded(
+                          child: SideMenu(),
+                        )
+                      else
+                        const SizedBox.shrink(),
+                      Expanded(
+                        flex: 5,
+                        child: _screens[
+                        context.watch<MyMenuController>().selectedScreen] ?? Container(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          );
-        }
+          )
+        );
+      },
     );
   }
 }
+

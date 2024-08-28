@@ -19,4 +19,12 @@ class ChatResponseModel {
     status = json['status'];
     data = ChatDataModel.fromJson(json['data']);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'status': status,
+      'data': data,
+    };
+  }
 }
