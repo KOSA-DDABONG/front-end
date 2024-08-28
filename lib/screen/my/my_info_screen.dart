@@ -610,8 +610,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(8, (index) {
-                      //
+                    children: List.generate(_myLikesInfo!.myLikesList!.length, (index) {
                       return Container(
                           margin: EdgeInsets.only(right: spacing),
                           width: containerWidth,
@@ -619,7 +618,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100), // 모서리 둥글기 설정
                             child: Image.network(
-                              _myReviewInfo!.data![0].url.isNotEmpty ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                              (_myLikesInfo!.myLikesList?[index].imgurl != null)
+                                  ? _myLikesInfo!.myLikesList![index].imgurl.toString()
+                                  : 'assets/images/noImg.jpg',
                               fit: BoxFit.cover,
                               errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                 // 오류가 발생할 경우 대체 이미지 제공
@@ -649,7 +650,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                   context.read<MyMenuController>().setSelectedScreen('myLikes');
                 },
                 child: Text(
-                  '8건',
+                  '${_myLikesInfo!.myLikesList!.length}건',
                   style: TextStyle(
                     fontSize: 15,
                     decoration: TextDecoration.underline,
