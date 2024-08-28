@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:front/dto/chat/travel_schedule_model.dart';
+import 'package:front/dto/chat/message/travel_schedule_model.dart';
 
 class ChatDataModel {
   ChatDataModel({

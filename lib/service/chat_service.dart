@@ -3,9 +3,9 @@ import 'package:front/service/result.dart';
 import 'package:front/service/session_service.dart';
 
 import '../config.dart';
-import '../dto/chat/chat_start_response_model.dart';
-import '../dto/chat/judge_result_response_model.dart';
-import '../dto/chat/chat_response_model.dart';
+import '../dto/chat/start/chat_start_response_model.dart';
+import '../dto/chat/response/judge_result_response_model.dart';
+import '../dto/chat/message/chat_response_model.dart';
 import '../key/key.dart';
 
 class ChatService {
@@ -52,9 +52,12 @@ class ChatService {
         headers: headers,
         body: userMessage
       );
-
       final jsonData = response.data;
       print("[사용자가 입력한 메세지 전달] : $jsonData");
+
+      final chatResponse = chatResponseJson(jsonData as Map<String, dynamic>);
+      print("[사용자가 입력한 메세지 전달 - ChatResponseModel] : ${chatResponse.data.travelSchedule.scheduler}");
+
       return Result.success(
         chatResponseJson(jsonData as Map<String, dynamic>)
       );
@@ -81,6 +84,7 @@ class ChatService {
       );
       final jsonData = response.data;
       print("[생성된 여행 일정에 대한 사용자의 반응 전달] : $jsonData");
+
       return Result.success(
           judgeResultResponseJson(jsonData as Map<String, dynamic>)
       );

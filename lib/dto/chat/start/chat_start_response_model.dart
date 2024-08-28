@@ -1,4 +1,4 @@
-import 'package:front/dto/chat/chat_data_start_model.dart';
+import 'package:front/dto/chat/start/chat_data_start_model.dart';
 
 ChatStartResponseModel chatStartResponseJson(Map<String, dynamic> json) =>
     ChatStartResponseModel.fromJson(json);

@@ -1,6 +1,6 @@
-import 'dart:convert'; // JSON 파싱을 위해 필요
+import 'dart:convert';
 
-import 'package:front/dto/chat/keywords_model.dart';
+import 'package:front/dto/chat/message/keywords_model.dart';
 
 class TravelScheduleModel {
   TravelScheduleModel({
