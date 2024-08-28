@@ -4,10 +4,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class GetMapForChat extends StatefulWidget {
   final List<List<dynamic>> dayScheduleData;
   final int selectedDay;
+  final LatLng? selectedPlace; // 기존
+  final int? selectedIndex; // 추가된 부분
 
   GetMapForChat({
     required this.dayScheduleData,
     required this.selectedDay,
+    this.selectedPlace,
+    this.selectedIndex, // 추가된 부분
   });
 
   @override
@@ -15,7 +19,8 @@ class GetMapForChat extends StatefulWidget {
 }
 
 class _GetMapState extends State<GetMapForChat> {
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
+  late GoogleMapController _mapController;
 
   @override
   void initState() {
@@ -26,8 +31,10 @@ class _GetMapState extends State<GetMapForChat> {
   @override
   void didUpdateWidget(GetMapForChat oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selectedDay != oldWidget.selectedDay) {
+    if (widget.selectedDay != oldWidget.selectedDay ||
+        widget.selectedIndex != oldWidget.selectedIndex) {
       _updateMarkers();
+      _moveCameraToSelectedPlace();
     }
   }
 
@@ -38,10 +45,11 @@ class _GetMapState extends State<GetMapForChat> {
       Colors.red,    // 1일차
       Colors.blue,   // 2일차
       Colors.yellow, // 3일차
-      // 필요한 경우 색상을 추가할 수 있습니다.
+      Colors.green,
+      Colors.orange,
+      Colors.deepPurpleAccent,
     ];
 
-    // 선택된 날짜에 대한 데이터 가져오기
     final dayData = widget.dayScheduleData[widget.selectedDay - 1];
     final markerColor = colors[widget.selectedDay - 1];
 
@@ -64,7 +72,22 @@ class _GetMapState extends State<GetMapForChat> {
         infoWindow: InfoWindow(title: name),
       ));
     }
-    setState(() {}); // 마커 업데이트 후 UI 리빌드
+    setState(() {});
+  }
+
+  void _moveCameraToSelectedPlace() {
+    if (widget.selectedIndex != null) {
+      final dayData = widget.dayScheduleData[widget.selectedDay - 1];
+      if (widget.selectedIndex! < dayData.length) {
+        final place = dayData[widget.selectedIndex!];
+        final position = LatLng(place[1], place[2]);
+        _mapController.animateCamera(CameraUpdate.newLatLng(position));
+      }
+    } else if (widget.selectedPlace != null) {
+      _mapController.animateCamera(
+        CameraUpdate.newLatLng(widget.selectedPlace!),
+      );
+    }
   }
 
   @override
@@ -74,9 +97,12 @@ class _GetMapState extends State<GetMapForChat> {
         : LatLng(0.0, 0.0);
 
     return GoogleMap(
+      onMapCreated: (GoogleMapController controller) {
+        _mapController = controller;
+      },
       initialCameraPosition: CameraPosition(
         target: initialPosition,
-        zoom: 12,
+        zoom: 10,
       ),
       markers: _markers,
     );

@@ -9,7 +9,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
   int selectedDay = 1;
   int? selectedIndex;
   int scheduleDayLength = scheduleInfo?.length ?? 0;
-  // List<List<dynamic>> dayScheduleSequence = [];
+  List<List<dynamic>>  aDayScheduleSequence = [];
 
   print("여행일정 상세 다이어로그 시작");
   print(scheduleInfo);
@@ -19,9 +19,13 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
       print("Day ${dayIndex} 호텔 없음");
       return [];
-    }
-    else {
-      return scheduleInfo[dayIndex]['hotel'];
+    } else {
+      if(scheduleInfo[dayIndex]['hotel'] == null) {
+        return [];
+      }
+      else {
+        return scheduleInfo[dayIndex]['hotel'];
+      }
     }
   }
 
@@ -29,8 +33,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
       print("Day ${dayIndex} 아침 없음");
       return [];
-    }
-    else {
+    } else {
       return scheduleInfo[dayIndex]['breakfast'];
     }
   }
@@ -39,8 +42,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
       print("Day ${dayIndex} 관광지 없음");
       return [];
-    }
-    else {
+    } else {
       return scheduleInfo[dayIndex]['tourist_spots'].map<List<Object>>((spot) => List<Object>.from(spot)).toList();
     }
   }
@@ -49,8 +51,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
       print("Day ${dayIndex} 점심 없음");
       return [];
-    }
-    else {
+    } else {
       return scheduleInfo[dayIndex]['lunch'];
     }
   }
@@ -59,34 +60,27 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
       print("Day ${dayIndex} 저녁 없음");
       return [];
-    }
-    else {
+    } else {
       return scheduleInfo[dayIndex]['dinner'];
     }
   }
 
   List<List<dynamic>> daySchedule(int dayIndex, int spotsLength) {
     List<List<dynamic>> list = [];
-    if(spotsLength == 1) {
+    if (spotsLength == 1) {
       list.add(findBreakfast(dayIndex));
       list.add(findLunch(dayIndex));
       list.add(findTouristSpots(dayIndex)[0]);
       list.add(findDinner(dayIndex));
       list.add(findHotelInfo(dayIndex));
-      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
-      return list;
-    }
-    else if (spotsLength == 2) {
+    } else if (spotsLength == 2) {
       list.add(findBreakfast(dayIndex));
       list.add(findTouristSpots(dayIndex)[0]);
       list.add(findLunch(dayIndex));
       list.add(findTouristSpots(dayIndex)[1]);
       list.add(findDinner(dayIndex));
       list.add(findHotelInfo(dayIndex));
-      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
-      return list;
-    }
-    else if (spotsLength == 3) {
+    } else if (spotsLength == 3) {
       list.add(findBreakfast(dayIndex));
       list.add(findTouristSpots(dayIndex)[0]);
       list.add(findLunch(dayIndex));
@@ -94,13 +88,11 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
       list.add(findDinner(dayIndex));
       list.add(findTouristSpots(dayIndex)[2]);
       list.add(findHotelInfo(dayIndex));
-      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
-      return list;
     }
-    else {
-      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
-      return list;
-    }
+    aDayScheduleSequence = list;
+    aDayScheduleSequence.removeWhere((element) => element.isEmpty);
+    print("Day ${dayIndex+1}, 관광지 개수 ${spotsLength}, $aDayScheduleSequence");
+    return aDayScheduleSequence;
   }
 
   showDialog(
@@ -138,7 +130,15 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                                   (index) => daySchedule(index, findTouristSpots(index).length),
                             ),
                             selectedDay: selectedDay,
+                            selectedPlace: selectedIndex != null
+                                ? LatLng(
+                              aDayScheduleSequence[selectedDay][1],
+                              aDayScheduleSequence[selectedDay][2],
+                            )
+                                : null,
+                            selectedIndex: selectedIndex, // 추가된 부분
                           ),
+
                         ),
                       ),
                     ),
@@ -177,60 +177,67 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: findTouristSpots(selectedDay-1).length + 4,
+                                itemCount: daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length).length,
                                 itemBuilder: (context, index) {
-                                  return Stack(
-                                    children: [
-                                      Positioned.fill(
-                                        left: 12,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: DashedLine(
-                                            height: double.infinity,
-                                            color: Colors.grey,
-                                            strokeWidth: 2,
+                                  if(daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index] != []) {
+                                    return Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          left: 12,
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: DashedLine(
+                                              height: double.infinity,
+                                              color: Colors.grey,
+                                              strokeWidth: 2,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundColor: Colors.blue,
-                                              radius: 12,
-                                              child: Text(
-                                                '${index + 1}',
-                                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: Colors.blue,
+                                                radius: 12,
+                                                child: Text(
+                                                  '${index + 1}',
+                                                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    selectedIndex = index;
-                                                  });
-                                                },
-                                                child: Card(
-                                                  color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      daySchedule(selectedDay-1, findTouristSpots(selectedDay-1).length)[index][0],
-                                                      style: const TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 16,
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedIndex = index;
+                                                      // 지도 중앙으로 이동
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+                                                    child: ListTile(
+                                                      title: Text(
+                                                        daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index][0],
+                                                        style: const TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
+                                      ],
+                                    );
+                                  }
+                                  else {
+                                    //
+                                  }
+
                                 },
                               ),
                             ),
@@ -242,15 +249,12 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                 ),
               ),
             );
-          } else {
-            ////////////////
-            ///
-            /// ////////////////
-            //             ///
-            ////////////////
-            ///
-            /// ////////////////
-            //             ///Here
+          }
+          ///
+          ///
+          ///
+          ///
+          else {
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -280,7 +284,15 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                                   (index) => daySchedule(index, findTouristSpots(index).length),
                             ),
                             selectedDay: selectedDay,
+                            selectedPlace: selectedIndex != null
+                                ? LatLng(
+                              aDayScheduleSequence[selectedDay][1],
+                              aDayScheduleSequence[selectedDay][2],
+                            )
+                                : null,
+                            selectedIndex: selectedIndex, // 추가된 부분
                           ),
+
                         ),
                       ),
                     ),
@@ -319,60 +331,66 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: findTouristSpots(selectedDay-1).length + 4,
+                                itemCount: daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length).length,
                                 itemBuilder: (context, index) {
-                                  return Stack(
-                                    children: [
-                                      Positioned.fill(
-                                        left: 12,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: DashedLine(
-                                            height: double.infinity,
-                                            color: Colors.grey,
-                                            strokeWidth: 2,
+                                  if(daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index] != []) {
+                                    return Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          left: 12,
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: DashedLine(
+                                              height: double.infinity,
+                                              color: Colors.grey,
+                                              strokeWidth: 2,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundColor: Colors.blue,
-                                              radius: 12,
-                                              child: Text(
-                                                '${index + 1}',
-                                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: Colors.blue,
+                                                radius: 12,
+                                                child: Text(
+                                                  '${index + 1}',
+                                                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    selectedIndex = index;
-                                                  });
-                                                },
-                                                child: Card(
-                                                  color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      daySchedule(selectedDay-1, findTouristSpots(selectedDay-1).length)[index][0],
-                                                      style: const TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 16,
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedIndex = index;
+                                                      // 지도 중앙으로 이동
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+                                                    child: ListTile(
+                                                      title: Text(
+                                                        daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index][0],
+                                                        style: const TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
+                                      ],
+                                    );
+                                  }
+                                  else {
+                                    ///
+                                  }
                                 },
                               ),
                             ),
