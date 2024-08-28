@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/key/key.dart';
 import 'package:front/responsive.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -136,7 +137,8 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                               aDayScheduleSequence[selectedDay][2],
                             )
                                 : null,
-                            selectedIndex: selectedIndex, // 추가된 부분
+                            selectedIndex: selectedIndex,
+                            googleApiKey: GOOGLE_MAP_KEY, // 추가된 부분
                           ),
 
                         ),
@@ -290,7 +292,8 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                               aDayScheduleSequence[selectedDay][2],
                             )
                                 : null,
-                            selectedIndex: selectedIndex, // 추가된 부분
+                            selectedIndex: selectedIndex,
+                            googleApiKey: GOOGLE_MAP_KEY, // 추가된 부분
                           ),
 
                         ),
