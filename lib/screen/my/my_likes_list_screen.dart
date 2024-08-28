@@ -15,7 +15,8 @@ import '../../service/user_service.dart';
 import '../start/login_screen.dart';
 
 class MyLikesListScreen extends StatefulWidget {
-  const MyLikesListScreen({Key? key}) : super(key: key);
+  final bool currentLoginState;
+  const MyLikesListScreen({Key? key, required this.currentLoginState}) : super(key: key);
 
   @override
   _MyLikesListScreenState createState() => _MyLikesListScreenState();
@@ -26,11 +27,11 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   MyLikesListResponseModel? _myLikesInfo;
   bool _isLoading = true;
   bool _loginState = false;
-  bool _dialogShown = false;
 
   @override
   void initState() {
     super.initState();
+    _loginState = widget.currentLoginState;
     _getMyLikesList();
     _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,70 +50,91 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
   }
 
   Future<void> _getMyLikesList() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
 
-      try {
-        final result = await UserService.getUserLikesList();
-        if (result.value?.status == 200) { // 유저정보 로드 성공
-          setState(() {
-            _myLikesInfo = result.value;
-            // 각 카드의 초기 좋아요 상태를 설정합니다.
-            _likedItems.clear();
-            for (var item in _myLikesInfo!.myLikesList!) {
-              _likedItems[item.postid] = item.likeflag ?? false;
-            }
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
+    try {
+      final result = await UserService.getUserLikesList();
+      if (result.value?.status == 200) { // 유저정보 로드 성공
+        setState(() {
+          _myLikesInfo = result.value;
+          // 각 카드의 초기 좋아요 상태를 설정합니다.
+          _likedItems.clear();
+          for (var item in _myLikesInfo!.myLikesList!) {
+            _likedItems[item.postid] = item.likeflag ?? false;
+          }
+          _isLoading = false;
+        });
+      } else {
         setState(() {
           _isLoading = false;
         });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
-    } else {
-      if (!_dialogShown) {
-        _dialogShown = true;
-        await showRequestLoginDialog(context);
-        _dialogShown = false;
-      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    if(!_loginState) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _loadingUI(context),
+          child: _notLoginProfileUI(),
         ),
       );
-    } else {
-      if (_myLikesInfo?.myLikesList == null || _myLikesInfo!.myLikesList!.isEmpty) {
+    }
+    else {
+      if(_isLoading) {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _myLikesEmptyPageUI(context),
+            child: _loadingUI(context),
           ),
         );
-      } else {
+      }
+      else {
         return Scaffold(
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _myLikesUI(context),
+              padding: const EdgeInsets.all(16.0),
+              child: _myLikesListPageUI()
           ),
         );
       }
     }
+  }
+
+  Widget _myLikesListPageUI() {
+    if (_myLikesInfo?.myLikesList == null || _myLikesInfo!.myLikesList!.isEmpty) {
+      return Scaffold(
+        body: _myLikesEmptyPageUI(context),
+      );
+    } else {
+      return Scaffold(
+        body: _myLikesUI(context),
+      );
+    }
+  }
+
+  Widget _notLoginProfileUI() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('나의 좋아요'),
+          const SizedBox(height: 200),
+          const Center(
+            child: Text(
+              '페이지에 접근할 수 없습니다.',
+            ),
+          ),
+          const SizedBox(height: 200),
+        ],
+      ),
+    );
   }
 
   Widget _loadingUI(BuildContext context) {

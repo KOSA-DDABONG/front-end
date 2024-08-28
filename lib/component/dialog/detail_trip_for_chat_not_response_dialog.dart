@@ -1,84 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:front/responsive.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../constants.dart';
-import '../../key/key.dart';
 import '../map/get_map_for_chat.dart';
 
-void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String, dynamic> scheduleInfo) {
+void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey, List<dynamic>? scheduleInfo) {
   int selectedDay = 1;
   int? selectedIndex;
+  int scheduleDayLength = scheduleInfo?.length ?? 0;
+  // List<List<dynamic>> dayScheduleSequence = [];
 
-  List<String> getPlaceNames(String keyValue) {
-    // 일정에 포함된 장소 이름들 리스트를 반환
-    List<String> placeNames = [];
-    var dayInfo = scheduleInfo[keyValue];
+  print("여행일정 상세 다이어로그 시작");
+  print(scheduleInfo);
+  print("--------------------------");
 
-    for (var entry in dayInfo.entries) {
-      var value = entry.value;
-      if (value is List) {
-        if (value.isNotEmpty && value[0] is List) {
-          // tourist_spots와 같이 중첩된 리스트의 경우
-          for (var spot in value) {
-            placeNames.add(spot[0]); // 장소 이름 추출
-          }
-        } else {
-          // 일반 리스트의 경우
-          placeNames.add(value[0]); // 장소 이름 추출
-        }
-      }
+  List<dynamic> findHotelInfo(int dayIndex) {
+    if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
+      print("Day ${dayIndex} 호텔 없음");
+      return [];
     }
-    return placeNames;
+    else {
+      return scheduleInfo[dayIndex]['hotel'];
+    }
   }
 
-  List<List<double>> getLatitudes() {
-    // 일정에 포함된 장소 위도 리스트를 반환
-    List<List<double>> latitudes = [];
-    for (var day in scheduleInfo.keys) {
-      var dayInfo = scheduleInfo[day];
-      List<double> placeLatitude = [];
-      for (var entry in dayInfo.entries) {
-        var value = entry.value;
-        if (value is List) {
-          if (value.isNotEmpty && value[0] is List) {
-            // tourist_spots와 같이 중첩된 리스트의 경우
-            for (var spot in value) {
-              placeLatitude.add(spot[1]); // 장소 위도 추출
-            }
-          } else {
-            // 일반 리스트의 경우
-            placeLatitude.add(value[1]); // 장소 위도 추출
-          }
-        }
-      }
-      latitudes.add(placeLatitude);
+  List<dynamic> findBreakfast(int dayIndex) {
+    if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
+      print("Day ${dayIndex} 아침 없음");
+      return [];
     }
-    return latitudes;
+    else {
+      return scheduleInfo[dayIndex]['breakfast'];
+    }
   }
 
-  List<List<double>> getLongitudes() {
-    // 일정에 포함된 장소 경도 리스트를 반환
-    List<List<double>> longitudes = [];
-    for (var day in scheduleInfo.keys) {
-      var dayInfo = scheduleInfo[day];
-      List<double> placeLongitude = [];
-      for (var entry in dayInfo.entries) {
-        var value = entry.value;
-        if (value is List) {
-          if (value.isNotEmpty && value[0] is List) {
-            // tourist_spots와 같이 중첩된 리스트의 경우
-            for (var spot in value) {
-              placeLongitude.add(spot[2]); // 장소 경도 추출
-            }
-          } else {
-            // 일반 리스트의 경우
-            placeLongitude.add(value[2]); // 장소 경도 추출
-          }
-        }
-      }
-      longitudes.add(placeLongitude);
+  List<List<dynamic>> findTouristSpots(int dayIndex) {
+    if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
+      print("Day ${dayIndex} 관광지 없음");
+      return [];
     }
-    return longitudes;
+    else {
+      return scheduleInfo[dayIndex]['tourist_spots'].map<List<Object>>((spot) => List<Object>.from(spot)).toList();
+    }
+  }
+
+  List<dynamic> findLunch(int dayIndex) {
+    if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
+      print("Day ${dayIndex} 점심 없음");
+      return [];
+    }
+    else {
+      return scheduleInfo[dayIndex]['lunch'];
+    }
+  }
+
+  List<dynamic> findDinner(int dayIndex) {
+    if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
+      print("Day ${dayIndex} 저녁 없음");
+      return [];
+    }
+    else {
+      return scheduleInfo[dayIndex]['dinner'];
+    }
+  }
+
+  List<List<dynamic>> daySchedule(int dayIndex, int spotsLength) {
+    List<List<dynamic>> list = [];
+    if(spotsLength == 1) {
+      list.add(findBreakfast(dayIndex));
+      list.add(findLunch(dayIndex));
+      list.add(findTouristSpots(dayIndex)[0]);
+      list.add(findDinner(dayIndex));
+      list.add(findHotelInfo(dayIndex));
+      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
+      return list;
+    }
+    else if (spotsLength == 2) {
+      list.add(findBreakfast(dayIndex));
+      list.add(findTouristSpots(dayIndex)[0]);
+      list.add(findLunch(dayIndex));
+      list.add(findTouristSpots(dayIndex)[1]);
+      list.add(findDinner(dayIndex));
+      list.add(findHotelInfo(dayIndex));
+      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
+      return list;
+    }
+    else if (spotsLength == 3) {
+      list.add(findBreakfast(dayIndex));
+      list.add(findTouristSpots(dayIndex)[0]);
+      list.add(findLunch(dayIndex));
+      list.add(findTouristSpots(dayIndex)[1]);
+      list.add(findDinner(dayIndex));
+      list.add(findTouristSpots(dayIndex)[2]);
+      list.add(findHotelInfo(dayIndex));
+      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
+      return list;
+    }
+    else {
+      print("Day ${dayIndex}, 관광지 개수 ${spotsLength}, $list");
+      return list;
+    }
   }
 
   showDialog(
@@ -110,7 +132,13 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Container() //GoogleMap
+                          child: GetMapForChat(
+                            dayScheduleData: List.generate(
+                              scheduleDayLength,
+                                  (index) => daySchedule(index, findTouristSpots(index).length),
+                            ),
+                            selectedDay: selectedDay,
+                          ),
                         ),
                       ),
                     ),
@@ -122,7 +150,7 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(scheduleInfo.length, (index) {
+                              children: List.generate(scheduleDayLength, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
@@ -149,9 +177,8 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: getPlaceNames(selectedDay.toString()).length,
+                                itemCount: findTouristSpots(selectedDay-1).length + 4,
                                 itemBuilder: (context, index) {
-                                  var placeNames = getPlaceNames(selectedDay.toString());
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -189,7 +216,7 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                   child: ListTile(
                                                     title: Text(
-                                                      placeNames[index],
+                                                      daySchedule(selectedDay-1, findTouristSpots(selectedDay-1).length)[index][0],
                                                       style: const TextStyle(
                                                         fontWeight: FontWeight.bold,
                                                         fontSize: 16,
@@ -216,6 +243,14 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
               ),
             );
           } else {
+            ////////////////
+            ///
+            /// ////////////////
+            //             ///
+            ////////////////
+            ///
+            /// ////////////////
+            //             ///Here
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -239,7 +274,13 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Container() // GoogleMap
+                          child: GetMapForChat(
+                            dayScheduleData: List.generate(
+                              scheduleDayLength,
+                                  (index) => daySchedule(index, findTouristSpots(index).length),
+                            ),
+                            selectedDay: selectedDay,
+                          ),
                         ),
                       ),
                     ),
@@ -251,7 +292,7 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(scheduleInfo.length, (index) {
+                              children: List.generate(scheduleDayLength, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
@@ -278,9 +319,8 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: getPlaceNames(selectedDay.toString()).length,
+                                itemCount: findTouristSpots(selectedDay-1).length + 4,
                                 itemBuilder: (context, index) {
-                                  var placeNames = getPlaceNames(selectedDay.toString());
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -318,7 +358,7 @@ void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String
                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                   child: ListTile(
                                                     title: Text(
-                                                      placeNames[index],
+                                                      daySchedule(selectedDay-1, findTouristSpots(selectedDay-1).length)[index][0],
                                                       style: const TextStyle(
                                                         fontWeight: FontWeight.bold,
                                                         fontSize: 16,

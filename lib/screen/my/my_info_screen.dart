@@ -5,18 +5,17 @@ import 'package:front/dto/board/board_myreviewlist_response_model.dart';
 import 'package:front/responsive.dart';
 import 'package:provider/provider.dart';
 
-import '../../component/dialog/request_login_dialog.dart';
 import '../../component/mypage/date_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
-import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
 import '../../dto/user/login/login_response_model.dart';
 import '../../service/session_service.dart';
 import '../../service/user_service.dart';
 
 class MyInfoScreen extends StatefulWidget {
-  const MyInfoScreen({Key? key}) : super(key: key);
+  final bool currentLoginState;
+  const MyInfoScreen({Key? key, required this.currentLoginState}) : super(key: key);
 
   @override
   _MyInfoScreenState createState() => _MyInfoScreenState();
@@ -26,13 +25,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   bool _isLoading = true;
   bool _loginState = false;
   LoginResponseModel? _userinfo;
-  bool _dialogShown  = false;
   BoardMyListResponseModel? _myReviewInfo;
   MyLikesListResponseModel? _myLikesInfo;
 
   @override
   void initState() {
     super.initState();
+    _loginState = widget.currentLoginState;
     _getMyReviewList();
     _startLoadingTimeout(); // 로딩 시간 제한을 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -51,61 +50,46 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   }
 
   Future<void> _getMyReviewList() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
-
-      try {
-        final reviewListResult = await UserService.getUserReviewList();
-        final likesListResult  = await UserService.getUserLikesList();
-        final usermodel = await SessionService.loginDetails();
-        if (reviewListResult.value?.status == 200 || usermodel != null || likesListResult.value?.status == 200) { // 유저정보 로드 성공
-          setState(() {
-            _userinfo = usermodel;
-            _myReviewInfo = reviewListResult.value;
-            _myLikesInfo = likesListResult.value;
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
+    try {
+      final reviewListResult = await UserService.getUserReviewList();
+      final likesListResult  = await UserService.getUserLikesList();
+      final usermodel = await SessionService.loginDetails();
+      if (reviewListResult.value?.status == 200 || usermodel != null || likesListResult.value?.status == 200) { // 유저정보 로드 성공
+        setState(() {
+          _userinfo = usermodel;
+          _myReviewInfo = reviewListResult.value;
+          _myLikesInfo = likesListResult.value;
+          _isLoading = false;
+        });
+      } else {
         setState(() {
           _isLoading = false;
         });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
-    } else {
-      if (!_dialogShown) {
-        _dialogShown = true;
-        await showRequestLoginDialog(context);
-        _dialogShown = false;
-      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_isLoading) {
+    if(!_loginState) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _loadingUI(context),
+          child: _notLoginProfileUI(),
         ),
       );
     }
-    else{
-      if (_loginState) {
+    else {
+      if(_isLoading) {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Responsive.isNarrowWidth(context)
-                ? _profileNarrowUI(context)
-                : _profileWideUI(context),
+            child: _loadingUI(context),
           ),
         );
       }
@@ -113,7 +97,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _notLoginProfileUI(),
+            child: Responsive.isNarrowWidth(context)
+                ? _profileNarrowUI(context)
+                : _profileWideUI(context),
           ),
         );
       }
@@ -159,7 +145,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
           const SizedBox(height: 200),
           const Center(
             child: Text(
-              '데이터를 불러올 수 없습니다.',
+              '페이지에 접근할 수 없습니다.',
             ),
           ),
           const SizedBox(height: 200),

@@ -16,7 +16,8 @@ import '../../responsive.dart';
 import '../../service/session_service.dart';
 
 class MyTripScheduleScreen extends StatefulWidget {
-  const MyTripScheduleScreen({Key? key}) : super(key: key);
+  final bool currentLoginState;
+  const MyTripScheduleScreen({Key? key, required this.currentLoginState}) : super(key: key);
 
   @override
   _MyTripScheduleScreenState createState() => _MyTripScheduleScreenState();
@@ -31,6 +32,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   @override
   void initState() {
     super.initState();
+    _loginState = widget.currentLoginState;
     _checkLoginUserInfo();
     _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,60 +51,53 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   }
 
   Future<void> _checkLoginUserInfo() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
-
-      try {
-        final usermodel = await SessionService.loginDetails();
-        if (usermodel!=null) {
-          setState(() {
-            _userinfo = usermodel;
-            _isLoading = false;
-          });
-        }
-        else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+    try {
+      final usermodel = await SessionService.loginDetails();
+      if (usermodel!=null) {
+        setState(() {
+          _userinfo = usermodel;
+          _isLoading = false;
+        });
       }
-      catch (e) {
+      else {
         setState(() {
           _isLoading = false;
         });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
+    }
+    catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_isLoading) {
+    if(!_loginState) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _loadingUI(context),
+          child: _notLoginProfileUI(),
         ),
       );
     }
-    else{
-      if (_loginState) {
+    else {
+      if(_isLoading) {
         return Scaffold(
           body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Responsive.isNarrowWidth(context)
-                  ? _myTripListPageNarrowUI() : _myTripListPageWideUI()
+            padding: const EdgeInsets.all(16.0),
+            child: _loadingUI(context),
           ),
         );
       }
       else {
         return Scaffold(
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _notLoginProfileUI(),
+              padding: const EdgeInsets.all(16.0),
+              child: Responsive.isNarrowWidth(context)
+                  ? _myTripListPageNarrowUI() : _myTripListPageWideUI()
           ),
         );
       }
@@ -177,7 +172,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
           const SizedBox(height: 200),
           const Center(
             child: Text(
-              '데이터를 불러올 수 없습니다.',
+              '페이지에 접근할 수 없습니다.',
             ),
           ),
           const SizedBox(height: 200),

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GetMapForChat extends StatefulWidget {
-  final List<List<double>> latitudes;
-  final List<List<double>> longitudes;
+  final List<List<dynamic>> dayScheduleData;
   final int selectedDay;
 
   GetMapForChat({
-    required this.latitudes,
-    required this.longitudes,
+    required this.dayScheduleData,
     required this.selectedDay,
   });
 
@@ -36,29 +34,43 @@ class _GetMapState extends State<GetMapForChat> {
   void _updateMarkers() {
     _markers.clear(); // 기존 마커 지우기
 
-    for (int day = 0; day < widget.latitudes.length; day++) {
-      final latitudes = widget.latitudes[day];
-      final longitudes = widget.longitudes[day];
-      final Color markerColor = day + 1 == widget.selectedDay ? Colors.red : Colors.grey;
+    final colors = [
+      Colors.red,    // 1일차
+      Colors.blue,   // 2일차
+      Colors.yellow, // 3일차
+      // 필요한 경우 색상을 추가할 수 있습니다.
+    ];
 
-      for (int i = 0; i < latitudes.length; i++) {
-        _markers.add(Marker(
-          markerId: MarkerId('day${day + 1}_$i'),
-          position: LatLng(latitudes[i], longitudes[i]),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            markerColor == Colors.red ? BitmapDescriptor.hueRed : BitmapDescriptor.hueBlue,
-          ),
-          infoWindow: InfoWindow(title: 'Location ${i + 1}'),
-        ));
-      }
+    // 선택된 날짜에 대한 데이터 가져오기
+    final dayData = widget.dayScheduleData[widget.selectedDay - 1];
+    final markerColor = colors[widget.selectedDay - 1];
+
+    for (int i = 0; i < dayData.length; i++) {
+      final place = dayData[i];
+      final name = place[0];
+      final latitude = place[1];
+      final longitude = place[2];
+
+      _markers.add(Marker(
+        markerId: MarkerId('day${widget.selectedDay}_$i'),
+        position: LatLng(latitude, longitude),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          markerColor == Colors.red
+              ? BitmapDescriptor.hueRed
+              : markerColor == Colors.blue
+              ? BitmapDescriptor.hueBlue
+              : BitmapDescriptor.hueYellow,
+        ),
+        infoWindow: InfoWindow(title: name),
+      ));
     }
     setState(() {}); // 마커 업데이트 후 UI 리빌드
   }
 
   @override
   Widget build(BuildContext context) {
-    final initialPosition = widget.latitudes[widget.selectedDay - 1].isNotEmpty
-        ? LatLng(widget.latitudes[widget.selectedDay - 1][0], widget.longitudes[widget.selectedDay - 1][0])
+    final initialPosition = widget.dayScheduleData[widget.selectedDay - 1].isNotEmpty
+        ? LatLng(widget.dayScheduleData[widget.selectedDay - 1][0][1], widget.dayScheduleData[widget.selectedDay - 1][0][2])
         : LatLng(0.0, 0.0);
 
     return GoogleMap(

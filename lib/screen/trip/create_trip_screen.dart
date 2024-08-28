@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:front/component/dialog/detail_trip_for_chat_not_response_dialog.dart';
+import 'package:front/component/mypage/my_menu.dart';
 import 'package:front/component/snack_bar.dart';
 import 'package:front/key/key.dart';
 import '../../component/dialog/detail_trip_for_chat_dialog.dart';
 import '../../component/header/header.dart';
 import '../../component/header/header_drawer.dart';
 import '../../controller/login_state_for_header.dart';
-import '../../dto/chat/message/chat_data_model.dart';
 import '../../responsive.dart';
 import '../../service/chat_service.dart';
 import 'dart:async';
@@ -20,7 +21,7 @@ class TypingText extends StatefulWidget {
     Key? key,
     required this.text,
     this.style,
-    this.duration = const Duration(milliseconds: 50),
+    this.duration = const Duration(milliseconds: 30),
   }) : super(key: key);
 
   @override
@@ -78,7 +79,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   final List<Map<String, dynamic>> _messages = [];
   bool showMoreButton = false;
   bool getResponseOfTripSchedule = false;
-  Map<String, dynamic> travelScheduleMap = {};
+  List<dynamic> scheduleInfo = [];
 
   @override
   void initState() {
@@ -126,6 +127,13 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               });
               _scrollToBottom();
 
+              scheduleInfo = conversationResult.value!.data.travelSchedule.scheduler!;
+
+              print("================scheduleInfo================");
+              print(conversationResult.value?.data.travelSchedule.scheduler);
+              print(scheduleInfo);
+              print("============================================");
+
               await Future.delayed(const Duration(milliseconds: 1000));
               setState(() {
                 _messages.add({'text': conversationResult.value?.data.travelSchedule.explain, 'isUser': false, 'isMore': true});
@@ -162,14 +170,31 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
 
         try {
           final sendResponseResult = await ChatService.sendUserResponse(text);
-
-          if (sendResponseResult.isSuccess && sendResponseResult.value?.status == 200) {
+          if (sendResponseResult.isSuccess && sendResponseResult.value?.status == 200 && sendResponseResult.value?.message?.toUpperCase()=="GOOD") {
             setState(() {
-              _messages.add({'text': '전송에 성공하였습니다.', 'isUser': false});
+              _messages.add({'text': '의견 감사합니다!!!\n마음에 들어하신 일정이 저장되었습니다! 마이페이지에서 확인 가능합니다.', 'isUser': false});
             });
-            //조건 추가 계속해서 받을 수 있음
-            getResponseOfTripSchedule = false;
-          } else {
+            await Future.delayed(const Duration(milliseconds: 6000));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyMenuScreen()),
+            );
+            getResponseOfTripSchedule = true;
+          }
+          else if (sendResponseResult.isSuccess && sendResponseResult.value?.status == 200 && sendResponseResult.value?.message?.toUpperCase()=="OTHER"){
+            //이어서 정보 받기
+            setState(() {
+              _messages.add({'text': '일정을 다시 생성합니다~ 잠시만 기다려주세요!', 'isUser': false});
+            });
+          }
+          else if (sendResponseResult.isSuccess && sendResponseResult.value?.status == 200 && sendResponseResult.value?.message?.toUpperCase()=="AGAIN"){
+            //아예 처음 부터 입력
+            //날짜 유지
+            setState(() {
+              _messages.add({'text': '지금까지 입력하신 정보가 초기화됩니다! 다시 여행 일정을 공유해주세요!', 'isUser': false});
+            });
+          }
+          else {
             setState(() {
               _messages.add({'text': '전송에 실패하였습니다.. 다시 시도해주세요.', 'isUser': false});
             });
@@ -241,7 +266,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   }
 
   void _showTripDetailDialog() {
-    showDetailTripForChatDialog(context, GOOGLE_MAP_KEY, travelScheduleMap);
+    print("다이어로그가 시작되었습니다.");
+    showDetailTripForChatNotResponseDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
   }
 
   @override
@@ -337,7 +363,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               style: const TextStyle(fontSize: 18),
               duration: const Duration(milliseconds: 50), // 타이핑 속도 조절
             ),
-            if (isMore) // "더보기" 버튼을 표시
+            if (isMore)
               TextButton(
                 onPressed: onMorePressed,
                 child: const Text(

@@ -7,7 +7,7 @@ class KeywordsModel {
     required this.food,
   });
 
-  late final int? days;
+  late final Object? days;
   late final String? transport;
   late final String? companion;
   late final String? theme;

@@ -62,6 +62,7 @@ class ChatService {
         chatResponseJson(jsonData as Map<String, dynamic>)
       );
     } catch (e) {
+      print("[사용자가 입력한 메세지 전달 에러] : $e");
       return Result.failure("[getChatConversation] An Error Occurred: $e");
     }
   }
@@ -74,7 +75,6 @@ class ChatService {
     final headers = {
       'Authorization': 'Bearer $accessToken'
     };
-    print("[사용자가 반응 전달 - 유저 반응] : $userResponse");
     try {
       final response = await DioClient.sendRequest(
           'POST',
@@ -84,7 +84,6 @@ class ChatService {
       );
       final jsonData = response.data;
       print("[생성된 여행 일정에 대한 사용자의 반응 전달] : $jsonData");
-
       return Result.success(
           judgeResultResponseJson(jsonData as Map<String, dynamic>)
       );
