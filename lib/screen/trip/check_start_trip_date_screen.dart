@@ -276,13 +276,7 @@ class _CheckStartTripDateScreenState extends State<CheckStartTripDateScreen> {
     return ElevatedButton(
       onPressed: () async {
         try {
-          print(sendDate);
           final response = await ChatService.isChatStart(sendDate);
-          print("response response");
-          print(response.isSuccess);
-          print(response.value?.status);
-          print(response.value?.message);
-          print("response response");
           if(response.isSuccess && response.value?.status == 200){
             Navigator.push(
               context,
