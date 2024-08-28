@@ -373,11 +373,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               );
             }
-            //   finally {
-            //   setState(() {
-            //     isApiCallProcess = false;
-            //   });
-            // }
           }
         },
         style: ElevatedButton.styleFrom(

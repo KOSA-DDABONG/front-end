@@ -3,11 +3,83 @@ import 'package:front/responsive.dart';
 
 import '../../constants.dart';
 import '../../key/key.dart';
-import '../map/get_map.dart';
+import '../map/get_map_for_chat.dart';
 
-void showDetailTripDialog(BuildContext context, String apiKey) {
+void showDetailTripForChatDialog(BuildContext context, String apiKey, Map<String, dynamic> scheduleInfo) {
   int selectedDay = 1;
   int? selectedIndex;
+
+  List<String> getPlaceNames(String keyValue) {
+    // 일정에 포함된 장소 이름들 리스트를 반환
+    List<String> placeNames = [];
+    var dayInfo = scheduleInfo[keyValue];
+
+    for (var entry in dayInfo.entries) {
+      var value = entry.value;
+      if (value is List) {
+        if (value.isNotEmpty && value[0] is List) {
+          // tourist_spots와 같이 중첩된 리스트의 경우
+          for (var spot in value) {
+            placeNames.add(spot[0]); // 장소 이름 추출
+          }
+        } else {
+          // 일반 리스트의 경우
+          placeNames.add(value[0]); // 장소 이름 추출
+        }
+      }
+    }
+    return placeNames;
+  }
+
+  List<List<double>> getLatitudes() {
+    // 일정에 포함된 장소 위도 리스트를 반환
+    List<List<double>> latitudes = [];
+    for (var day in scheduleInfo.keys) {
+      var dayInfo = scheduleInfo[day];
+      List<double> placeLatitude = [];
+      for (var entry in dayInfo.entries) {
+        var value = entry.value;
+        if (value is List) {
+          if (value.isNotEmpty && value[0] is List) {
+            // tourist_spots와 같이 중첩된 리스트의 경우
+            for (var spot in value) {
+              placeLatitude.add(spot[1]); // 장소 위도 추출
+            }
+          } else {
+            // 일반 리스트의 경우
+            placeLatitude.add(value[1]); // 장소 위도 추출
+          }
+        }
+      }
+      latitudes.add(placeLatitude);
+    }
+    return latitudes;
+  }
+
+  List<List<double>> getLongitudes() {
+    // 일정에 포함된 장소 경도 리스트를 반환
+    List<List<double>> longitudes = [];
+    for (var day in scheduleInfo.keys) {
+      var dayInfo = scheduleInfo[day];
+      List<double> placeLongitude = [];
+      for (var entry in dayInfo.entries) {
+        var value = entry.value;
+        if (value is List) {
+          if (value.isNotEmpty && value[0] is List) {
+            // tourist_spots와 같이 중첩된 리스트의 경우
+            for (var spot in value) {
+              placeLongitude.add(spot[2]); // 장소 경도 추출
+            }
+          } else {
+            // 일반 리스트의 경우
+            placeLongitude.add(value[2]); // 장소 경도 추출
+          }
+        }
+      }
+      longitudes.add(placeLongitude);
+    }
+    return longitudes;
+  }
 
   showDialog(
     context: context,
@@ -38,12 +110,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: GetMap(
-                              apiKey: GOOGLE_MAP_KEY,
-                              origin: '{35.819929,129.478255}',
-                              destination: '{35.787994,129.407437}',
-                              waypoints: '{35.76999,129.44696}'
-                          ),
+                          child: Container() //GoogleMap
                         ),
                       ),
                     ),
@@ -55,7 +122,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(3, (index) {
+                              children: List.generate(scheduleInfo.length, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
@@ -82,9 +149,9 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: 3,
+                                itemCount: getPlaceNames(selectedDay.toString()).length,
                                 itemBuilder: (context, index) {
-                                  var placeNames = "{장소 이름}";
+                                  var placeNames = getPlaceNames(selectedDay.toString());
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -172,12 +239,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: GetMap(
-                              apiKey: GOOGLE_MAP_KEY,
-                              origin: '{35.819929,129.478255}',
-                              destination: '{35.787994,129.407437}',
-                              waypoints: '{35.76999,129.44696}'
-                          ),
+                          child: Container() // GoogleMap
                         ),
                       ),
                     ),
@@ -189,7 +251,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(3, (index) {
+                              children: List.generate(scheduleInfo.length, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
@@ -216,9 +278,9 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: 6,
+                                itemCount: getPlaceNames(selectedDay.toString()).length,
                                 itemBuilder: (context, index) {
-                                  var placeNames = "{장소 이름}";
+                                  var placeNames = getPlaceNames(selectedDay.toString());
                                   return Stack(
                                     children: [
                                       Positioned.fill(

@@ -19,7 +19,8 @@ import '../../dto/user/login/login_response_model.dart';
 import '../../service/session_service.dart';
 
 class MyInfoEditScreen extends StatefulWidget {
-  const MyInfoEditScreen({Key? key}) : super(key: key);
+  final bool currentLoginState;
+  const MyInfoEditScreen({Key? key, required this.currentLoginState}) : super(key: key);
 
   @override
   _MyInfoEditScreenState createState() => _MyInfoEditScreenState();
@@ -42,6 +43,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   @override
   void initState() {
     super.initState();
+    _loginState = widget.currentLoginState;
     _checkLoginUserInfo();
     _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -60,32 +62,25 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
   }
 
   Future<void> _checkLoginUserInfo() async {
-    bool isLoggedIn = await checkLoginState(context);
-    if (isLoggedIn) {
-      setState(() {
-        _loginState = isLoggedIn;
-      });
-
-      try {
-        final usermodel = await SessionService.loginDetails();
-        if (usermodel!=null) { //유저정보 로드 성공
-          setState(() {
-            _userinfo = usermodel;
-            _isLoading = false;
-          });
-        }
-        else {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+    try {
+      final usermodel = await SessionService.loginDetails();
+      if (usermodel!=null) { //유저정보 로드 성공
+        setState(() {
+          _userinfo = usermodel;
+          _isLoading = false;
+        });
       }
-      catch (e) {
+      else {
         setState(() {
           _isLoading = false;
         });
-        showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
+    }
+    catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   }
 
@@ -108,47 +103,45 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_loginState) {
+    if(!_loginState) {
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ProgressHUD(
-            inAsyncCall: isApiCallProcess,
-            opacity: 0.3,
-            key: UniqueKey(),
-            child: Form(
-              key: globalFormKey,
-              child: Responsive.isNarrowWidth(context)
-                  ? profileEditNarrowUI(context)
-                  : profileEditWideUI(context),
-            ),
-          ),
+          child: _notLoginProfileUI(),
         ),
       );
     }
     else {
-      if (_isLoading) {
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-            ),
+      if(_isLoading) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _loadingUI(context),
           ),
         );
       }
-      else{
+      else {
         return Scaffold(
           body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _notLoginEditUI()
+            padding: const EdgeInsets.all(16.0),
+            child: ProgressHUD(
+              inAsyncCall: isApiCallProcess,
+              opacity: 0.3,
+              key: UniqueKey(),
+              child: Form(
+                key: globalFormKey,
+                child: Responsive.isNarrowWidth(context)
+                    ? profileEditNarrowUI(context)
+                    : profileEditWideUI(context),
+              ),
+            ),
           ),
         );
       }
     }
   }
 
-  //로그인X
-  Widget _notLoginEditUI() {
+  Widget _notLoginProfileUI() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(25),
       child: Column(
@@ -158,7 +151,7 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
           const SizedBox(height: 200),
           const Center(
             child: Text(
-              '데이터를 불러올 수 없습니다.',
+              '페이지에 접근할 수 없습니다.',
             ),
           ),
           const SizedBox(height: 200),
@@ -166,6 +159,35 @@ class _MyInfoEditScreenState extends State<MyInfoEditScreen> {
       ),
     );
   }
+
+  Widget _loadingUI(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          showTitle('내 정보 수정'),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue, // 로딩 표시 색상 설정 (파란색)
+                ),
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
+        ],
+      ),
+    );
+  }
+
 
   //프로필 수정 페이지 UI(좁은 화면)
   Widget profileEditNarrowUI(BuildContext context) {

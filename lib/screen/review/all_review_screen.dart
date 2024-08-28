@@ -166,18 +166,25 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   }
 
   Widget _notLoginAllReviewUI() {
-    return const SingleChildScrollView(
-      padding: EdgeInsets.all(25),
+    return Container(
+      padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 200),
-          Center(
-            child: Text(
-              '데이터를 불러올 수 없습니다.',
-            ),
+          Expanded(
+            flex: 2,
+            child: Container(),
           ),
-          SizedBox(height: 200),
+          const Expanded(
+              flex: 1,
+              child: Center(
+                  child: Text("페이지에 접근할 수 없습니다.")
+              )
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          )
         ],
       ),
     );

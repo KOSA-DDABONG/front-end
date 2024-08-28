@@ -11,7 +11,6 @@ import 'dio_client.dart';
 import 'session_service.dart';
 
 class UserService {
-
   //회원가입
   static Future<Result<String>> register(SignupRequestModel model) async {
     final url = Uri.https(API_URL, Config.signupAPI).toString();
@@ -21,7 +20,7 @@ class UserService {
       final response = await DioClient.sendRequest('POST', url, body: model.toJson());
       final jsonData = response.data;
       print("[회원가입] : $jsonData");
-      if (response == "Success") {
+      if (jsonData == "ok") {
         return Result.success("Success");
       }
       else {

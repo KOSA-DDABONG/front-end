@@ -183,11 +183,11 @@ class _ContactScreenState extends State<ContactScreen> {
   //지도
   Widget _mapUI() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final markerPosition = const LatLng(37.583883601891, 126.9999880311);
-    final Marker marker = Marker(
-      markerId: const MarkerId('initial_marker'),
+    const markerPosition = LatLng(37.583883601891, 126.9999880311);
+    const Marker marker = Marker(
+      markerId: MarkerId('initial_marker'),
       position: markerPosition,
-      infoWindow: const InfoWindow(
+      infoWindow: InfoWindow(
         title: '서울특별시 종로구 창경궁로 254',
       ),
     );
