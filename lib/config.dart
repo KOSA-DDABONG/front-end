@@ -24,6 +24,9 @@ class Config {
   static const getUserBoardListAPI = "/myinfo/review/list"; //내가 쓴 후기 리스트
   static const getMyTravelListAPI = "/my/mySavedTravel"; //내가 저장한 여행일정 리스트
   static const getMyLikesListAPI = "/mylist"; //나의 좋아요 리스트
+  static const getPastTravelListAPI = "/myinfo/past/list"; //나의 과거 일정 리스트
+  static const getFutureTravelListAPI = "/myinfo/future/list"; //나의 미래 일정 리스트
+  static const getPresentTravelListAPI = "/myinfo/present/list"; //나의 현재 일정 리스트
 
   //Travel
   static const getResponseForCreateScheduleAPI = "/making"; //여행 일정 요청 전달 및 응답 받아오기

@@ -55,9 +55,6 @@ class ChatService {
       final jsonData = response.data;
       print("[사용자가 입력한 메세지 전달] : $jsonData");
 
-      final chatResponse = chatResponseJson(jsonData as Map<String, dynamic>);
-      print("[사용자가 입력한 메세지 전달 - ChatResponseModel] : ${chatResponse.data.travelSchedule.scheduler}");
-
       return Result.success(
         chatResponseJson(jsonData as Map<String, dynamic>)
       );

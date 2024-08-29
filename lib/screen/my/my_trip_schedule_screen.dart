@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
+import 'package:front/dto/travel/my_travel_list_response_model.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/delete_trip_schedule_dialog.dart';
 import '../../component/dialog/detail_trip_dialog.dart';
+import '../../component/mypage/date_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
-import '../../controller/check_login_state.dart';
 import '../../controller/my_menu_controller.dart';
-import '../../dto/user/login/login_response_model.dart';
 import '../../key/key.dart';
 import '../../responsive.dart';
-import '../../service/session_service.dart';
+import '../../service/user_service.dart';
 
 class MyTripScheduleScreen extends StatefulWidget {
   final bool currentLoginState;
@@ -27,13 +27,18 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   late Map<String, String> scheduleInfo;
   bool _isLoading = true;
   bool _loginState = false;
-  LoginResponseModel? _userinfo;
+  MyTravelListResponseModel? _pastTravelInfo;
+  MyTravelListResponseModel? _presentTravelInfo;
+  MyTravelListResponseModel? _futureTravelInfo;
 
   @override
   void initState() {
     super.initState();
     _loginState = widget.currentLoginState;
-    _checkLoginUserInfo();
+    _getMyTravelList();
+    // _getMyPastTravelList();
+    // _getMyPresentTravelList();
+    // _getMyFutureTravelList();
     _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('mySchedule');
@@ -50,22 +55,24 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
     });
   }
 
-  Future<void> _checkLoginUserInfo() async {
+  Future<void> _getMyTravelList() async {
     try {
-      final usermodel = await SessionService.loginDetails();
-      if (usermodel!=null) {
+      final pastResult = await UserService.getPastTravelList();
+      final presentResult = await UserService.getPresentTravelList();
+      final futureResult = await UserService.getFutureTravelList();
+      if (pastResult.value?.status == 200 && presentResult.value?.status == 200 && futureResult.value?.status == 200) {
         setState(() {
-          _userinfo = usermodel;
+          _pastTravelInfo = pastResult.value;
+          _presentTravelInfo = presentResult.value;
+          _futureTravelInfo = futureResult.value;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
           _isLoading = false;
         });
       }
-      else {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-    catch (e) {
+    } catch (e) {
       setState(() {
         _isLoading = false;
       });
@@ -73,9 +80,74 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
     }
   }
 
+  // Future<void> _getMyPastTravelList() async {
+  //   try {
+  //     final pastResult = await UserService.getPastTravelList();
+  //     if (pastResult.value?.status == 200) {
+  //       setState(() {
+  //         _pastTravelInfo = pastResult.value;
+  //         _isLoading = false;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+  //   }
+  // }
+  //
+  // Future<void> _getMyPresentTravelList() async {
+  //   try {
+  //     final presentResult = await UserService.getPresentTravelList();
+  //     if (presentResult.value?.status == 200) {
+  //       setState(() {
+  //         _presentTravelInfo = presentResult.value;
+  //         _isLoading = false;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+  //   }
+  // }
+  //
+  // Future<void> _getMyFutureTravelList() async {
+  //   try {
+  //     final futureResult = await UserService.getFutureTravelList();
+  //     if (futureResult.value?.status == 200) {
+  //       setState(() {
+  //         _futureTravelInfo = futureResult.value;
+  //         _isLoading = false;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
+    print("1");
     if(!_loginState) {
+      print("2");
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -84,7 +156,9 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       );
     }
     else {
+      print("3");
       if(_isLoading) {
+        print("4");
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -93,6 +167,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
         );
       }
       else {
+        print("5");
         return Scaffold(
           body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -163,7 +238,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   }
 
   Widget _notLoginProfileUI() {
-    return SingleChildScrollView(
+    return Container(
       padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,6 +289,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
     );
   }
 
+
   //진행중인 일정 탭 구성
   Widget _presentScheduleTab(BuildContext context) {
     return SingleChildScrollView(
@@ -258,219 +334,337 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
 
   //진행 중인 일정 카드
   Widget _presentScheduleCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: Stack(
+    if(_presentTravelInfo!.data == null || _presentTravelInfo!.data.isEmpty) {
+      return const Column(
         children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(10),
-            subtitle: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 10),
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/noImg.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Responsive.isNarrowWidth(context)
-                    ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                )
-                    : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(width: 10),
-                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                ),
-              ],
-            ),
-            onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY);
-            },
+          SizedBox(height: 100,),
+          Center(
+            child: Text("해당 데이터가 없습니다.")
           ),
-          Responsive.isNarrowWidth(context)
-          ? _cardIconNarrowBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
-          : _cardIconWideBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
         ],
-      ),
-    );
+      );
+    }
+    else {
+      return Container(
+        height: 500,
+        // decoration: BoxDecoration(
+        //   border: Border.all(color: Colors.black, width: 1.0),
+        //   borderRadius: BorderRadius.circular(10),
+        //   color: Colors.transparent,
+        // ),
+        child: ListView.builder(
+          itemCount: _presentTravelInfo!.data.length,
+          itemBuilder: (context, index) {
+            return Stack(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.all(10),
+                  subtitle: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/noImg.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Responsive.isNarrowWidth(context)
+                          ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('부산 여행 일정',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text(
+                              changeDateFormat(
+                                  _presentTravelInfo!.data[index].startTime),
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(
+                              _presentTravelInfo!.data[index].dayAndNights,
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(_presentTravelInfo!.data[index].dday,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.red)),
+                        ],
+                      )
+                          : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('부산 여행 일정',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Text(
+                                  '일정 시작일: ${changeDateFormat(_presentTravelInfo!.data[index].startTime)}',
+                                  style: const TextStyle(fontSize: 14)),
+                              const SizedBox(width: 10),
+                              Text(_presentTravelInfo!.data[index].dayAndNights,
+                                  style: const TextStyle(fontSize: 14)),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(_presentTravelInfo!.data[index].dday,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.red)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    showDetailTripDialog(context, GOOGLE_MAP_KEY);
+                  },
+                ),
+                Responsive.isNarrowWidth(context)
+                    ? _cardIconNarrowBtn(
+                    const Icon(Icons.chat_bubble_outline),
+                    const Icon(Icons.delete_outline))
+                    : _cardIconWideBtn(
+                    const Icon(Icons.chat_bubble_outline),
+                    const Icon(Icons.delete_outline))
+              ],
+            );
+          },
+        ),
+      );
+    }
   }
+
+
 
   //다가오는 일정 카드
   Widget _upcomingScheduleCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: Stack(
+    if(_futureTravelInfo!.data == null || _futureTravelInfo!.data.isEmpty) {
+      return const Column(
         children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(10),
-            subtitle: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 10),
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/noImg.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Responsive.isNarrowWidth(context)
-                    ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                )
-                    : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(width: 10),
-                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                ),
-              ],
-            ),
-            onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY);
-            },
+          SizedBox(height: 100,),
+          Center(
+              child: Text("해당 데이터가 없습니다.")
           ),
-          Responsive.isNarrowWidth(context)
-          ? _cardIconNarrowBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
-          : _cardIconWideBtn(const Icon(Icons.chat_bubble_outline), const Icon(Icons.delete_outline))
         ],
-      ),
-    );
+      );
+    }
+    else {
+      return Container(
+        height: 500,
+        // decoration: BoxDecoration(
+        //   border: Border.all(color: Colors.black, width: 1.0),
+        //   borderRadius: BorderRadius.circular(10),
+        //   color: Colors.transparent,
+        // ),
+        child: ListView.builder(
+          itemCount: _futureTravelInfo!.data.length,
+          itemBuilder: (context, index) {
+            return Stack(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.all(10),
+                  subtitle: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/noImg.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Responsive.isNarrowWidth(context)
+                          ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('부산 여행 일정',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text(
+                              changeDateFormat(
+                                  _futureTravelInfo!.data[index].startTime),
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(
+                              _futureTravelInfo!.data[index].dayAndNights,
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(_futureTravelInfo!.data[index].dday,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.red)),
+                        ],
+                      )
+                          : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('부산 여행 일정',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Text(
+                                  '일정 시작일: ${changeDateFormat(_futureTravelInfo!.data[index].startTime)}',
+                                  style: const TextStyle(fontSize: 14)),
+                              const SizedBox(width: 10),
+                              Text(_futureTravelInfo!.data[index].dayAndNights,
+                                  style: const TextStyle(fontSize: 14)),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(_futureTravelInfo!.data[index].dday,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.red)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    showDetailTripDialog(context, GOOGLE_MAP_KEY);
+                  },
+                ),
+                Responsive.isNarrowWidth(context)
+                    ? _cardIconNarrowBtn(
+                    const Icon(Icons.chat_bubble_outline),
+                    const Icon(Icons.delete_outline))
+                    : _cardIconWideBtn(
+                    const Icon(Icons.chat_bubble_outline),
+                    const Icon(Icons.delete_outline))
+              ],
+            );
+          },
+        ),
+      );
+    }
   }
+
 
   //지나간 일정 카드
   Widget _pastScheduleCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1.0),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: Stack(
+    if(_pastTravelInfo?.data == null || _pastTravelInfo!.data.isEmpty) {
+      return const Column(
         children: [
-          ListTile(
-            contentPadding: const EdgeInsets.all(10),
-            subtitle: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 10),
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/noImg.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Responsive.isNarrowWidth(context)
-                    ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                    const SizedBox(height: 5),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                )
-                    : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('{일정 이름}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(width: 10),
-                        Text('{0박 0일}', style: TextStyle(fontSize: 14)),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
-                  ],
-                ),
-              ],
-            ),
-            onTap: () {
-              showDetailTripDialog(context, GOOGLE_MAP_KEY);
-            },
+          SizedBox(height: 100,),
+          Center(
+              child: Text("해당 데이터가 없습니다.")
           ),
-          Responsive.isNarrowWidth(context)
-          ? _cardIconNarrowBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline))
-          : _cardIconWideBtn(const Icon(Icons.note_add_outlined), const Icon(Icons.delete_outline))
         ],
-      ),
-    );
+      );
+    }
+    else {
+      return Container(
+        height: 500,
+        // decoration: BoxDecoration(
+        //   border: Border.all(color: Colors.black, width: 1.0),
+        //   borderRadius: BorderRadius.circular(10),
+        //   color: Colors.transparent,
+        // ),
+        child: ListView.builder(
+          itemCount: _pastTravelInfo!.data.length,
+          itemBuilder: (context, index) {
+            return Stack(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.all(10),
+                  subtitle: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/noImg.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Responsive.isNarrowWidth(context)
+                          ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('부산 여행 일정',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text(
+                              changeDateFormat(
+                                  _pastTravelInfo!.data[index].startTime),
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(
+                              _pastTravelInfo!.data[index].dayAndNights,
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(_pastTravelInfo!.data[index].dday,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.red)),
+                        ],
+                      )
+                          : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('부산 여행 일정',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Text(
+                                  '일정 시작일: ${changeDateFormat(_pastTravelInfo!.data[index].startTime)}',
+                                  style: const TextStyle(fontSize: 14)),
+                              const SizedBox(width: 10),
+                              Text(_pastTravelInfo!.data[index].dayAndNights,
+                                  style: const TextStyle(fontSize: 14)),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(_pastTravelInfo!.data[index].dday,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.red)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    showDetailTripDialog(context, GOOGLE_MAP_KEY);
+                  },
+                ),
+                Responsive.isNarrowWidth(context)
+                    ? _cardIconNarrowBtn(
+                    const Icon(Icons.chat_bubble_outline),
+                    const Icon(Icons.delete_outline))
+                    : _cardIconWideBtn(
+                    const Icon(Icons.chat_bubble_outline),
+                    const Icon(Icons.delete_outline))
+              ],
+            );
+          },
+        ),
+      );
+    }
   }
+
 
   //카드 내 아이콘 버튼(좁은 화면)
   Widget _cardIconNarrowBtn(Icon icon1, Icon icon2) {
