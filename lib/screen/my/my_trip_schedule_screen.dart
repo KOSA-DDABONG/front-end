@@ -372,10 +372,13 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 Responsive.isNarrowWidth(context)
                     ? _cardIconNarrowBtn(
                     const Icon(Icons.chat_bubble_outline),
-                    const Icon(Icons.delete_outline))
+                    const Icon(Icons.delete_outline),
+                    _presentTravelInfo!.data[index].travelId)
                     : _cardIconWideBtn(
                     const Icon(Icons.chat_bubble_outline),
-                    const Icon(Icons.delete_outline))
+                    const Icon(Icons.delete_outline),
+                    _presentTravelInfo!.data[index].travelId
+                  )
               ],
             );
           },
@@ -496,10 +499,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 Responsive.isNarrowWidth(context)
                     ? _cardIconNarrowBtn(
                     const Icon(Icons.chat_bubble_outline),
-                    const Icon(Icons.delete_outline))
+                    const Icon(Icons.delete_outline),
+                    _futureTravelInfo!.data[index].travelId
+                    )
                     : _cardIconWideBtn(
                     const Icon(Icons.chat_bubble_outline),
-                    const Icon(Icons.delete_outline))
+                    const Icon(Icons.delete_outline),
+                    _futureTravelInfo!.data[index].travelId
+                )
               ],
             );
           },
@@ -621,10 +628,14 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 Responsive.isNarrowWidth(context)
                     ? _cardIconNarrowBtn(
                     const Icon(Icons.chat_bubble_outline),
-                    const Icon(Icons.delete_outline))
+                    const Icon(Icons.delete_outline),
+                    _pastTravelInfo!.data[index].travelId
+                )
                     : _cardIconWideBtn(
                     const Icon(Icons.chat_bubble_outline),
-                    const Icon(Icons.delete_outline))
+                    const Icon(Icons.delete_outline),
+                    _pastTravelInfo!.data[index].travelId
+                )
               ],
             );
           },
@@ -635,7 +646,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
 
 
   //카드 내 아이콘 버튼(좁은 화면)
-  Widget _cardIconNarrowBtn(Icon icon1, Icon icon2) {
+  Widget _cardIconNarrowBtn(Icon icon1, Icon icon2, int currentTravelId) {
     return Positioned(
       right: 1,
       bottom: 1,
@@ -657,7 +668,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddReviewScreen()
+                      builder: (context) => AddReviewScreen(currentTravelId)
                   ),
                 );
               }
@@ -676,7 +687,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
   }
 
   //카드 내 아이콘 버튼(넓은 화면)
-  Widget _cardIconWideBtn(Icon icon1, Icon icon2) {
+  Widget _cardIconWideBtn(Icon icon1, Icon icon2, int currentTravelId) {
     return Positioned(
       right: 8,
       top: 8,
@@ -698,7 +709,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddReviewScreen()
+                      builder: (context) => AddReviewScreen(currentTravelId)
                   ),
                 );
               }
