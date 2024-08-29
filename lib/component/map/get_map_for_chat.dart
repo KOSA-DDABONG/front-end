@@ -121,7 +121,7 @@ class _GetMapState extends State<GetMapForChat> {
               _polylines.add(
                 Polyline(
                   polylineId: PolylineId('day${widget.selectedDay}_route'),
-                  color: Colors.blue,
+                  color: Colors.orange,
                   points: polylineCoordinates,
                   width: 4,
                 ),
@@ -158,7 +158,7 @@ class _GetMapState extends State<GetMapForChat> {
       _polylines.add(
         Polyline(
           polylineId: PolylineId('day${widget.selectedDay}_default_route'),
-          color: Colors.blue,
+          color: Colors.orange,
           points: polylinePoints,
           width: 4,
         ),
@@ -193,7 +193,7 @@ class _GetMapState extends State<GetMapForChat> {
       },
       initialCameraPosition: CameraPosition(
         target: initialPosition,
-        zoom: 10,
+        zoom: 12,
       ),
       markers: _markers,
       polylines: _polylines,

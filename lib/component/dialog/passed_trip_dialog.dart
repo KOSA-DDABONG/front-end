@@ -46,6 +46,9 @@ void showPassedTripDialog(BuildContext context, List<MyTravelListDataModel>? dat
                                 });
                               },
                               child: Container(
+                                padding: EdgeInsets.all(5),
+                                width: 120,
+                                height: 120,
                                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -59,17 +62,33 @@ void showPassedTripDialog(BuildContext context, List<MyTravelListDataModel>? dat
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5.0),
                                       child: Image.asset(
-                                        "assets/images/noImg.jpg",
-                                        width: 100,
-                                        height: 100,
+                                        "assets/images/travel_schedule_default.jpg",
+                                        width: 110,
+                                        height: 110,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(
-                                        "${changeDateFormat(data[index].startTime)} - ${changeDateFormat(data[index].endTime)}",
-                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "시작일: ${changeDateFormat(data[index].startTime)}",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          SizedBox(height: 5,),
+                                          Text(
+                                            "종료일: ${changeDateFormat(data[index].endTime)}",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          SizedBox(height: 15,),
+                                          Text(
+                                            data[index].dayAndNights,
+                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      )
                                     ),
                                   ],
                                 ),
@@ -111,7 +130,7 @@ void showPassedTripDialog(BuildContext context, List<MyTravelListDataModel>? dat
                                 Navigator.of(context).pop();
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AddReviewScreen()),
+                                  MaterialPageRoute(builder: (context) => AddReviewScreen(data[selectedIndex!.toInt()].travelId)),
                                 );
                               }
                             },

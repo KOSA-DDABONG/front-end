@@ -299,7 +299,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: const DecorationImage(
-                            image: AssetImage('assets/images/noImg.jpg'),
+                            image: AssetImage('assets/images/travel_schedule_default.jpg'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -423,7 +423,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: const DecorationImage(
-                            image: AssetImage('assets/images/noImg.jpg'),
+                            image: AssetImage('assets/images/travel_schedule_default.jpg'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -532,6 +532,8 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
         child: ListView.builder(
           itemCount: _pastTravelInfo!.data.length,
           itemBuilder: (context, index) {
+            String originalText = _pastTravelInfo!.data![index].dday;
+            String modifiedText = originalText.replaceAll('--', '+');
             return Stack(
               children: [
                 ListTile(
@@ -546,7 +548,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: const DecorationImage(
-                            image: AssetImage('assets/images/noImg.jpg'),
+                            image: AssetImage('assets/images/travel_schedule_default.jpg'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -569,7 +571,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                               _pastTravelInfo!.data[index].dayAndNights,
                               style: const TextStyle(fontSize: 14)),
                           const SizedBox(height: 5),
-                          Text(_pastTravelInfo!.data[index].dday,
+                          Text(modifiedText,
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.red)),
                         ],
@@ -593,7 +595,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          Text(_pastTravelInfo!.data[index].dday,
+                          Text(modifiedText,
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.red)),
                         ],

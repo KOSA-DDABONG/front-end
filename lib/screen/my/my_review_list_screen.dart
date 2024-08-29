@@ -267,6 +267,8 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
 
   // 카드 내용
   Widget _cardContent(int index) {
+    String originalText = _myReviewInfo!.data![index].dday;
+    String modifiedText = originalText.replaceAll('--', '+');
     return ListTile(
       contentPadding: const EdgeInsets.all(10),
       subtitle: Row(
@@ -299,7 +301,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
               const SizedBox(height: 5),
               Text(_myReviewInfo!.data![index].dayAndNights, style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
-              Text(_myReviewInfo!.data![index].dday, style: TextStyle(fontSize: 14, color: Colors.red)),
+              Text(modifiedText, style: TextStyle(fontSize: 14, color: Colors.red)),
             ],
           )
               : Column(
@@ -316,7 +318,7 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              Text(_myReviewInfo!.data![index].dday, style: TextStyle(fontSize: 14, color: Colors.red)),
+              Text(modifiedText, style: TextStyle(fontSize: 14, color: Colors.red)),
             ],
           ),
         ],

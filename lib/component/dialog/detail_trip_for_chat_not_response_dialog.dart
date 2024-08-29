@@ -411,31 +411,47 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                       ),
                     ),
                     Expanded(
-                      flex: 1,
-                      child: (explanation == "" || explanation.isEmpty)
-                        ? Column(
+                      flex: 2,
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20,0,20,10),
+                          child: (explanation == "" || explanation.isEmpty)
+                              ? const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "일정 선정 기준 :",
-                                style: TextStyle(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: pointColor,
+                                    fontSize: 17
+                                ),
                               ),
                               Text(
-                                  "일정 선정 기준을 불러오지 못했습니다."
+                                "일정 선정 기준을 불러오지 못했습니다.",
+                                style: TextStyle(fontSize: 15),
                               )
                             ],
                           )
-                        : Column(
+                              : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "일정 선정 기준 :",
-                                style: TextStyle(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: pointColor,
+                                    fontSize: 18
+                                ),
                               ),
                               Text(
-                                  explanation
+                                explanation,
+                                style: const TextStyle(fontSize: 15),
                               )
                             ],
                           )
-
+                        )
+                      )
                     )
                   ],
                 )
