@@ -3,6 +3,7 @@ import 'package:front/constants.dart';
 import 'package:front/dto/travel/my_travel_list_response_model.dart';
 import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/review/add_review_screen.dart';
+import 'package:front/service/travel_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/delete_trip_schedule_dialog.dart';
@@ -36,9 +37,6 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
     super.initState();
     _loginState = widget.currentLoginState;
     _getMyTravelList();
-    // _getMyPastTravelList();
-    // _getMyPresentTravelList();
-    // _getMyFutureTravelList();
     _startLoadingTimeout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('mySchedule');
@@ -80,74 +78,9 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
     }
   }
 
-  // Future<void> _getMyPastTravelList() async {
-  //   try {
-  //     final pastResult = await UserService.getPastTravelList();
-  //     if (pastResult.value?.status == 200) {
-  //       setState(() {
-  //         _pastTravelInfo = pastResult.value;
-  //         _isLoading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
-  //   }
-  // }
-  //
-  // Future<void> _getMyPresentTravelList() async {
-  //   try {
-  //     final presentResult = await UserService.getPresentTravelList();
-  //     if (presentResult.value?.status == 200) {
-  //       setState(() {
-  //         _presentTravelInfo = presentResult.value;
-  //         _isLoading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
-  //   }
-  // }
-  //
-  // Future<void> _getMyFutureTravelList() async {
-  //   try {
-  //     final futureResult = await UserService.getFutureTravelList();
-  //     if (futureResult.value?.status == 200) {
-  //       setState(() {
-  //         _futureTravelInfo = futureResult.value;
-  //         _isLoading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     showCustomSnackBar(context, '문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    print("1");
     if(!_loginState) {
-      print("2");
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -156,9 +89,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
       );
     }
     else {
-      print("3");
       if(_isLoading) {
-        print("4");
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -167,7 +98,6 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
         );
       }
       else {
-        print("5");
         return Scaffold(
           body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -423,8 +353,20 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                       ),
                     ],
                   ),
-                  onTap: () {
-                    showDetailTripDialog(context, GOOGLE_MAP_KEY);
+                  onTap: () async {
+                    //일정 상세 다이어로그 호출
+                    try{
+                      final result = await TravelService.getDetailOfTravelDetails(_presentTravelInfo!.data[index].travelId);
+                      if(result.isSuccess || result.value?.status == 200) {
+                        showDetailTripDialog(context, GOOGLE_MAP_KEY, result.value!.data);
+                      }
+                      else {
+                        showCustomSnackBar(context, "데이터를 로드하는 데 실패했습니다.");
+                      }
+                    }
+                    catch (e) {
+                      showCustomSnackBar(context, "에러가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                    }
                   },
                 ),
                 Responsive.isNarrowWidth(context)
@@ -535,8 +477,20 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                       ),
                     ],
                   ),
-                  onTap: () {
-                    showDetailTripDialog(context, GOOGLE_MAP_KEY);
+                  onTap: () async {
+                    //일정 상세 다이어로그 호출
+                    try{
+                      final result = await TravelService.getDetailOfTravelDetails(_futureTravelInfo!.data[index].travelId);
+                      if(result.isSuccess || result.value?.status == 200) {
+                        showDetailTripDialog(context, GOOGLE_MAP_KEY, result.value!.data);
+                      }
+                      else {
+                        showCustomSnackBar(context, "데이터를 로드하는 데 실패했습니다.");
+                      }
+                    }
+                    catch (e) {
+                      showCustomSnackBar(context, "에러가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                    }
                   },
                 ),
                 Responsive.isNarrowWidth(context)
@@ -646,8 +600,20 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                       ),
                     ],
                   ),
-                  onTap: () {
-                    showDetailTripDialog(context, GOOGLE_MAP_KEY);
+                  onTap: () async {
+                    //일정 상세 다이어로그 호출
+                    try{
+                      final result = await TravelService.getDetailOfTravelDetails(_pastTravelInfo!.data[index].travelId);
+                      if(result.isSuccess || result.value?.status == 200) {
+                        showDetailTripDialog(context, GOOGLE_MAP_KEY, result.value!.data);
+                      }
+                      else {
+                        showCustomSnackBar(context, "데이터를 로드하는 데 실패했습니다.");
+                      }
+                    }
+                    catch (e) {
+                      showCustomSnackBar(context, "에러가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                    }
                   },
                 ),
                 Responsive.isNarrowWidth(context)

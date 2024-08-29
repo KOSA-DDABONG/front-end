@@ -30,6 +30,7 @@ class Config {
 
   //Travel
   static const getResponseForCreateScheduleAPI = "/making"; //여행 일정 요청 전달 및 응답 받아오기
+  static const getDetailOfTravelInfoAPI = "/myinfo/travel/"; //여행 일정 상세 정보 조회(마이페이지에서 사용)
 
   //Chat
   static const getChatConnectionAPI = "/chat/start"; //챗봇 연결 여부 받아오기

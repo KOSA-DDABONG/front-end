@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:front/responsive.dart';
 
 import '../../constants.dart';
+import '../../dto/travel/my_travel_detail_data_model.dart';
 import '../../key/key.dart';
 import '../map/get_map.dart';
 
-void showDetailTripDialog(BuildContext context, String apiKey) {
-  int selectedDay = 1;
+
+void showDetailTripDialog(BuildContext context, String apiKey, List<MyTravelDetailDataModel> data) {
+  int selectedDay = 1;  // 첫 번째 날을 기본 선택으로 설정
   int? selectedIndex;
+  int travelDays = data.length; //여행 날짜
+
+  print("========================================================");
+  print("여행 일정 상세 다이어로그 시작 [showDetailTripDialog]");
+  print(data);
+  print("========================================================");
 
   showDialog(
     context: context,
@@ -39,10 +47,10 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: GetMap(
-                              apiKey: GOOGLE_MAP_KEY,
-                              origin: '{35.819929,129.478255}',
-                              destination: '{35.787994,129.407437}',
-                              waypoints: '{35.76999,129.44696}'
+                            apiKey: GOOGLE_MAP_KEY,
+                            origin: '{35.819929,129.478255}',
+                            destination: '{35.787994,129.407437}',
+                            waypoints: '{35.76999,129.44696}',
                           ),
                         ),
                       ),
@@ -55,24 +63,24 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(3, (index) {
+                              children: List.generate(travelDays, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
                                     child: ElevatedButton(
                                       onPressed: () {
                                         setState(() {
-                                          selectedDay = index + 1;
+                                          selectedDay = data[index].dayNum;
                                           selectedIndex = null;
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+                                        backgroundColor: selectedDay == data[index].dayNum ? pointColor : Colors.grey,
                                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                                         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
                                       child: Text(
-                                        '${index + 1}일차',
+                                        '${data[index].dayNum}일차',
                                         style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
@@ -82,9 +90,9 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: 3,
+                                itemCount: data[selectedDay - 1].place.length,
                                 itemBuilder: (context, index) {
-                                  var placeNames = "{장소 이름}";
+                                  var place = data[selectedDay - 1].place[index].name;
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -122,7 +130,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                   child: ListTile(
                                                     title: Text(
-                                                      placeNames[index],
+                                                      place,
                                                       style: const TextStyle(
                                                         fontWeight: FontWeight.bold,
                                                         fontSize: 16,
@@ -148,7 +156,8 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                 ),
               ),
             );
-          } else {
+          }
+          else {
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -189,14 +198,14 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(3, (index) {
+                              children: List.generate(travelDays, (index) {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
                                     child: ElevatedButton(
                                       onPressed: () {
                                         setState(() {
-                                          selectedDay = index + 1;
+                                          selectedDay = data[index].dayNum;
                                           selectedIndex = null;
                                         });
                                       },
@@ -206,7 +215,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                                         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
                                       child: Text(
-                                        '${index + 1}일차',
+                                        '${data[index].dayNum}일차',
                                         style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
@@ -216,9 +225,9 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: 6,
+                                itemCount: data[selectedDay - 1].place.length,
                                 itemBuilder: (context, index) {
-                                  var placeNames = "{장소 이름}";
+                                  var place = data[selectedDay - 1].place[index].name;
                                   return Stack(
                                     children: [
                                       Positioned.fill(
@@ -256,7 +265,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
                                                   color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
                                                   child: ListTile(
                                                     title: Text(
-                                                      placeNames[index],
+                                                      place,
                                                       style: const TextStyle(
                                                         fontWeight: FontWeight.bold,
                                                         fontSize: 16,
@@ -283,6 +292,7 @@ void showDetailTripDialog(BuildContext context, String apiKey) {
               ),
             );
           }
+
         },
       );
     },

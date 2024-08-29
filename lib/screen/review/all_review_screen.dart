@@ -325,15 +325,12 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //탭 선택에 따른 순위 내용
   Widget _buildContestTab() {
-    print("000999");
-    print(_rankReviews);
-    print("000999");
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: (_rankReviews.isEmpty || _rankReviews == null)
-            ? [const Text('데이터가 존재하지 않습니다.')]
+            ? [const Text('현재 데이터가 없습니다.')]
             : _rankReviews.map((review) {
           int index = _rankReviews.indexOf(review) + 1;
           IconData icon;
@@ -494,72 +491,101 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
 
   //전체 후기 내용 영역
   Widget _allReviewContentUI() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        int crossAxisCount = (constraints.maxWidth / 150).floor();
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-          ),
-          itemCount: _allReviews.length,
-          itemBuilder: (context, index) {
-            final review = _allReviews[index];
-            return GestureDetector(
-              onTap: () async {
-                try {
-                  final result = await BoardService.getReviewDetailInfo(review.postid.toString());
-                  if (result.value?.status == 200 /*result.value != null*/) {
-                    showDetailReviewDialog(
-                      context,
-                      GOOGLE_MAP_KEY,
-                      review.postid,
-                      result,
-                    );
-                  }
-                  else {
-                    showCustomSnackBar(context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
-                  }
-                } catch (e) {
-                  showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
-                }
-              },
-              child: Column(
-                children: [
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                              width: constraints.maxWidth,
-                              height: constraints.maxWidth * 3 / 4,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
-                                child: Image.network(
-                                  (_allReviews[index].imgurl != null && _allReviews[index].imgurl!.isNotEmpty)
-                                  ? _allReviews[index].imgurl.toString()
-                                  : 'assets/images/noImg.jpg',
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                    return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
-                                  },
-                                ),
-                              )
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  _reviewInfoUI(review),
-                ],
+    if(_allReviews.isEmpty) {
+      return _isContestExpanded
+        ? Column(
+            children: [
+              SizedBox(
+                height: 50,
               ),
-            );
-          },
-        );
-      },
-    );
+              Text("현재 데이터가 없습니다.")
+            ],
+          )
+        : Column(
+            children: [
+              SizedBox(
+                height: 150,
+              ),
+              Text("현재 데이터가 없습니다.")
+            ],
+          );
+    }
+    else {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          int crossAxisCount = (constraints.maxWidth / 150).floor();
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+            ),
+            itemCount: _allReviews.length,
+            itemBuilder: (context, index) {
+              final review = _allReviews[index];
+              return GestureDetector(
+                onTap: () async {
+                  try {
+                    final result = await BoardService.getReviewDetailInfo(
+                        review.postid.toString());
+                    if (result.value?.status == 200 /*result.value != null*/) {
+                      showDetailReviewDialog(
+                        context,
+                        GOOGLE_MAP_KEY,
+                        review.postid,
+                        result,
+                      );
+                    }
+                    else {
+                      showCustomSnackBar(
+                          context, '상세 정보를 불러오는 데 실패하였습니다. 잠시 후 다시 시도해주세요.');
+                    }
+                  } catch (e) {
+                    showCustomSnackBar(context, '에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                  }
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox(
+                                width: constraints.maxWidth,
+                                height: constraints.maxWidth * 3 / 4,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  // 모서리 둥글기 설정
+                                  child: Image.network(
+                                    (_allReviews[index].imgurl != null &&
+                                        _allReviews[index].imgurl!.isNotEmpty)
+                                        ? _allReviews[index].imgurl.toString()
+                                        : 'assets/images/noImg.jpg',
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (BuildContext context,
+                                        Object exception,
+                                        StackTrace? stackTrace) {
+                                      return Image.asset(
+                                          'assets/images/noImg.jpg',
+                                          fit: BoxFit.cover);
+                                    },
+                                  ),
+                                )
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    _reviewInfoUI(review),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
   }
 
   //게시물 정보(좋아요수, 댓글수)
