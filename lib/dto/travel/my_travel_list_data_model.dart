@@ -4,6 +4,7 @@ class MyTravelListDataModel {
     required this.startTime,
     required this.endTime,
     required this.dayAndNights,
+    required this.isWrite,
     required this.dday,
   });
 
@@ -11,6 +12,7 @@ class MyTravelListDataModel {
   late final String startTime;
   late final String endTime;
   late final String dayAndNights;
+  late final bool isWrite;
   late final String dday;
 
   @override
@@ -21,6 +23,7 @@ class MyTravelListDataModel {
         startTime: $startTime,
         endTime: $endTime,
         dayAndNights: $dayAndNights,
+        isWrite: $isWrite,
         dday: $dday,
       }''';
   }
@@ -31,6 +34,7 @@ class MyTravelListDataModel {
       startTime: json['startTime'] ?? '',
       endTime: json['endTime'] ?? '',
       dayAndNights: json['dayAndNights'] ?? '',
+      isWrite: json['isWrite'] ?? true,
       dday: json['dday'] ?? '',
     );
   }
@@ -41,6 +45,7 @@ class MyTravelListDataModel {
       'startTime': startTime,
       'endTime': endTime,
       'dayAndNights': dayAndNights,
+      'isWrite': isWrite,
       'dday': dday,
     };
   }

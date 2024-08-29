@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 import 'package:front/service/board_service.dart';
+import 'package:front/service/user_service.dart';
 
 import '../../component/dialog/detail_review_dialog.dart';
 import '../../component/dialog/passed_trip_dialog.dart';
@@ -466,8 +467,18 @@ class _AllReviewScreenState extends State<AllReviewScreen> with SingleTickerProv
   //후기 작성 버튼
   Widget _addReviewBtnUI() {
     return ElevatedButton(
-      onPressed: () {
-        showPassedTripDialog(context);
+      onPressed: () async {
+        try {
+          final result = await UserService.getPastTravelList();
+          if(result.isSuccess && result.value?.status == 200) {
+            showPassedTripDialog(context, result.value?.data);
+          }
+          else {
+            showCustomSnackBar(context, "데이터를 로드하는 데 실패하였습니다.");
+          }
+        } catch (e) {
+          showCustomSnackBar(context, "오류가 발생하였습니다. 잠시 후 다시 시도해주세요.");
+        }
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,

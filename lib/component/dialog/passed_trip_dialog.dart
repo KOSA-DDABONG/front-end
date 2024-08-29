@@ -1,31 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:front/dto/travel/my_travel_list_data_model.dart';
 
 import '../../screen/review/add_review_screen.dart';
+import '../mypage/date_format.dart';
 
-void showPassedTripDialog(BuildContext context) {
-  final List<Map<String, String>> trips = [
-    {
-      'image': 'assets/images/noImg.jpg',
-      'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
-    },
-    {
-      'image': 'assets/images/noImg.jpg',
-      'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
-    },
-    {
-      'image': 'assets/images/noImg.jpg',
-      'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
-    },
-    {
-      'image': 'assets/images/noImg.jpg',
-      'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
-    },
-    {
-      'image': 'assets/images/noImg.jpg',
-      'dates': '2024.08.01 - 2024.08.07 (여행 7일) D-3'
-    },
-  ];
-
+void showPassedTripDialog(BuildContext context, List<MyTravelListDataModel>? data) {
   int? selectedIndex;
 
   showDialog(
@@ -54,43 +33,49 @@ void showPassedTripDialog(BuildContext context) {
                     ),
                     const SizedBox(height: 20),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: trips.length,
+                      child: (data!.isEmpty || data?.length == 0)
+                      ? const Center(child: Text("선택하실 여행 일정이 없습니다."))
+                      : ListView.builder(
+                        itemCount: data?.length,
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 10.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: selectedIndex == index ? Colors.blue : Colors.grey,
-                                  width: selectedIndex == index ? 3.0 : 1.0,
+                          if(data[index].isWrite != false) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = index;
+                                });
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: selectedIndex == index ? Colors.blue : Colors.grey,
+                                    width: selectedIndex == index ? 3.0 : 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    child: Image.asset(
-                                      trips[index]['image']!,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      child: Image.asset(
+                                        "assets/images/noImg.jpg",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(trips[index]['dates']!),
-                                  ),
-                                ],
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        "${changeDateFormat(data[index].startTime)} - ${changeDateFormat(data[index].endTime)}",
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                       ),
                     ),
