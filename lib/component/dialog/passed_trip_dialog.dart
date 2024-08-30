@@ -33,12 +33,12 @@ void showPassedTripDialog(BuildContext context, List<MyTravelListDataModel>? dat
                     ),
                     const SizedBox(height: 20),
                     Expanded(
-                      child: (data!.isEmpty || data?.length == 0)
+                      child: (data!.isEmpty)
                       ? const Center(child: Text("선택하실 여행 일정이 없습니다."))
                       : ListView.builder(
                         itemCount: data?.length,
                         itemBuilder: (context, index) {
-                          if(data[index].isWrite != false) {
+                          if(data[index].isWrite == false) {
                             return GestureDetector(
                               onTap: () {
                                 setState(() {

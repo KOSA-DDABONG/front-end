@@ -1,6 +1,7 @@
 import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:front/config.dart';
+import 'package:front/screen/chat/chatbot_screen.dart';
 import 'package:front/screen/start/landing_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: AddReviewScreen(),
       home: LandingScreen(),
-      // home: CreatingScreen(),
+      // home: ChatbotScreen(),
     );
   }
 }

@@ -39,4 +39,5 @@ class Config {
 
   //Sample
   static const sampleAPI = "/sample";
+  static const editScheduleAPI = "/chat/updateByChat/";
 }

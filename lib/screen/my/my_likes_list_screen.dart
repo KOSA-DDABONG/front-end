@@ -292,9 +292,12 @@ class _MyLikesListScreenState extends State<MyLikesListScreen> {
                 color: isLiked ? Colors.red : Colors.black,
               ),
               onPressed: () async {
+                print("좋아요 변경 0");
                 try {
                   final response = await BoardService.updateLikes(postId);
+                  print("좋아요 변경 1" + response.toString());
                   if (response != null) {
+                    print("좋아요 변경 0");
                     setState(() {
                       _likedItems[postId] = !isLiked;
                     });

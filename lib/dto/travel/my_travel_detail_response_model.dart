@@ -14,13 +14,6 @@ class MyTravelDetailResponseModel {
   late final int status;
   late final List<MyTravelDetailDataModel> data;
 
-  // MyTravelDetailResponseModel.fromJson(Map<String, dynamic> json) {
-  //   message = json['message'];
-  //   status = json['status'];
-  //   data = List<MyTravelDetailDataModel>.from(
-  //       json['data'].map((item) => MyTravelDetailDataModel.fromJson(item))
-  //   );
-  // }
   MyTravelDetailResponseModel.fromJson(Map<String, dynamic> json) {
     message = json['message'] ?? '';
     status = json['status'] ?? 0;

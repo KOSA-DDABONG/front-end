@@ -25,7 +25,6 @@ class MyTripScheduleScreen extends StatefulWidget {
 }
 
 class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
-  late Map<String, String> scheduleInfo;
   bool _isLoading = true;
   bool _loginState = false;
   MyTravelListResponseModel? _pastTravelInfo;
@@ -701,6 +700,7 @@ class _MyTripScheduleScreenState extends State<MyTripScheduleScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    ///
                       builder: (context) => const ChatbotScreen()
                   ),
                 );

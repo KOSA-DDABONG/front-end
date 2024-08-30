@@ -89,4 +89,30 @@ class ChatService {
       return Result.failure("[getChatConversation] An Error Occurred: $e");
     }
   }
+
+  //사용자가 입력한 메세지 전달
+  static Future<Result<ChatResponseModel>> editSchedule(int travelId) async {
+    final url = Uri.https(API_URL, Config.editScheduleAPI+travelId.toString()).toString();
+    // final url = Uri.http(Config.apiUrl, Config.editScheduleAPI).toString();
+    final accessToken = await SessionService.getAccessToken();
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+    };
+    try {
+      final response = await DioClient.sendRequest(
+          'POST',
+          url,
+          headers: headers,
+      );
+      final jsonData = response.data;
+      print("[수정 챗봇] : $jsonData");
+
+      return Result.success(
+          chatResponseJson(jsonData as Map<String, dynamic>)
+      );
+    } catch (e) {
+      print("[수정 챗봇 에러] : $e");
+      return Result.failure("[getChatConversation] An Error Occurred: $e");
+    }
+  }
 }
