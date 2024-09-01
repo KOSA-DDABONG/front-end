@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/component/mypage/date_format.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/dialog/delete_my_review_dialog.dart';
@@ -267,6 +268,8 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
 
   // 카드 내용
   Widget _cardContent(int index) {
+    String originalText = _myReviewInfo!.data![index].dday;
+    String modifiedText = originalText.replaceAll('--', '+');
     return ListTile(
       contentPadding: const EdgeInsets.all(10),
       subtitle: Row(
@@ -295,11 +298,11 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
             children: [
               const Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
-              Text('${_myReviewInfo!.data![index].startTime} ~ ${_myReviewInfo!.data![index].endTime}', style: TextStyle(fontSize: 14)),
+              Text('${changeDateFormat(_myReviewInfo!.data![index].startTime)} ~ ${changeDateFormat(_myReviewInfo!.data![index].endTime)}', style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
               Text(_myReviewInfo!.data![index].dayAndNights, style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
-              Text(_myReviewInfo!.data![index].dday, style: TextStyle(fontSize: 14, color: Colors.red)),
+              Text(modifiedText, style: TextStyle(fontSize: 14, color: Colors.red)),
             ],
           )
               : Column(
@@ -309,14 +312,14 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Text('${_myReviewInfo!.data![index].startTime} ~ ${_myReviewInfo!.data![index].endTime}', style: TextStyle(fontSize: 14)),
+                  Text('${changeDateFormat(_myReviewInfo!.data![index].startTime)} ~ ${changeDateFormat(_myReviewInfo!.data![index].endTime)}', style: TextStyle(fontSize: 14)),
                   const SizedBox(width: 10),
                   Text(_myReviewInfo!.data![index].dayAndNights, style: TextStyle(fontSize: 14)),
                   const SizedBox(height: 10),
                 ],
               ),
               const SizedBox(height: 10),
-              Text(_myReviewInfo!.data![index].dday, style: TextStyle(fontSize: 14, color: Colors.red)),
+              Text(modifiedText, style: TextStyle(fontSize: 14, color: Colors.red)),
             ],
           ),
         ],

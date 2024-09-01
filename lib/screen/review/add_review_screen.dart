@@ -18,7 +18,8 @@ import '../../responsive.dart';
 import '../../service/board_service.dart';
 
 class AddReviewScreen extends StatefulWidget {
-  const AddReviewScreen({Key? key}) : super(key: key);
+  final int travelId;
+  const AddReviewScreen(this.travelId, {Key? key}) : super(key: key);
 
   @override
   _AddReviewScreenState createState() => _AddReviewScreenState();
@@ -35,10 +36,12 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   bool _showDuplicateHashtagError = false;
   bool _showNoHashtagError = false;
   bool isButtonEnabled = false;
+  int currentTravelId = -1;
 
   @override
   void initState() {
     super.initState();
+    currentTravelId = widget.travelId;
     _textController.addListener(_updateButtonState);
   }
 
@@ -74,7 +77,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   void _submitReview() async {
     // PostDTOModel 생성
     final postDto = PostDTOModel(
-      travelId: 42, // 적절한 travelId로 수정 필요
+      travelId: currentTravelId, // 적절한 travelId로 수정 필요
       reviewContent: _textController.text.trim(),
       hashtags: _hashtags.isNotEmpty ? _hashtags : null,
     );

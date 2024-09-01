@@ -9,6 +9,7 @@ import '../../component/mypage/date_format.dart';
 import '../../component/mypage/my_title.dart';
 import '../../component/snack_bar.dart';
 import '../../controller/my_menu_controller.dart';
+import '../../dto/travel/my_travel_list_response_model.dart';
 import '../../dto/user/login/login_response_model.dart';
 import '../../service/session_service.dart';
 import '../../service/user_service.dart';
@@ -25,14 +26,16 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
   bool _isLoading = true;
   bool _loginState = false;
   LoginResponseModel? _userinfo;
+  MyTravelListResponseModel? _myUpCommingInfo;
   BoardMyListResponseModel? _myReviewInfo;
   MyLikesListResponseModel? _myLikesInfo;
+
 
   @override
   void initState() {
     super.initState();
     _loginState = widget.currentLoginState;
-    _getMyReviewList();
+    _getNeedInfos();
     _startLoadingTimeout(); // 로딩 시간 제한을 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MyMenuController>().setSelectedScreen('myInfo');
@@ -49,14 +52,16 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     });
   }
 
-  Future<void> _getMyReviewList() async {
+  Future<void> _getNeedInfos() async {
     try {
+      final upcomimgResult = await UserService.getFutureTravelList();
       final reviewListResult = await UserService.getUserReviewList();
       final likesListResult  = await UserService.getUserLikesList();
       final usermodel = await SessionService.loginDetails();
-      if (reviewListResult.value?.status == 200 || usermodel != null || likesListResult.value?.status == 200) { // 유저정보 로드 성공
+      if (usermodel != null || reviewListResult.value?.status == 200 || likesListResult.value?.status == 200 || upcomimgResult.value?.status == 200) { // 유저정보 로드 성공
         setState(() {
           _userinfo = usermodel;
+          _myUpCommingInfo = upcomimgResult.value;
           _myReviewInfo = reviewListResult.value;
           _myLikesInfo = likesListResult.value;
           _isLoading = false;
@@ -276,7 +281,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
         const Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '가까운 일정',
+            '다가오는 일정',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold
@@ -292,7 +297,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   //일정 카드
   Widget _myScheduleCard() {
-    if (_myReviewInfo == null || _myReviewInfo!.data == null || _myReviewInfo!.data!.isEmpty) {
+    if (_myUpCommingInfo == null || _myUpCommingInfo!.data == null || _myUpCommingInfo!.data!.isEmpty) {
       return Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 1.0),
@@ -334,14 +339,9 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                   height: 100,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0), // 모서리 둥글기 설정
-                    child: Image.network(
-                      _myReviewInfo!.data![0].url.isNotEmpty
-                          ? _myReviewInfo!.data![0].url[0] : 'assets/images/noImg.jpg',
+                    child: Image.asset(
+                      'assets/images/travel_schedule_default.jpg',
                       fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                        // 오류가 발생할 경우 대체 이미지 제공
-                        return Image.asset('assets/images/noImg.jpg', fit: BoxFit.cover);
-                      },
                     ),
                   )
               ),
@@ -350,30 +350,30 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                   ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 5),
-                  Text('{YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                  Text(changeDateFormat(_myUpCommingInfo!.data.first.startTime), style: TextStyle(fontSize: 14)),
                   const SizedBox(height: 5),
-                  Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                  Text(_myUpCommingInfo!.data.first.dayAndNights, style: TextStyle(fontSize: 14)),
                   const SizedBox(height: 5),
-                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  Text(_myUpCommingInfo!.data.first.dday, style: TextStyle(fontSize: 14, color: Colors.red)),
                 ],
               )
                   : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text('부산 여행 일정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Text('{일정 시작일: YYYY-MM-DD}', style: TextStyle(fontSize: 14)),
+                      Text('일정 시작일: ${changeDateFormat(_myUpCommingInfo!.data.first.startTime)}', style: TextStyle(fontSize: 14)),
                       const SizedBox(width: 10),
-                      Text('{0박 0일}', style: TextStyle(fontSize: 14)),
+                      Text(_myUpCommingInfo!.data.first.dayAndNights, style: TextStyle(fontSize: 14)),
                       const SizedBox(height: 10),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Text('{D-5}', style: TextStyle(fontSize: 14, color: Colors.red)),
+                  Text(_myUpCommingInfo!.data.first.dday, style: TextStyle(fontSize: 14, color: Colors.red)),
                 ],
               ),
             ],
@@ -393,8 +393,8 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                   context.read<MyMenuController>().setSelectedScreen('mySchedule');
                 },
                 child: Text(
-                  '3건',
-                  style: TextStyle(
+                  "${_myUpCommingInfo!.data.length} 건",
+                  style: const TextStyle(
                     fontSize: 15,
                     decoration: TextDecoration.underline,
                     color: Colors.black,
@@ -521,11 +521,37 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ],
           ),
         ),
-        trailing: GestureDetector(
+        trailing: Responsive.isNarrowWidth(context)
+            ? GestureDetector(
           onTap: () {
             context.read<MyMenuController>().setSelectedScreen('myReview');
           },
           child: const Icon(Icons.arrow_forward),
+        )
+            : Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.read<MyMenuController>().setSelectedScreen('myReview');
+              },
+              child: Text(
+                "${_myReviewInfo!.data?.length} 건",
+                style: const TextStyle(
+                  fontSize: 15,
+                  decoration: TextDecoration.underline,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {
+                context.read<MyMenuController>().setSelectedScreen('myReview');
+              },
+              child: const Icon(Icons.arrow_forward),
+            ),
+          ],
         ),
       ),
     );
@@ -637,7 +663,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                 },
                 child: Text(
                   '${_myLikesInfo!.myLikesList!.length}건',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     decoration: TextDecoration.underline,
                     color: Colors.black,

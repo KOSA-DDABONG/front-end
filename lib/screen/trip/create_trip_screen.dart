@@ -80,6 +80,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   bool showMoreButton = false;
   bool getResponseOfTripSchedule = false;
   List<dynamic> scheduleInfo = [];
+  String explanation = "";
 
   @override
   void initState() {
@@ -128,6 +129,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               _scrollToBottom();
 
               scheduleInfo = conversationResult.value!.data.travelSchedule.scheduler!;
+              explanation = conversationResult.value!.data.travelSchedule.explain!;
 
               print("================scheduleInfo================");
               print(conversationResult.value?.data.travelSchedule.scheduler);
@@ -267,7 +269,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
 
   void _showTripDetailDialog() {
     print("다이어로그가 시작되었습니다.");
-    showDetailTripForChatNotResponseDialog(context, GOOGLE_MAP_KEY, scheduleInfo);
+    showDetailTripForChatNotResponseDialog(context, GOOGLE_MAP_KEY, scheduleInfo, explanation);
   }
 
   @override

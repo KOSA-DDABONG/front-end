@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../constants.dart';
 import '../map/get_map_for_chat.dart';
 
-void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey, List<dynamic>? scheduleInfo) {
+void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey, List<dynamic>? scheduleInfo, String explanation) {
   int selectedDay = 1;
   int? selectedIndex;
   int scheduleDayLength = scheduleInfo?.length ?? 0;
@@ -18,7 +18,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
 
   List<dynamic> findHotelInfo(int dayIndex) {
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
-      print("Day ${dayIndex} 호텔 없음");
+      print("Day $dayIndex 호텔 없음");
       return [];
     } else {
       if(scheduleInfo[dayIndex]['hotel'] == null) {
@@ -32,7 +32,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
 
   List<dynamic> findBreakfast(int dayIndex) {
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
-      print("Day ${dayIndex} 아침 없음");
+      print("Day $dayIndex 아침 없음");
       return [];
     } else {
       return scheduleInfo[dayIndex]['breakfast'];
@@ -41,7 +41,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
 
   List<List<dynamic>> findTouristSpots(int dayIndex) {
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
-      print("Day ${dayIndex} 관광지 없음");
+      print("Day $dayIndex 관광지 없음");
       return [];
     } else {
       return scheduleInfo[dayIndex]['tourist_spots'].map<List<Object>>((spot) => List<Object>.from(spot)).toList();
@@ -50,7 +50,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
 
   List<dynamic> findLunch(int dayIndex) {
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
-      print("Day ${dayIndex} 점심 없음");
+      print("Day $dayIndex 점심 없음");
       return [];
     } else {
       return scheduleInfo[dayIndex]['lunch'];
@@ -59,7 +59,7 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
 
   List<dynamic> findDinner(int dayIndex) {
     if (scheduleInfo == null || dayIndex >= scheduleDayLength || scheduleInfo.isEmpty) {
-      print("Day ${dayIndex} 저녁 없음");
+      print("Day $dayIndex 저녁 없음");
       return [];
     } else {
       return scheduleInfo[dayIndex]['dinner'];
@@ -256,6 +256,8 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
           ///
           ///
           ///
+          ///
+          //넓은 화면
           else {
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -268,141 +270,191 @@ void showDetailTripForChatNotResponseDialog(BuildContext context, String apiKey,
                 ),
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.8,
-                child: Row(
+                child: Column(
                   children: [
                     Expanded(
-                      flex: 3,
-                      child: Container(
-                        margin: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blueAccent),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: GetMapForChat(
-                            dayScheduleData: List.generate(
-                              scheduleDayLength,
-                                  (index) => daySchedule(index, findTouristSpots(index).length),
-                            ),
-                            selectedDay: selectedDay,
-                            selectedPlace: selectedIndex != null
-                                ? LatLng(
-                              aDayScheduleSequence[selectedDay][1],
-                              aDayScheduleSequence[selectedDay][2],
-                            )
-                                : null,
-                            selectedIndex: selectedIndex,
-                            googleApiKey: GOOGLE_MAP_KEY, // 추가된 부분
-                          ),
+                      flex: 6,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              margin: const EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: GetMapForChat(
+                                  dayScheduleData: List.generate(
+                                    scheduleDayLength,
+                                        (index) => daySchedule(index, findTouristSpots(index).length),
+                                  ),
+                                  selectedDay: selectedDay,
+                                  selectedPlace: selectedIndex != null
+                                      ? LatLng(
+                                    aDayScheduleSequence[selectedDay][1],
+                                    aDayScheduleSequence[selectedDay][2],
+                                  )
+                                      : null,
+                                  selectedIndex: selectedIndex,
+                                  googleApiKey: GOOGLE_MAP_KEY, // 추가된 부분
+                                ),
 
-                        ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: List.generate(scheduleDayLength, (index) {
+                                      return Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                selectedDay = index + 1;
+                                                selectedIndex = null;
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
+                                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                                              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                            ),
+                                            child: Text(
+                                              '${index + 1}일차',
+                                              style: const TextStyle(color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length).length,
+                                      itemBuilder: (context, index) {
+                                        if(daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index] != []) {
+                                          return Stack(
+                                            children: [
+                                              Positioned.fill(
+                                                left: 12,
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: DashedLine(
+                                                    height: double.infinity,
+                                                    color: Colors.grey,
+                                                    strokeWidth: 2,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                                child: Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundColor: Colors.blue,
+                                                      radius: 12,
+                                                      child: Text(
+                                                        '${index + 1}',
+                                                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            selectedIndex = index;
+                                                            // 지도 중앙으로 이동
+                                                          });
+                                                        },
+                                                        child: Card(
+                                                          color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
+                                                          child: ListTile(
+                                                            title: Text(
+                                                              daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index][0],
+                                                              style: const TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                        else {
+                                          ///
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Expanded(
                       flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 20, 25, 30),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(scheduleDayLength, (index) {
-                                return Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 20),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          selectedDay = index + 1;
-                                          selectedIndex = null;
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: selectedDay == index + 1 ? pointColor : Colors.grey,
-                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                      ),
-                                      child: Text(
-                                        '${index + 1}일차',
-                                        style: const TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length).length,
-                                itemBuilder: (context, index) {
-                                  if(daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index] != []) {
-                                    return Stack(
-                                      children: [
-                                        Positioned.fill(
-                                          left: 12,
-                                          child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: DashedLine(
-                                              height: double.infinity,
-                                              color: Colors.grey,
-                                              strokeWidth: 2,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundColor: Colors.blue,
-                                                radius: 12,
-                                                child: Text(
-                                                  '${index + 1}',
-                                                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      selectedIndex = index;
-                                                      // 지도 중앙으로 이동
-                                                    });
-                                                  },
-                                                  child: Card(
-                                                    color: selectedIndex == index ? Colors.lightBlueAccent : Colors.white,
-                                                    child: ListTile(
-                                                      title: Text(
-                                                        daySchedule(selectedDay - 1, findTouristSpots(selectedDay - 1).length)[index][0],
-                                                        style: const TextStyle(
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                  else {
-                                    ///
-                                  }
-                                },
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20,0,20,10),
+                          child: (explanation == "" || explanation.isEmpty)
+                              ? const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "일정 선정 기준 :",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: pointColor,
+                                    fontSize: 17
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                              Text(
+                                "일정 선정 기준을 불러오지 못했습니다.",
+                                style: TextStyle(fontSize: 15),
+                              )
+                            ],
+                          )
+                              : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "일정 선정 기준 :",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: pointColor,
+                                    fontSize: 18
+                                ),
+                              ),
+                              Text(
+                                explanation,
+                                style: const TextStyle(fontSize: 15),
+                              )
+                            ],
+                          )
+                        )
+                      )
+                    )
                   ],
-                ),
+                )
               ),
             );
           }
