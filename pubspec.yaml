@@ -88,6 +88,7 @@ flutter:
     - assets/images/login_background.png
     - assets/images/noImg.jpg
     - assets/images/profile_pic.png
+    - assets/images/travel_schedule_default.jpg
     - assets/images/tripflow_logo.png
     - assets/images/yellow_car.png
     - assets/icons/doc_file.svg

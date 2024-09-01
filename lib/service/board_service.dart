@@ -71,7 +71,8 @@ class BoardService {
         throw Exception("Failed to get Board Detail");
       }
     } catch (e) {
-      return Result.failure("[Get Board Detail] An Error Occurred: ${e}");
+      print("[후기 상세 정보 조회 error] : $e");
+      return Result.failure("[Get Board Detail] An Error Occurred: $e");
     }
   }
 
@@ -169,6 +170,7 @@ class BoardService {
         throw Exception("Failed to update Likes");
       }
     } catch (e) {
+      print("[좋아요 변경] 에러 : $e");
       return Result.failure("[Update Likes] An Error Occurred: ${e}");
     }
   }

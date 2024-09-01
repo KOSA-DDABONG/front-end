@@ -24,9 +24,13 @@ class Config {
   static const getUserBoardListAPI = "/myinfo/review/list"; //내가 쓴 후기 리스트
   static const getMyTravelListAPI = "/my/mySavedTravel"; //내가 저장한 여행일정 리스트
   static const getMyLikesListAPI = "/mylist"; //나의 좋아요 리스트
+  static const getPastTravelListAPI = "/myinfo/past/list"; //나의 과거 일정 리스트
+  static const getFutureTravelListAPI = "/myinfo/future/list"; //나의 미래 일정 리스트
+  static const getPresentTravelListAPI = "/myinfo/present/list"; //나의 현재 일정 리스트
 
   //Travel
   static const getResponseForCreateScheduleAPI = "/making"; //여행 일정 요청 전달 및 응답 받아오기
+  static const getDetailOfTravelInfoAPI = "/myinfo/travel/"; //여행 일정 상세 정보 조회(마이페이지에서 사용)
 
   //Chat
   static const getChatConnectionAPI = "/chat/start"; //챗봇 연결 여부 받아오기
@@ -35,4 +39,5 @@ class Config {
 
   //Sample
   static const sampleAPI = "/sample";
+  static const editScheduleAPI = "/chat/updateByChat/";
 }

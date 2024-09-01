@@ -2,6 +2,7 @@ import '../comment/comment_info_model.dart';
 import '../place/hotel_model.dart';
 import '../place/restaurant_model.dart';
 import '../place/tour_model.dart';
+import '../travel/my_travel_detail_data_model.dart';
 
 class AllBoardList {
   AllBoardList({
@@ -186,9 +187,7 @@ class BoardDetailInfo {
     required this.postId,
     required this.travelId,
     required this.url,
-    required this.tour,
-    required this.restaurant,
-    required this.hotel,
+    required this.loadDetailTravelScheduleDTOs,
     required this.nickName,
     required this.content,
     required this.hashtags,
@@ -202,9 +201,9 @@ class BoardDetailInfo {
   late final int postId;
   late final int travelId;
   late final List<String> url;
-  late final List<Tour> tour;
-  late final List<Restaurant> restaurant;
-  late final List<Hotel> hotel;
+
+  late final List<MyTravelDetailDataModel> loadDetailTravelScheduleDTOs;
+
   late final String nickName;
   late final String content;
   late final List<String> hashtags;
@@ -221,9 +220,7 @@ class BoardDetailInfo {
         postId: $postId,
         travelId: $travelId,
         url: $url,
-        tour: $tour,
-        restaurant: $restaurant,
-        hotel: $hotel,
+        loadDetailTravelScheduleDTOs: $loadDetailTravelScheduleDTOs,
         nickName: $nickName,
         content: $content,
         hashtags: $hashtags,
@@ -248,14 +245,8 @@ class BoardDetailInfo {
       url: json['url'] != null
           ? List<String>.from(json['url'])
           : [],
-      tour: json['tour'] != null
-          ? (json['tour'] as List<dynamic>).map((item) => Tour.fromJson(item as Map<String, dynamic>)).toList()
-          : [],
-      restaurant: json['restaurant'] != null
-          ? (json['restaurant'] as List<dynamic>).map((item) => Restaurant.fromJson(item as Map<String, dynamic>)).toList()
-          : [],
-      hotel: json['hotel'] != null
-          ? (json['hotel'] as List<dynamic>).map((item) => Hotel.fromJson(item as Map<String, dynamic>)).toList()
+      loadDetailTravelScheduleDTOs: json['loadDetailTravelScheduleDTOs'] != null
+          ? (json['loadDetailTravelScheduleDTOs'] as List<dynamic>).map((item) => MyTravelDetailDataModel.fromJson(item as Map<String, dynamic>)).toList()
           : [],
       nickName: json['nickName'] != null
           ? json['nickName'].toString()
